@@ -46,13 +46,6 @@ const handleBlur = () => {
     box-shadow: 0 0 0 1px #E5E5E5;
   }
 
-  @media (max-width: 620px) {
-    .search-container{
-      width: 350px;
-    }
-  }
-
-
   :deep .v-label{
     opacity: 100% !important;
   }
@@ -72,5 +65,11 @@ const handleBlur = () => {
   :deep input::placeholder {
     color: #666464;
     opacity: 90%;
+  }
+
+  @media (max-width: 620px) {
+    .search-container{
+      width: 350px;
+    }
   }
 </style>
