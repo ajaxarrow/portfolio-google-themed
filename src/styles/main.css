@@ -1,3 +1,16 @@
+@import url('./variables.css');
+
 *{
   font-family: 'Satoshi', sans-serif !important;
+}
+
+.center{
+  display: grid;
+  place-items: center;
+  height: 85vh;
+  width: 100vw;
+}
+
+.text-small{
+  font-size: 12px;
 }
