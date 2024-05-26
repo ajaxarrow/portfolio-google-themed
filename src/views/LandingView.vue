@@ -133,5 +133,9 @@ import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRe
     .links-container{
       width: 300px;
     }
+
+    .text-title{
+      font-size: 72px;
+    }
   }
 </style>
