@@ -38,7 +38,7 @@
           location="bottom"
         >
           <div class="tooltip-container">
-            <p>Portfolio</p>
+            <p class="text-small font-weight-medium">Portfolio</p>
             <p class="text-small text-gs90">Jiu Axl R. Tabilla</p>
             <p class="text-small text-gs90">axldamnaxl@gmail.com</p>
           </div>
