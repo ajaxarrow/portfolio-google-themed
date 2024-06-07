@@ -1,22 +1,44 @@
 <script setup lang="ts">
-import {PhMagnifyingGlass} from "@phosphor-icons/vue";
+import {PhClockCounterClockwise, PhMagnifyingGlass, PhX} from "@phosphor-icons/vue";
 import {ref} from "vue";
+import {links} from "../data/links.ts";
+import {useRouter} from "vue-router";
 
 const isActive = ref(false);
+const activeSearchItem = ref("");
+const searchQuery = ref("");
+const linksData = ref(links);
+const isClickingLink = ref(false);
+const router = useRouter();
 
-// Event handlers to update the active state
 const handleFocus = () => {
   isActive.value = true;
 };
 
 const handleBlur = () => {
-  isActive.value = false;
+  setTimeout(() => {
+    if (!isClickingLink.value) {
+      isActive.value = false;
+    }
+  }, 150);
 };
+
+const handleHover = (name: string) => {
+  activeSearchItem.value = name;
+}
+
+const navigateTo = (path: string) => {
+  isClickingLink.value = true;
+  router.push(path).then(() => {
+    isClickingLink.value = false;
+  });
+}
 </script>
 
 <template>
   <div class="search-container">
     <VTextField
+        v-model="searchQuery"
         @focus="handleFocus"
         @blur="handleBlur"
         placeholder="Search information about Jiu Axl"
@@ -25,25 +47,76 @@ const handleBlur = () => {
         rounded="lg"
         density="compact"
         variant="outlined"
-        base-color="gs60"
     >
       <template #prepend-inner>
-        <PhMagnifyingGlass size="20" color="#666464"/>
+        <PhMagnifyingGlass size="18" color="#666464" class="ml-2"/>
       </template>
     </VTextField>
-    <div v-if="isActive">
+    <div v-if="isActive" class="overlay pb-2">
+      <div
+          @click="navigateTo(searchQuery)"
+          v-if="searchQuery !== ''"
+          class="py-2 mr-5 search-query text-black d-flex align-center justify-space-between cursor-pointer"
+      >
+        <div class="d-flex align-center ga-2">
+          <PhMagnifyingGlass/>
+          <p>{{searchQuery}} - Search</p>
+        </div>
+      </div>
+      <div
+          @click="navigateTo(link.link)"
+          @mouseleave="handleHover('')"
+          @mouseover="handleHover(link.name)"
+          v-for="(link, index) in linksData"
+          :key="index"
+          class="px-5 py-2 mr-5 search-suggestion-item text-black d-flex align-center justify-space-between cursor-pointer"
+      >
+        <div class="d-flex align-center ga-2">
+          <PhClockCounterClockwise/>
+          <p>{{link.name.toLowerCase()}}</p>
+        </div>
+        <PhX
+          @click="linksData.splice(index, 1)"
+          class="delete-icon"
+          v-if="link.name.toLowerCase() === activeSearchItem.toLowerCase()"/>
+      </div>
+
     </div>
   </div>
 </template>
 
 <style scoped>
 
-  .search-container{
+  .search-container {
     width: 523px;
     border-radius: 25px;
-    overflow: hidden;
     color: #8C8C8C;
     box-shadow: 0 0 0 1px #E5E5E5;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+
+  .overlay{
+    background-color: #ffffff;
+  }
+
+  .search-suggestion-item:hover, .search-query{
+    background-color: #e9e9ea;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+  }
+
+  .search-query{
+    padding: 0 17px;
+    border-left: 3px solid #4285F4;
+  }
+
+  .delete-icon:hover{
+    border-radius: 50%;
+    background-color: #cacace;
   }
 
   :deep .v-label{

@@ -1,7 +1,15 @@
 <script setup lang="ts">
-import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
+  import {PhDotsNine} from "@phosphor-icons/vue";
   import Profile from '../assets/images/profile.jpg'
   import Search from "../components/Search.vue";
+  import {links} from "../data/links.ts";
+  import {useRouter} from "vue-router";
+
+  const router = useRouter();
+
+  const navigateTo = (path: string) => {
+    router.push(path)
+  }
 
   const socials = [
     {
@@ -10,7 +18,7 @@ import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRe
     },
     {
       name: 'Email',
-      link: 'mailto:axldamnaxl@gmail.com',
+      link: 'https://mail.google.com/mail/u/0/?fs=1&to=axldamnaxl@gmail.com&tf=cm',
     },
     {
       name: 'Github',
@@ -18,45 +26,12 @@ import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRe
     }
   ];
 
-  const links = [
-    {
-      name: 'All',
-      link: '/all',
-      color: '#006180',
-      icon: PhTextIndent
-    },
-    {
-      name: 'About Me',
-      link: '/about',
-      color: '#4D1683',
-      icon: PhUserRectangle
-    },
-    {
-      name: 'Projects',
-      link: '/projects',
-      color: '#3744B3',
-      icon: PhCode
-    },
-    {
-      name: 'Designs',
-      link: '/designs',
-      color: '#AC207D',
-      icon: PhFigmaLogo
-    },
-    {
-      name: 'Socials',
-      link: '/socials',
-      color: '#819D12',
-      icon: PhInstagramLogo
-    },
-
-  ]
 </script>
 
 <template>
   <div class="pa-6">
     <VRow align="center" justify="end" class="ma-0">
-      <a v-for="social in socials" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
+      <a v-for="social in socials" target="_blank" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
       <PhDotsNine class="mx-2" size="24" />
@@ -78,7 +53,7 @@ import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRe
       </VAvatar>
     </VRow>
     <div class="center">
-      <div class="d-flex flex-column justify-center align-center">
+      <div class="d-flex flex-column justify-center  ">
         <p class="text-title text-center mb-3">
           <span class="text-googleblue">j</span>
           <span class="text-googlered">i</span>
@@ -88,9 +63,15 @@ import {PhCode, PhDotsNine, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRe
           <span class="text-googlered">l</span>
           <span class="text-googleyellow">.</span>
         </p>
-        <Search/>
+        <div class="position-relative mb-15">
+          <Search/>
+        </div>
         <div class="links-container mt-5">
-          <div v-for="link in links" :key="link.name" class="d-flex flex-column align-center">
+          <div
+            @click="navigateTo(link.link)"
+            v-for="link in links"
+            :key="link.name"
+            class="d-flex flex-column align-center cursor-pointer">
             <div class="icon-container">
               <component :is="link.icon" size="32" :color="link.color" weight="duotone"/>
             </div>
