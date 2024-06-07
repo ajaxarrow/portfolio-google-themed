@@ -3,10 +3,6 @@
   import Profile from '../assets/images/profile.jpg'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
-  import {useRouter} from "vue-router";
-
-  const router = useRouter();
-
 
   const socials = [
     {
