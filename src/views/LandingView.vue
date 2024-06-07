@@ -7,9 +7,6 @@
 
   const router = useRouter();
 
-  const navigateTo = (path: string) => {
-    router.push(path)
-  }
 
   const socials = [
     {
@@ -67,16 +64,16 @@
           <Search/>
         </div>
         <div class="links-container mt-5">
-          <div
-            @click="navigateTo(link.link)"
+          <RouterLink
             v-for="link in links"
             :key="link.name"
-            class="d-flex flex-column align-center cursor-pointer">
+            class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black"
+            :to="{path: link.link}">
             <div class="icon-container">
               <component :is="link.icon" size="32" :color="link.color" weight="duotone"/>
             </div>
             <p class="text-small mt-2">{{link.name}}</p>
-          </div>
+          </RouterLink>
 
         </div>
       </div>
