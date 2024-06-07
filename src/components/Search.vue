@@ -38,6 +38,7 @@ const navigateTo = (path: string) => {
 <template>
   <div class="search-container">
     <VTextField
+        @keydown.enter="navigateTo(searchQuery)"
         v-model="searchQuery"
         @focus="handleFocus"
         @blur="handleBlur"
