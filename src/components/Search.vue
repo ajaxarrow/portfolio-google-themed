@@ -143,7 +143,7 @@ const navigateTo = (path: string) => {
 
   @media (max-width: 620px) {
     .search-container{
-      width: 350px;
+      width: 300px;
     }
   }
 </style>
