@@ -1,13 +1,14 @@
 <script setup lang="ts">
-  import {PhDotsNine} from "@phosphor-icons/vue";
+import {PhDotsNine, PhEnvelope, PhGithubLogo, PhLinkedinLogo, PhMagnifyingGlass} from "@phosphor-icons/vue";
   import Profile from '../assets/images/profile.jpg'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
   import {ref, watch} from "vue";
   import SearchView from "./SearchView.vue";
+  import {Link} from "../interfaces/link.interface.ts";
 
-
+  const menuDialog = ref(true);
   const {isMobile} = useScreenStore();
   const isSmallLayout = ref(false);
   const searchQuery = ref('');
@@ -22,20 +23,36 @@
     isSmallLayout.value = !!isMobile.value;
   }
 
-  const socials = [
+  const socials: Link[] = [
     {
       name: 'LinkedIn',
       link: 'https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/',
+      color: '#0077b5',
+      icon: PhLinkedinLogo
     },
     {
       name: 'Email',
       link: 'https://mail.google.com/mail/u/0/?fs=1&to=axldamnaxl@gmail.com&tf=cm',
+      color: '#c52626',
+      icon: PhEnvelope
     },
     {
       name: 'Github',
       link: 'https://github.com/ajaxarrow',
+      color: '#010810',
+      icon: PhGithubLogo
     }
   ];
+
+  const items: Link[] = [
+    {
+      name: 'Search',
+      link: '/',
+      color: '#00b503',
+      icon: PhMagnifyingGlass
+    },
+      ...links,
+  ]
 
   watch(() => searchQuery.value, filterLinks)
 
@@ -55,7 +72,44 @@
       <a v-for="social in socials" target="_blank" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
-      <PhDotsNine class="mx-2" size="24" />
+      <VMenu
+          v-model="menuDialog"
+          :close-on-content-click="false"
+      >
+        <template #activator="{ props }">
+          <PhDotsNine
+              :class="{'icon': menuDialog}"
+              v-bind="props"
+              class="mx-2 cursor-pointer menu-icon"
+              size="24"
+              weight="bold"
+          />
+        </template>
+        <VSheet class="menu-container px-2 pt-4 pb-10" width="300">
+          <RouterLink
+              @click="menuDialog = false"
+              v-for="link in items"
+              :key="link.name"
+              class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black pa-2 menu-item "
+              :to="{path: link.link}">
+            <div class="menu-item-container">
+              <component :is="link.icon" size="36" :color="link.color" weight="duotone"/>
+            </div>
+            <p class="mt-2 text-center" style="font-size: 14px">{{link.name}}</p>
+          </RouterLink>
+          <a
+              v-for="link in socials"
+              :key="link.name"
+              class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black pa-2 menu-item "
+              target="_blank"
+              :href="link.link">
+            <div class="menu-item-container">
+              <component :is="link.icon" size="36" :color="link.color" weight="duotone"/>
+            </div>
+            <p class="mt-2 text-center" style="font-size: 14px">{{link.name}}</p>
+          </a>
+        </VSheet>
+      </VMenu>
       <VAvatar
           size="32"
           class="ml-2 cursor-pointer"
@@ -96,7 +150,7 @@
           <RouterLink
             v-for="link in links"
             :key="link.name"
-            class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black"
+            class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black link-item"
             :to="{path: link.link}">
             <div class="icon-container">
               <component :is="link.icon" size="32" :color="link.color" weight="duotone"/>
@@ -111,6 +165,39 @@
 </template>
 
 <style scoped>
+  .menu-container{
+    border-radius: 24px !important;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .menu-item:hover{
+    background-color: #e9f3f8;
+    border-radius: 10px;
+  }
+
+  .menu-item{
+    width: 80px
+  }
+
+  .link-item{
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .link-item:hover{
+    background-color: #dbe0e3;
+  }
+
+  .icon{
+    border-radius: 50%;
+    color: #4285F4;
+  }
+
+  .menu-icon:hover{
+    color: #8ca3c7;
+  }
+
   .icon-container{
     display: flex;
     align-items: center;
@@ -120,6 +207,15 @@
     background-color: #E1E3E1;
     border-radius: 50%;
   }
+
+  .menu-item-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+  }
+
   .tooltip-container{
     line-height: 1.25;
   }
