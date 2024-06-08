@@ -1,14 +1,12 @@
 <script setup lang="ts">
-  import {PhDotsNine, PhEnvelope, PhGithubLogo, PhLinkedinLogo, PhMagnifyingGlass} from "@phosphor-icons/vue";
   import Profile from '../assets/images/profile.jpg'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
   import {ref, watch} from "vue";
   import SearchView from "./SearchView.vue";
-  import {Link} from "../interfaces/link.interface.ts";
-import {socials} from "../data/socials.ts";
-import MenuDialog from "../components/MenuDialog.vue";
+  import {socials} from "../data/socials.ts";
+  import MenuDialog from "../components/MenuDialog.vue";
 
 
   const {isMobile} = useScreenStore();
