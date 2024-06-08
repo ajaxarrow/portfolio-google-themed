@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@phosphor-icons/vue": "^2.2.1",
+    "@vueuse/core": "^10.10.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2",
     "vuetify": "^3.6.7"
