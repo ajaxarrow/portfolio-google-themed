@@ -103,9 +103,8 @@ watch(() => localQuery.value, () => {
 </template>
 
 <style scoped>
-
   .search-container {
-    width: 523px;
+    width: 100%;
     border-radius: 25px;
     color: #8C8C8C;
     box-shadow: 0 0 0 1px #E5E5E5;
@@ -157,15 +156,4 @@ watch(() => localQuery.value, () => {
     opacity: 90%;
   }
 
-  @media (max-width: 580px) {
-    .search-container{
-      width: 400px;
-    }
-  }
-
-  @media (max-width: 450px) {
-    .search-container{
-      width: 300px;
-    }
-  }
 </style>

@@ -1,6 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 // @ts-ignore
 import LandingView from "../views/LandingView.vue";
+// @ts-ignore
+import AboutView from "../views/AboutView.vue";
 
 
 const router = createRouter({
@@ -10,6 +12,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: LandingView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutView
     }
   ]
 })
