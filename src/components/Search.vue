@@ -141,7 +141,13 @@ const navigateTo = (path: string) => {
     opacity: 90%;
   }
 
-  @media (max-width: 620px) {
+  @media (max-width: 580px) {
+    .search-container{
+      width: 400px;
+    }
+  }
+
+  @media (max-width: 450px) {
     .search-container{
       width: 300px;
     }

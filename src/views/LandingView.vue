@@ -103,13 +103,24 @@
     width: 523px;
   }
 
-  @media (max-width: 620px) {
+  @media (max-width: 580px) {
     .links-container{
-      width: 300px;
+      width: 400px;
     }
 
     .text-title{
       font-size: 72px;
     }
+  }
+
+  @media (max-width: 450px) {
+    .links-container{
+      width: 300px;
+    }
+
+    .text-title{
+      font-size: 64px;
+    }
+
   }
 </style>
