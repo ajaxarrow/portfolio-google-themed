@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import {PhClockCounterClockwise, PhMagnifyingGlass, PhX} from "@phosphor-icons/vue";
-import {ref} from "vue";
-import {links} from "../data/links.ts";
+import {ref, watch} from "vue";
 import {useRouter} from "vue-router";
 
 const isActive = ref(false);
 const activeSearchItem = ref("");
-const searchQuery = ref("");
-const linksData = ref(links);
+
+const props = defineProps({
+  searchQuery: String,
+  links: Array
+})
+
+const emits = defineEmits(['update:searchQuery'])
+const localQuery = ref(props.searchQuery);
+
 const isClickingLink = ref(false);
 const router = useRouter();
 
@@ -33,15 +39,24 @@ const navigateTo = (path: string) => {
     isClickingLink.value = false;
   });
 }
+
+const removeLink = (index: number, event: MouseEvent) => {
+  event.stopPropagation();
+  props.links!.splice(index, 1)
+}
+
+watch(() => localQuery.value, () => {
+ emits('update:searchQuery', localQuery.value)
+})
 </script>
 
 <template>
   <div class="search-container">
     <VTextField
-        @keydown.enter="navigateTo(searchQuery)"
-        v-model="searchQuery"
+        @keydown.enter="navigateTo(<string>props.searchQuery)"
         @focus="handleFocus"
         @blur="handleBlur"
+        v-model="localQuery"
         placeholder="Search information about Jiu Axl"
         class="my-2 search"
         hide-details
@@ -55,9 +70,9 @@ const navigateTo = (path: string) => {
     </VTextField>
     <div v-if="isActive" class="overlay pb-2">
       <div
-          @click="navigateTo(searchQuery)"
+          @click="navigateTo(<string>props.searchQuery)"
           v-if="searchQuery !== ''"
-          class="py-2 mr-5 search-query text-black d-flex align-center justify-space-between cursor-pointer"
+          class="py-3 mr-5 search-query text-black d-flex align-center justify-space-between cursor-pointer"
       >
         <div class="d-flex align-center ga-2">
           <PhMagnifyingGlass/>
@@ -68,16 +83,16 @@ const navigateTo = (path: string) => {
           @click="navigateTo(link.link)"
           @mouseleave="handleHover('')"
           @mouseover="handleHover(link.name)"
-          v-for="(link, index) in linksData"
+          v-for="(link, index) in props.links"
           :key="index"
-          class="px-5 py-2 mr-5 search-suggestion-item text-black d-flex align-center justify-space-between cursor-pointer"
+          class="px-5 py-3 mr-5 search-suggestion-item text-black d-flex align-center justify-space-between cursor-pointer"
       >
         <div class="d-flex align-center ga-2">
           <PhClockCounterClockwise/>
           <p>{{link.name.toLowerCase()}}</p>
         </div>
         <PhX
-          @click="linksData.splice(index, 1)"
+          @click="removeLink(index, $event)"
           class="delete-icon"
           v-if="link.name.toLowerCase() === activeSearchItem.toLowerCase()"/>
       </div>

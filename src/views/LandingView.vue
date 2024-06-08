@@ -3,6 +3,24 @@
   import Profile from '../assets/images/profile.jpg'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
+  import {useScreenStore} from "../stores/screenSizeStore.ts";
+  import {ref, watch} from "vue";
+  import SearchView from "./SearchView.vue";
+
+
+  const {isMobile} = useScreenStore();
+  const isSmallLayout = ref(false);
+  const searchQuery = ref('');
+  const linksData = ref(links);
+
+  const filterLinks = () => {
+    console.log('called')
+    linksData.value = links.filter(link => link.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  }
+
+  const changeLayout = () => {
+    isSmallLayout.value = !!isMobile.value;
+  }
 
   const socials = [
     {
@@ -19,10 +37,20 @@
     }
   ];
 
+  watch(() => searchQuery.value, filterLinks)
+
 </script>
 
 <template>
-  <div class="pa-6">
+  <div v-if="isSmallLayout">
+    <SearchView
+      @change-layout="isSmallLayout = false"
+      @update:searchQuery="$event => (searchQuery = $event)"
+      :searchQuery="searchQuery"
+      :links="linksData"
+    />
+  </div>
+  <div v-else class="pa-6">
     <VRow align="center" justify="end" class="ma-0">
       <a v-for="social in socials" target="_blank" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
         {{social.name}}
@@ -57,7 +85,12 @@
           <span class="text-googleyellow">.</span>
         </p>
         <div class="position-relative mb-15">
-          <Search/>
+          <Search
+            @click="changeLayout"
+            :searchQuery="searchQuery"
+            :links="linksData"
+            @update:searchQuery="$event => (searchQuery = $event)"
+          />
         </div>
         <div class="links-container mt-5">
           <RouterLink
