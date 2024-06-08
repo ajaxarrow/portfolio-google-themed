@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {PhArrowLeft, PhClockCounterClockwise, PhMagnifyingGlass, PhX} from "@phosphor-icons/vue";
-import {ref, watch} from "vue";
+import {Link} from "../interfaces/link.interface.ts";
+import {PropType, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 
 const props = defineProps({
   searchQuery: String,
-  links: Array
+  links: Object as PropType<Link[]>
 })
 const emits = defineEmits(['update:searchQuery', 'change-layout'])
 const router = useRouter();

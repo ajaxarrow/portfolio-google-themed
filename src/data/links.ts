@@ -1,5 +1,8 @@
 import {PhCode, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
-export const links = [
+import {Link} from "../interfaces/link.interface.ts";
+
+
+export const links: Link[] = [
   {
     name: 'All',
     link: '/all',

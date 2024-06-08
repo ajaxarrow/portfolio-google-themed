@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import {PhClockCounterClockwise, PhMagnifyingGlass, PhX} from "@phosphor-icons/vue";
-import {ref, watch} from "vue";
+import {PropType, ref, watch} from "vue";
 import {useRouter} from "vue-router";
+import {Link} from "../interfaces/link.interface.ts";
 
 const isActive = ref(false);
 const activeSearchItem = ref("");
 
 const props = defineProps({
   searchQuery: String,
-  links: Array
+  links: Object as PropType<Link[]>
 })
 
 const emits = defineEmits(['update:searchQuery'])
@@ -80,10 +81,10 @@ watch(() => localQuery.value, () => {
         </div>
       </div>
       <div
+          v-for="(link, index) in props.links"
           @click="navigateTo(link.link)"
           @mouseleave="handleHover('')"
           @mouseover="handleHover(link.name)"
-          v-for="(link, index) in props.links"
           :key="index"
           class="px-5 py-3 mr-5 search-suggestion-item text-black d-flex align-center justify-space-between cursor-pointer"
       >
