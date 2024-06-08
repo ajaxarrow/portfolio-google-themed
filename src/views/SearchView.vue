@@ -37,27 +37,25 @@ watch(() => localQuery.value, () => {
   <VLayout>
     <VAppBar elevation="0">
       <VTextField
+        density="default"
         @keydown.enter="navigateTo(<string>props.searchQuery)"
         autofocus
         v-model="localQuery"
       >
         <template v-slot:prepend-inner>
           <PhArrowLeft
+            weight="bold"
+            color="#4285F4"
             @click="emits('change-layout')"
-            class="mx-1 cursor-pointer"
+            class="mx-1 cursor-pointer delete-icon"
           />
         </template>
         <template v-slot:append-inner>
-          <VIcon
-              class="mx-1"
-          >
-            mdi-magnify
-          </VIcon>
-          <VIcon
-              class="mx-1"
-          >
-            mdi-close
-          </VIcon>
+          <PhX
+            @click="localQuery = ''"
+            v-if="localQuery"
+            class="mx-1 delete-icon cursor-pointer"
+          />
         </template>
       </VTextField>
     </VAppBar>
