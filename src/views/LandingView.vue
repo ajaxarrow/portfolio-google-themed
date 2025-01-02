@@ -3,7 +3,7 @@
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
-  import {onMounted, ref, watch} from "vue";
+  import {ref, watch} from "vue";
   import SearchView from "./SearchView.vue";
   import {socials} from "../data/socials.ts";
   import MenuDialog from "../components/MenuDialog.vue";
