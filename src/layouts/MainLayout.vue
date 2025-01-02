@@ -3,10 +3,13 @@ import Search from "../components/Search.vue";
 import Profile from "../assets/images/profile.jpg";
 import MenuDialog from "../components/MenuDialog.vue";
 import {useScreenStore} from "../stores/screenSizeStore.ts";
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import SearchView from "../views/SearchView.vue";
 import {links} from "../data/links.ts";
+import {useRoute} from "vue-router";
 
+
+const route = useRoute()
 const {isMobile, isLargePhone} = useScreenStore();
 const isSmallLayout = ref(false);
 const searchQuery = ref('');
@@ -22,7 +25,24 @@ const changeLayout = () => {
   }
 }
 
+const getFirstSegment = (path: string) => {
+  return path.split("/")[1] || "";
+};
+
 watch(() => searchQuery.value, filterLinks)
+
+watch(
+    () => route.path,
+    (newPath) => {
+      searchQuery.value = newPath ? getFirstSegment(newPath) : "";
+    }
+);
+
+onMounted(() => {
+  if (route.path) {
+    searchQuery.value = getFirstSegment(route.path);
+  }
+});
 </script>
 
 <template>

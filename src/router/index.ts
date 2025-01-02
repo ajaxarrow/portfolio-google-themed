@@ -11,6 +11,8 @@ import ProjectsView from "../views/ProjectsView.vue";
 import DesignsView from "../views/DesignsView.vue";
 // @ts-ignore
 import SocialsView from "../views/SocialsView.vue";
+// @ts-ignore
+import NotFoundView from "../views/NotFoundView.vue";
 
 
 const router = createRouter({
@@ -45,7 +47,12 @@ const router = createRouter({
       path: '/socials',
       name: 'socials',
       component: SocialsView
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'error404',
+      component: NotFoundView
+    },
   ]
 })
 

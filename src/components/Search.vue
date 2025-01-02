@@ -49,6 +49,12 @@ const removeLink = (index: number, event: MouseEvent) => {
 watch(() => localQuery.value, () => {
  emits('update:searchQuery', localQuery.value)
 })
+
+watch(() => props.searchQuery, (newQuery) => {
+  localQuery.value = newQuery;
+});
+
+
 </script>
 
 <template>
