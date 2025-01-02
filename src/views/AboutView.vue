@@ -4,7 +4,9 @@ import MainLayout from "../layouts/MainLayout.vue";
 </script>
 
 <template>
-  <MainLayout></MainLayout>
+  <MainLayout>
+    <p>This is an about page</p>
+  </MainLayout>
 </template>
 
 <style scoped>

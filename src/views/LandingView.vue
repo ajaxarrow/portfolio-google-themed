@@ -3,7 +3,7 @@
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
-  import {ref, watch} from "vue";
+  import {onMounted, ref, watch} from "vue";
   import SearchView from "./SearchView.vue";
   import {socials} from "../data/socials.ts";
   import MenuDialog from "../components/MenuDialog.vue";
@@ -12,7 +12,7 @@
   const {isMobile} = useScreenStore();
   const isSmallLayout = ref(false);
   const searchQuery = ref('');
-  const linksData = ref(links);
+  const linksData = ref([...links]);
 
   const filterLinks = () => {
     linksData.value = links.filter(link => link.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
@@ -23,6 +23,7 @@
   }
 
   watch(() => searchQuery.value, filterLinks)
+
 
 </script>
 

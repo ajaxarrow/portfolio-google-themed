@@ -10,7 +10,7 @@ import {links} from "../data/links.ts";
 const {isMobile, isLargePhone} = useScreenStore();
 const isSmallLayout = ref(false);
 const searchQuery = ref('');
-const linksData = ref(links);
+const linksData = ref([...links]);
 
 const filterLinks = () => {
   linksData.value = links.filter(link => link.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
@@ -59,7 +59,7 @@ watch(() => searchQuery.value, filterLinks)
     </div>
     <VRow
         v-else
-        class="ma-0 pa-6"
+        class="ma-0 px-6 pt-6 pb-2"
         align="center"
         justify="space-between"
     >
@@ -102,8 +102,35 @@ watch(() => searchQuery.value, filterLinks)
         </VAvatar>
       </div>
     </VRow>
+    <div
+        class="ma-0 mx-10 d-flex ga-3"
+        :style="{
+          paddingLeft: isMobile || isLargePhone ? '0px' : '150px',
+          paddingTop: isMobile || isLargePhone ? '70px' : '0px',
+        }"
+    >
+      <RouterLink
+        v-for="link in links" :key="link.name" class=" text-decoration-none text-black" :to="link.link">
+        <div
+            class="align-center cursor-pointer link-item"
+            :class="{ 'active-link': $route.path === link.link }"
+        >
+          {{ link.name }}
+        </div>
+      </RouterLink>
+    </div>
+    <VDivider/>
   </div>
 
+    <div
+        class="mx-5 mt-5"
+        :style="{
+          paddingLeft: isMobile || isLargePhone ? '0px' : '150px',
+        }">
+      <slot>
+
+      </slot>
+    </div>
 </template>
 
 <style scoped>
@@ -114,5 +141,15 @@ watch(() => searchQuery.value, filterLinks)
 
   .tooltip-container{
     line-height: 1.25;
+  }
+
+  .link-item{
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .active-link{
+    border-bottom: 3px solid #000;
   }
 </style>
