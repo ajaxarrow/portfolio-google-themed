@@ -167,9 +167,12 @@ onMounted(() => {
     padding-right: 10px !important;
     padding-left: 10px !important;
     padding-bottom: 10px !important;
+    color: #2D2D2D;
   }
 
   .active-link{
     border-bottom: 3px solid #000;
+    color: black;
+    font-weight: 500;
   }
 </style>
