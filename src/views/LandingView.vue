@@ -163,4 +163,8 @@
     }
 
   }
+
+  .text-base:hover{
+    text-decoration: underline !important;
+  }
 </style>

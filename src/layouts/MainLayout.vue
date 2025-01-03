@@ -7,10 +7,12 @@ import {onMounted, ref, watch} from "vue";
 import SearchView from "../views/SearchView.vue";
 import {links} from "../data/links.ts";
 import {useRoute} from "vue-router";
+import {PhMagnifyingGlass} from "@phosphor-icons/vue";
+import Footer from "../components/Footer.vue";
 
 
 const route = useRoute()
-const {isMobile, isLargePhone} = useScreenStore();
+const {isMobile, isSmall} = useScreenStore();
 const isSmallLayout = ref(false);
 const searchQuery = ref('');
 const linksData = ref([...links]);
@@ -20,7 +22,7 @@ const filterLinks = () => {
 }
 
 const changeLayout = () => {
-  if(isMobile.value || isLargePhone.value) {
+  if(isMobile.value || isSmall.value) {
     isSmallLayout.value = true;
   }
 }
@@ -55,7 +57,7 @@ onMounted(() => {
     />
   </div>
   <div v-else>
-    <div v-if="isMobile || isLargePhone">
+    <div v-if="isMobile || isSmall">
       <VRow class="ma-0 px-6 pt-6" justify="center" >
         <RouterLink class="text-logo text-center mb-3 text-decoration-none" to="/">
           <span class="text-googleblue">j</span>
@@ -83,7 +85,7 @@ onMounted(() => {
         align="center"
         justify="space-between"
     >
-      <div class="d-flex ga-6" style="width: 60%">
+      <div class="d-flex ga-6" style="width: 800px">
         <RouterLink class="text-logo text-center mb-3 text-decoration-none" to="/">
           <span class="text-googleblue">j</span>
           <span class="text-googlered">i</span>
@@ -125,35 +127,94 @@ onMounted(() => {
     <div
         class="ma-0 mx-10 d-flex ga-3"
         :style="{
-          paddingLeft: isMobile || isLargePhone ? '0px' : '150px',
-          paddingTop: isMobile || isLargePhone ? '70px' : '0px',
+          paddingLeft: isMobile || isSmall ? '0px' : '150px',
+          paddingTop: isMobile || isSmall ? '70px' : '0px',
+          overflowX: 'auto',
         }"
     >
       <RouterLink
         v-for="link in links" :key="link.name" class=" text-decoration-none text-black" :to="link.link">
         <div
-            class="align-center cursor-pointer link-item"
+            class="align-center cursor-pointer link-item d-flex align-center ga-2"
             :class="{ 'active-link': $route.path === link.link }"
         >
-          {{ link.name }}
+          <component :is="link.icon" /> {{ link.name }}
         </div>
       </RouterLink>
     </div>
     <VDivider/>
-  </div>
-
     <div
-        class="mx-5 mt-5"
-        :style="{
-          paddingLeft: isMobile || isLargePhone ? '0px' : '150px',
-        }">
-      <slot>
+      class="mx-5 mt-5"
+      :style="{
+        paddingLeft: isMobile || isSmall ? '0px' : '150px',
+        minHeight: '85vh'
+      }"
+    >
+      <div class="d-flex ga-5">
+        <div
+            :style="{
+              width: isMobile || isSmall ? '100%' : '800px !important',
+            }">
+          <slot></slot>
+        </div>
+        <div v-if="!isMobile && !isSmall" class="side-details w-50"
+        >
+          <slot name="side-details">
 
-      </slot>
+          </slot>
+        </div>
+      </div>
+      <div
+        class="mt-5 mb-15"
+        :style="{
+          width: isMobile || isSmall ? '100%' : '800px',
+        }"
+      >
+        <p class="text-suggestion mb-3">People Also Search For</p>
+        <VRow class="ma-0 ga-3">
+          <VCol v-for="link in links" class="pa-0" cols="5">
+            <a  class="text-decoration-none text-black" :href="link.link">
+              <div class="suggestion-item">
+                <div class="suggestion-item-text">
+                  {{ link.name }}
+                </div>
+                <PhMagnifyingGlass/>
+              </div>
+            </a>
+          </VCol>
+        </VRow>
+      </div>
     </div>
+
+  </div>
+  <Footer/>
 </template>
 
 <style scoped>
+  .suggestion-item{
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f3f4;
+  }
+
+  .suggestion-item-text{
+    font-weight: 500;
+  }
+
+  .suggestion-item:hover{
+    background-color: #dbdfe1;
+
+    .suggestion-item-text{
+      text-decoration: underline;
+    }
+  }
+  .text-suggestion{
+    font-weight: 500;
+    font-size: 20px;
+  }
   .text-logo{
     font-size: 36px;
     font-weight: 800;
@@ -171,8 +232,9 @@ onMounted(() => {
   }
 
   .active-link{
-    border-bottom: 3px solid #000;
-    color: black;
+
+    border-bottom: 3px solid #4285F4;
+    color: #4285F4;
     font-weight: 500;
   }
 </style>

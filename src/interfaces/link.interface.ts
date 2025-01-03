@@ -8,4 +8,14 @@ interface Link{
   color: string;
 }
 
-export type {Link}
+interface SearchItem{
+  name: string;
+  title: string;
+  link: string;
+  id: string;
+  image?: string;
+  description: string;
+  icon?: string
+}
+
+export type {Link, SearchItem}
