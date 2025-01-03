@@ -22,6 +22,10 @@ import Logo from '../assets/logo.jpg'
         <span class="font-weight-medium">Framework and Language Used: </span>
         Vue.JS, TypeScript
       </p>
+      <p class="mb-1">
+        <span class="font-weight-medium">Additional Technologies: </span>
+        Vite for build optimization, Figma for UI design and Netlify for Hosting
+      </p>
     </div>
   </div>
 </template>
