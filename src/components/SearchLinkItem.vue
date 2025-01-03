@@ -3,7 +3,10 @@ import {PropType} from "vue";
 import {SearchItem} from "../interfaces/link.interface.ts";
 
 const prop = defineProps({
-  searchItem: Object as PropType<SearchItem>
+  searchItem: {
+    type: Object as PropType<SearchItem>,
+    required: true
+  }
 })
 
 function truncateString(str: string): string {
