@@ -150,7 +150,7 @@ onMounted(() => {
         minHeight: '85vh'
       }"
     >
-      <div class="d-flex ga-5">
+      <div class="d-flex ga-7">
         <div
             :style="{
               width: isMobile || isSmall ? '100%' : '800px !important',
@@ -172,16 +172,16 @@ onMounted(() => {
       >
         <p class="text-suggestion mb-3">People Also Search For</p>
         <VRow class="ma-0 ga-3">
-          <VCol v-for="link in links" class="pa-0" cols="5">
-            <a  class="text-decoration-none text-black" :href="link.link">
-              <div class="suggestion-item">
-                <div class="suggestion-item-text">
-                  {{ link.name }}
+            <VCol v-for="link in links" class="pa-0" cols="5">
+              <a class="text-decoration-none text-black" :href="link.link">
+                <div class="suggestion-item">
+                  <div class="suggestion-item-text">
+                    {{ link.name }}
+                  </div>
+                  <PhMagnifyingGlass/>
                 </div>
-                <PhMagnifyingGlass/>
-              </div>
-            </a>
-          </VCol>
+              </a>
+            </VCol>
         </VRow>
       </div>
     </div>

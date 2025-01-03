@@ -18,4 +18,9 @@ interface SearchItem{
   icon?: string
 }
 
-export type {Link, SearchItem}
+interface QnAItem{
+  question: string;
+  answer: string;
+}
+
+export type {Link, SearchItem, QnAItem}
