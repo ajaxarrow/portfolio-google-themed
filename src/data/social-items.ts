@@ -32,7 +32,7 @@ export const socialItems: SearchItem[] = [
   {
     name: 'Facebook',
     title: 'Facebook - Axl',
-    link: 'https://web.facebook.com/axlsunflower00/',
+    link: 'https://web.facebook.com/jiushiii/',
     id: 'facebook',
     description: 'Connect with Axl on Facebook',
     icon: facebook
