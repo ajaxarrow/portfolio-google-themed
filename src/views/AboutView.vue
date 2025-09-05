@@ -30,7 +30,7 @@ const aboutData = [...about]
           />
         </div>
         <SearchLinkItem
-            v-for="link in aboutItems.splice(2, 4)"
+            v-for="link in aboutItems.splice(2, 6)"
             :searchItem="link"
         />
       </div>

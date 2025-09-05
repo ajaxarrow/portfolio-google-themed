@@ -141,15 +141,15 @@ watch(() => props.searchQuery, (newQuery) => {
     background-color: #cacace;
   }
 
-  :deep .v-label{
+  :deep(.v-label){
     opacity: 100% !important;
   }
 
-  :deep .v-icon{
+  :deep(.v-icon){
     --v-icon-size-multiplier: 1.23
   }
 
-  :deep .v-field__outline {
+  :deep(.v-field__outline) {
     opacity: 0%;
     color: #8C8C8C;
     --v-field-border-width: 1.75px !important;
@@ -157,7 +157,7 @@ watch(() => props.searchQuery, (newQuery) => {
 
   }
 
-  :deep input::placeholder {
+  :deep(input::placeholder) {
     color: #666464;
     opacity: 90%;
   }

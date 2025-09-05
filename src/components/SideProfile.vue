@@ -23,7 +23,7 @@ import Profile from '../assets/images/profile.jpg'
       </p>
       <p class="mb-1">
         <span class="font-weight-medium">Education: </span>
-        BS Information Technology, Central Mindanao University (August 2021 - Present)
+        Magna Cum Laude, BS Information Technology Major in Software Development, Central Mindanao University (August 2021 - July 2025)
       </p>
     </div>
 
@@ -64,6 +64,7 @@ import Profile from '../assets/images/profile.jpg'
     height: 80px;
     width: 80px;
     border-radius: 16px;
+    object-fit: cover;
   }
 
   .text-name{

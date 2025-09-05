@@ -11,7 +11,14 @@ const aboutQuestions: QnAItem[] = [
   },
   {
     question: "What is the quickest way to contact you?",
-    answer: "You can reach me by phone at 09631788461 or via email at axldamnaxl@gmail.com."
+    answer:  `You can reach me by phone at 
+      <a href="tel:09631788461" class="text-decoration-underline text-primary">
+        09631788461
+      </a> 
+      or via email at 
+      <a href="mailto:axldamnaxl@gmail.com" class="text-decoration-underline text-primary">
+        axldamnaxl@gmail.com
+      </a>.`
   },
   {
     question: "What motivates you daily?",
@@ -19,7 +26,7 @@ const aboutQuestions: QnAItem[] = [
   },
   {
     question: "Are you available for work?",
-    answer: "I am open to gigs, collaborations, and am also seeking internship opportunities."
+    answer: "I am open to gigs, collaborations, remote jobs and part-time works"
   },
 ];
 
@@ -34,4 +41,5 @@ const overviewQuestions: QnAItem[] = [
   },
 ];
 
+// @ts-ignore
 export { aboutQuestions, overviewQuestions };

@@ -14,7 +14,7 @@ const aboutItems = [...about]
 const aboutData = [...about]
 
 const combinedLinks = [
-    ...aboutItems.splice(2, 4),
+    ...aboutItems.splice(2, 6),
     ...projects,
     ...designs,
     ...socialItems,

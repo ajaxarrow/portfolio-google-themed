@@ -27,8 +27,8 @@ const toggleAccordion = () => {
         </transition>
       </div>
       <VExpandTransition>
-        <div v-show="isOpen" class="accordion-description mt-3 pa-1">
-          {{props.item.answer}}
+        <div v-show="isOpen" class="accordion-description mt-3 pa-1" v-html="props.item.answer">
+
         </div>
       </VExpandTransition>
     </div>
