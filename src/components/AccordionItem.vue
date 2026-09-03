@@ -18,9 +18,16 @@ const toggleAccordion = () => {
 </script>
 
 <template>
-  <div class=" cursor-pointer mb-3" @click="toggleAccordion" >
+  <div class="cursor-pointer mb-3" @click="toggleAccordion" >
     <div class="">
-      <div class="d-flex align-center justify-space-between accordion-item pa-1" >
+      <div
+          class="d-flex align-center justify-space-between accordion-item pa-1"
+          role="button"
+          tabindex="0"
+          :aria-expanded="isOpen"
+          @keydown.enter="toggleAccordion"
+          @keydown.space.prevent="toggleAccordion"
+      >
         <p>{{props.item.question}}</p>
         <transition name="flip" mode="out-in">
           <component :is="isOpen ? PhCaretUp : PhCaretDown" />
@@ -38,23 +45,18 @@ const toggleAccordion = () => {
 
 <style scoped>
 .accordion-description {
-  transition: height 0.3s ease-out;
+  transition: height 0.3s var(--ease-out-quart);
   overflow: hidden;
 }
 
-@keyframes flip {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(180deg); }
-}
-
 .accordion-item:hover{
-  background-color: #e6e6e8;
+  background-color: var(--grey-200);
   border-radius: 4px;
 }
 
 .flip-enter-active,
 .flip-leave-active {
-  animation: flip 0.15s;
+  transition: transform var(--duration-fast) var(--ease-out-quart);
 }
 
 .flip-enter-from,
@@ -64,6 +66,6 @@ const toggleAccordion = () => {
 
 .flip-enter-to,
 .flip-leave-from {
-  transform: rotate(360deg);
+  transform: rotate(180deg);
 }
 </style>

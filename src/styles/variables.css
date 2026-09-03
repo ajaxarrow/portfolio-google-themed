@@ -1,3 +1,46 @@
 :root{
+  /* Text */
+  --ink: #202124;
+  --meta: #5F6368;
+  --gs90: #cccbcb; /* secondary text on dark/inverted surfaces (tooltip) */
+
+  /* Brand */
+  --googleblue: #4285F4;
+  --googlered: #EA4335;
+  --googlegreen: #34A853;
+  --googleyellow: #FBBC05;
+  --google-link: #1A73E8;
+
+  /* Neutral surfaces / borders */
+  --surface: #ffffff;
+  --grey-50: #F8F9FA;
+  --grey-100: #F1F3F4;
+  --grey-200: #E8EAED;
+  --grey-300: #DADCE0;
+  --grey-400: #BDC1C6;
+
+  /* Motion */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-stagger-step: 40ms;
+  --duration-hero: 350ms;
+  --duration-egg-spin: 900ms;
+
+  /* Layout */
+  --layout-content-width: 800px;
+  --layout-rail-offset: 150px;
+
+  /* Legacy alias, kept for anything not yet migrated */
   --base: #2D2D2D;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-base: 0.01ms;
+    --duration-stagger-step: 0.01ms;
+    --duration-hero: 0.01ms;
+    --duration-egg-spin: 0.01ms;
+  }
 }

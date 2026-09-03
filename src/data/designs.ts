@@ -3,6 +3,9 @@ import figma from "../assets/icons/figma.png";
 import sheesh from "../assets/images/sheesh.png";
 import idmdr from "../assets/images/idmdr.png";
 import payroll from "../assets/images/payroll.png";
+import farmaid from "../assets/images/farmaid.png";
+import kahibawhub from "../assets/images/kahibawhub.png";
+import ecotrail from "../assets/images/ecotrail.png";
 
 export const designs: SearchItem[] = [
   {
@@ -31,5 +34,32 @@ export const designs: SearchItem[] = [
     description: 'Discover the well-structured UI design of a payroll management system, crafted with reusable components from a robust design system.',
     icon: figma,
     image: payroll
+  },
+  {
+    name: 'EcoTrail',
+    title: 'EcoTrail',
+    link: 'https://www.figma.com/proto/nHn1yBgODYM1itkdLCY6D9/EcoTrail---Tabilla--Jiu-Axl?page-id=0%3A1&node-id=1-3&starting-point-node-id=1%3A3&t=S0g8iVuuJfevvEjr-1',
+    id: 'eco-trail',
+    description: "Built as a timed internship application challenge for a CDO-based software company, EcoTrail is a travel landing page designed and shipped in just two hours. Despite the tight constraint, it features a clean layout and a lightweight entrance animation that keeps the focus on the destination photography.",
+    icon: figma,
+    image: ecotrail
+  },
+  {
+    name: 'FarmAid',
+    title: 'FarmAid',
+    link: 'https://www.figma.com/proto/6hNbJt7R8c7rpVkfOPUDtW/FarmAid?page-id=0%3A1&node-id=101-15&starting-point-node-id=1%3A3&t=qF70OSTsJar82VJv-1',
+    id: 'farm-aid',
+    description: "Contributed with the UI development using figma for the creation of the FarmAid mobile application. FarmAid is a mobile application that aims to provide farmers with a comprehensive platform for accessing agricultural resources, connecting with experts, and improving their farming practices through technology.",
+    icon: figma,
+    image: farmaid
+  },
+  {
+    name: 'KahibawHub',
+    title: 'KahibawHub',
+    link: 'https://www.figma.com/proto/t9hTcWJMbakz41MFpFgXWP/KahibawHub?page-id=0%3A1&node-id=1-2&starting-point-node-id=3%3A35&t=bZeLmY129PW4UHeF-1',
+    id: 'kahibawhub',
+    description: "Designed the UI screens for KahibawHub in Figma ahead of development, reusing and adapting components from earlier projects to meet a tight two-day turnaround without sacrificing consistency.",
+    icon: figma,
+    image: kahibawhub
   },
 ];

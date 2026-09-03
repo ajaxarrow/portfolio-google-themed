@@ -25,6 +25,7 @@ export const projects: SearchItem[] = [
     icon: virtualclass,
     image: mk
   },
+  
   {
     name: 'Portfolio',
     title: 'Google Themed Portfolio',

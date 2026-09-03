@@ -15,7 +15,9 @@ interface SearchItem{
   id: string;
   image?: string;
   description: string;
-  icon?: string
+  icon?: string;
+  date?: string;
+  visible?: boolean;
 }
 
 interface QnAItem{

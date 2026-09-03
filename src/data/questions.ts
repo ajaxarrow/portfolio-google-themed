@@ -41,5 +41,4 @@ const overviewQuestions: QnAItem[] = [
   },
 ];
 
-// @ts-ignore
 export { aboutQuestions, overviewQuestions };

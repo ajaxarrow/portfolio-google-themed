@@ -3,9 +3,16 @@ import {PhClockCounterClockwise, PhMagnifyingGlass, PhX} from "@phosphor-icons/v
 import {PropType, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {Link} from "../interfaces/link.interface.ts";
+import {useEasterEggs} from "../composables/useEasterEggs.ts";
+import {resolveSearchDestination} from "../utils/search.ts";
 
 const isActive = ref(false);
 const activeSearchItem = ref("");
+const textFieldRef = ref();
+
+defineExpose({
+  focus: () => textFieldRef.value?.focus(),
+});
 
 const props = defineProps({
   searchQuery: String,
@@ -15,19 +22,23 @@ const props = defineProps({
 const emits = defineEmits(['update:searchQuery'])
 const localQuery = ref(props.searchQuery);
 
-const isClickingLink = ref(false);
 const router = useRouter();
+const {tryTrigger} = useEasterEggs();
 
 const handleFocus = () => {
   isActive.value = true;
 };
 
-const handleBlur = () => {
-  setTimeout(() => {
-    if (!isClickingLink.value) {
-      isActive.value = false;
-    }
-  }, 150);
+// Closes the suggestions overlay only once focus actually leaves the whole
+// search container (text field + dropdown), not merely between the two — this
+// correctly handles both mouse clicks and Tab/keyboard navigation into a
+// suggestion row, since every row is now a focusable element itself.
+const handleContainerFocusOut = (event: FocusEvent) => {
+  const container = event.currentTarget as HTMLElement;
+  const next = event.relatedTarget as Node | null;
+  if (!next || !container.contains(next)) {
+    isActive.value = false;
+  }
 };
 
 const handleHover = (name: string) => {
@@ -35,10 +46,8 @@ const handleHover = (name: string) => {
 }
 
 const navigateTo = (path: string) => {
-  isClickingLink.value = true;
-  router.push(path).then(() => {
-    isClickingLink.value = false;
-  });
+  if (tryTrigger(path)) return;
+  router.push(resolveSearchDestination(path));
 }
 
 const removeLink = (index: number, event: MouseEvent) => {
@@ -58,11 +67,11 @@ watch(() => props.searchQuery, (newQuery) => {
 </script>
 
 <template>
-  <div class="search-container">
+  <div class="search-container" @focusout="handleContainerFocusOut">
     <VTextField
+        ref="textFieldRef"
         @keydown.enter="navigateTo(<string>props.searchQuery)"
         @focus="handleFocus"
-        @blur="handleBlur"
         v-model="localQuery"
         placeholder="Search information about Jiu Axl"
         class="my-2 search"
@@ -72,14 +81,18 @@ watch(() => props.searchQuery, (newQuery) => {
         variant="outlined"
     >
       <template #prepend-inner>
-        <PhMagnifyingGlass size="18" color="#666464" class="ml-2"/>
+        <PhMagnifyingGlass size="18" color="var(--meta)" class="ml-2"/>
       </template>
     </VTextField>
+    <Transition name="suggestions">
     <div v-if="isActive" class="overlay pb-2">
       <div
           @click="navigateTo(<string>props.searchQuery)"
+          @keydown.enter="navigateTo(<string>props.searchQuery)"
           v-if="searchQuery !== ''"
           class="py-3 mr-5 search-query text-black d-flex align-center justify-space-between cursor-pointer"
+          role="button"
+          tabindex="0"
       >
         <div class="d-flex align-center ga-2">
           <PhMagnifyingGlass/>
@@ -89,10 +102,14 @@ watch(() => props.searchQuery, (newQuery) => {
       <div
           v-for="(link, index) in props.links"
           @click="navigateTo(link.link)"
+          @keydown.enter="navigateTo(link.link)"
           @mouseleave="handleHover('')"
           @mouseover="handleHover(link.name)"
+          @focus="handleHover(link.name)"
           :key="index"
           class="px-5 py-3 mr-5 search-suggestion-item text-black d-flex align-center justify-space-between cursor-pointer"
+          role="button"
+          tabindex="0"
       >
         <div class="d-flex align-center ga-2">
           <PhClockCounterClockwise/>
@@ -100,45 +117,75 @@ watch(() => props.searchQuery, (newQuery) => {
         </div>
         <PhX
           @click="removeLink(index, $event)"
+          @keydown.enter="removeLink(index, $event as unknown as MouseEvent)"
           class="delete-icon"
+          aria-label="Remove from history"
+          role="button"
+          tabindex="0"
           v-if="link.name.toLowerCase() === activeSearchItem.toLowerCase()"/>
       </div>
 
     </div>
+    </Transition>
   </div>
 </template>
 
 <style scoped>
   .search-container {
     width: 100%;
+    box-sizing: border-box;
     border-radius: 25px;
-    color: #8C8C8C;
-    box-shadow: 0 0 0 1px #E5E5E5;
+    color: var(--meta);
+    border: 1px solid var(--grey-300);
     overflow: hidden;
     position: absolute;
     top: 0;
     left: 0;
     z-index: 10;
+    isolation: isolate;
+    transition: border-color var(--duration-fast) var(--ease-out-quart),
+      box-shadow var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .search-container:focus-within {
+    border-color: var(--googleblue);
+    box-shadow: 0 0 0 0.5px var(--googleblue);
   }
 
   .overlay{
-    background-color: #ffffff;
+    background-color: var(--surface);
+  }
+
+  .suggestions-enter-active,
+  .suggestions-leave-active {
+    transition: opacity var(--duration-base) var(--ease-out-quart),
+      transform var(--duration-base) var(--ease-out-quart);
+  }
+
+  .suggestions-enter-from,
+  .suggestions-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  .search-suggestion-item, .search-query {
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
   }
 
   .search-suggestion-item:hover, .search-query{
-    background-color: #e9e9ea;
+    background-color: var(--grey-200);
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
   }
 
   .search-query{
-    padding: 0 17px;
-    border-left: 3px solid #4285F4;
+    padding: 0 20px;
+    font-weight: 500;
   }
 
   .delete-icon:hover{
     border-radius: 50%;
-    background-color: #cacace;
+    background-color: var(--grey-400);
   }
 
   :deep(.v-label){
@@ -151,14 +198,10 @@ watch(() => props.searchQuery, (newQuery) => {
 
   :deep(.v-field__outline) {
     opacity: 0%;
-    color: #8C8C8C;
-    --v-field-border-width: 1.75px !important;
-    box-shadow: 0 0 0 1px #E5E5E5;
-
   }
 
   :deep(input::placeholder) {
-    color: #666464;
+    color: var(--meta);
     opacity: 90%;
   }
 

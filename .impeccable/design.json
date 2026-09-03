@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-31T00:00:00Z",
+  "title": "Design System: jiuaxl. — The Knowledge Panel",
+  "extensions": {
+    "colorMeta": {
+      "base": { "role": "neutral", "displayName": "Legacy Ink", "canonical": "#2D2D2D" },
+      "googleblue": { "role": "primary", "displayName": "Google Blue", "canonical": "#4285F4" },
+      "googlered": { "role": "secondary", "displayName": "Google Red", "canonical": "#EA4335" },
+      "googlegreen": { "role": "secondary", "displayName": "Google Green", "canonical": "#34A853" },
+      "googleyellow": { "role": "secondary", "displayName": "Google Yellow", "canonical": "#FBBC05" },
+      "google-link": { "role": "primary", "displayName": "Google Link Blue", "canonical": "#1A73E8" },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#202124", "tonalRamp": ["#202124", "#3C4043", "#5F6368", "#80868B", "#9AA0A6", "#BDC1C6", "#DADCE0", "#F1F3F4"] },
+      "meta": { "role": "neutral", "displayName": "Meta Grey", "canonical": "#5F6368" },
+      "grey-50": { "role": "neutral", "displayName": "Google Grey 50", "canonical": "#F8F9FA" },
+      "grey-100": { "role": "neutral", "displayName": "Google Grey 100", "canonical": "#F1F3F4" },
+      "grey-200": { "role": "neutral", "displayName": "Google Grey 200", "canonical": "#E8EAED" },
+      "grey-300": { "role": "neutral", "displayName": "Google Grey 300", "canonical": "#DADCE0" },
+      "grey-400": { "role": "neutral", "displayName": "Google Grey 400", "canonical": "#BDC1C6" },
+      "gs90": { "role": "neutral", "displayName": "On-Dark Secondary Text", "canonical": "#CCCBCB" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Landing view wordmark hero only." },
+      "headline": { "displayName": "Headline", "purpose": "Topbar wordmark logo." },
+      "title": { "displayName": "Title", "purpose": "Result titles, Knowledge Panel name." },
+      "body": { "displayName": "Body", "purpose": "Result descriptions, bio/skills text." },
+      "label": { "displayName": "Label", "purpose": "URLs, meta text, chip labels." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-quart", "value": "cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "Default easing for all UI motion: route transitions, underline slide, dropdown reveals, hover tints. No bounce/elastic anywhere in this system." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Micro-interactions: hover tints, focus rings, accordion caret rotation." },
+      { "name": "duration-base", "value": "200ms", "purpose": "Route transitions, nav underline slide, suggestion dropdown reveal." },
+      { "name": "duration-stagger-step", "value": "40ms", "purpose": "Per-item delay for result-row and menu-grid stagger, capped at ~10 items / 500ms total." },
+      { "name": "duration-hero", "value": "350ms", "purpose": "Cap for the Landing view's single choreographed hero entrance." },
+      { "name": "reduced-motion-duration", "value": "0.01ms", "purpose": "Global override under prefers-reduced-motion: reduce." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "476px" },
+      { "name": "tablet", "value": "768px" },
+      { "name": "largeTablet", "value": "960px" },
+      { "name": "laptop", "value": "1024px" },
+      { "name": "desktop", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "SERP Result Row",
+      "kind": "custom",
+      "refersTo": "card-result",
+      "description": "The reusable search-result list item used across About/Projects/Designs/Socials/All views.",
+      "html": "<a class=\"ds-result-row\" href=\"#\"><div class=\"ds-result-meta\"><span class=\"ds-result-avatar\"></span><div><p class=\"ds-result-name\">LINNKS</p><p class=\"ds-result-url\">idmdr.netlify.app</p></div></div><a class=\"ds-result-title\" href=\"#\">LINNKS</a><p class=\"ds-result-desc\">Discover LINNKS: a powerful data mapping and repository platform.</p></a>",
+      "css": ".ds-result-row { display: block; text-decoration: none; color: #202124; padding-bottom: 24px; } .ds-result-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; } .ds-result-avatar { width: 30px; height: 30px; border-radius: 50%; background: #F1F3F4; border: 1px solid #DADCE0; display: inline-block; } .ds-result-name { font-size: 14px; margin: 0; } .ds-result-url { font-size: 12px; color: #5F6368; margin: 0; } .ds-result-title { font-size: 20px; font-weight: 500; color: #1A73E8; text-decoration: none; } .ds-result-row:hover .ds-result-title { text-decoration: underline; } .ds-result-desc { font-size: 14px; color: #5F6368; margin-top: 4px; }"
+    },
+    {
+      "name": "Knowledge Panel Card",
+      "kind": "card",
+      "refersTo": "card-knowledge-panel",
+      "description": "The right-rail bio/skills panel shown on About and All views.",
+      "html": "<div class=\"ds-kp-card\"><div class=\"ds-kp-header\"><img class=\"ds-kp-avatar\" src=\"\" alt=\"\"><div><p class=\"ds-kp-name\">Jiu Axl R. Tabilla</p><p class=\"ds-kp-role\">UI/UX Designer | Frontend Developer</p></div></div></div>",
+      "css": ".ds-kp-card { background: #F8F9FA; border-radius: 16px; padding: 24px; } .ds-kp-header { display: flex; align-items: center; gap: 12px; } .ds-kp-avatar { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; } .ds-kp-name { font-size: 20px; font-weight: 500; margin: 0; color: #202124; } .ds-kp-role { font-size: 14px; color: #5F6368; margin: 0; }"
+    },
+    {
+      "name": "Suggestion Chip",
+      "kind": "chip",
+      "refersTo": "chip-suggestion",
+      "description": "The \"People Also Search For\" pill.",
+      "html": "<a class=\"ds-chip\" href=\"#\"><span>About Me</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 256 256\"><path d=\"M229.66,218.34,171.31,160A88.11,88.11,0,1,0,160,171.31l58.34,58.35a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/></svg></a>",
+      "css": ".ds-chip { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-radius: 16px; background: #F1F3F4; color: #202124; text-decoration: none; font-weight: 500; transition: background-color 150ms cubic-bezier(0.25,1,0.5,1); } .ds-chip:hover { background: #DADCE0; text-decoration: underline; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "search-input",
+      "description": "The pill-shaped search bar with instant-suggestions overlay.",
+      "html": "<div class=\"ds-search\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 256 256\"><path d=\"M229.66,218.34,171.31,160A88.11,88.11,0,1,0,160,171.31l58.34,58.35a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z\"/></svg><input class=\"ds-search-field\" placeholder=\"Search information about Jiu Axl\"></div>",
+      "css": ".ds-search { display: flex; align-items: center; gap: 8px; width: 100%; border-radius: 25px; padding: 8px 20px; box-shadow: 0 0 0 1px #DADCE0; background: #fff; transition: box-shadow 150ms cubic-bezier(0.25,1,0.5,1); } .ds-search:focus-within { box-shadow: 0 0 0 1.5px #4285F4; } .ds-search-field { border: none; outline: none; flex: 1; font-size: 14px; color: #202124; } .ds-search-field::placeholder { color: #5F6368; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Topbar navigation link, default and active state, with the sliding underline indicator.",
+      "html": "<div class=\"ds-nav\"><a class=\"ds-nav-link\">About Me</a><a class=\"ds-nav-link ds-nav-link--active\">Projects<span class=\"ds-nav-indicator\"></span></a></div>",
+      "css": ".ds-nav { display: flex; gap: 12px; position: relative; } .ds-nav-link { position: relative; padding: 10px; color: #202124; text-decoration: none; font-size: 14px; } .ds-nav-link--active { color: #4285F4; font-weight: 500; } .ds-nav-indicator { position: absolute; left: 10px; right: 10px; bottom: 0; height: 3px; background: #4285F4; border-radius: 2px; transition: transform 200ms cubic-bezier(0.25,1,0.5,1); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Knowledge Panel",
+    "overview": "The premise: Jiu Axl is notable enough that searching his name surfaces the real Google apparatus, a search bar, a results list, People Also Ask, a People Also Search For rail, a Knowledge Panel, right down to a did you mean 404. The whole site is that Knowledge Panel, expanded outward into a full portfolio. It's a playful, obviously-a-wink pastiche rather than a deadpan forgery: the fun is in how convincingly well-crafted the joke is, not in fooling anyone into thinking it's really google.com. Precision and craft carry the personality; the page never winks with a caption explaining the joke, it just executes the bit extremely well.",
+    "keyCharacteristics": [
+      "Flat, shadowless surfaces throughout",
+      "Google's own documented Material grey scale and text colors, used verbatim",
+      "One typeface family (Satoshi) doing all the work through weight and scale contrast",
+      "SERP furniture is real navigational structure, not decoration",
+      "Motion mimics real Google micro-interactions, not generic marketing-site flourish"
+    ],
+    "rules": [
+      { "name": "The Flat Palette Rule", "body": "Every neutral is a real, documented Google Material grey. When in doubt about a new grey, don't invent one; borrow from Google's own published scale.", "section": "colors" },
+      { "name": "The Truncation Rule", "body": "Result descriptions cap at 80 characters plus an ellipsis; this is the de facto line-length control in place of a prose measure.", "section": "typography" },
+      { "name": "The No-Shadow Rule", "body": "Never add box-shadow for decorative depth. If a surface needs to read as raised, use a tonal fill (Grey 50/100) or a 1px Grey 300 border instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Google's real documented greys for all neutral UI, not invented hex values.",
+      "Do keep every surface flat; depth comes from tonal fills or a 1px Grey 300 border, never a shadow.",
+      "Do let SERP furniture carry real content and navigation, not decoration.",
+      "Do treat motion as a Google-authenticity anchor.",
+      "Do provide a prefers-reduced-motion fallback for every animation added."
+    ],
+    "donts": [
+      "Don't use glassy SaaS cards, gradient hero sections, or glassmorphism-by-default.",
+      "Don't build identical icon-card grids, tiny uppercase tracked eyebrows, or 01/02/03 numbered section scaffolding.",
+      "Don't add a card-hover-lift shadow to result rows.",
+      "Don't use border-left/border-right as a colored accent stripe.",
+      "Don't source or forge Google Sans/Product Sans to chase authenticity.",
+      "Don't apply the same scroll-fade-in to whole section wrappers; stagger belongs to individual result rows."
+    ]
+  }
+}

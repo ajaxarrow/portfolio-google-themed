@@ -1,4 +1,4 @@
-import {PhCode, PhFigmaLogo, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
+import {PhCode, PhFigmaLogo, PhImages, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
 import {Link} from "../interfaces/link.interface.ts";
 
 
@@ -32,5 +32,11 @@ export const links: Link[] = [
     link: '/socials',
     color: '#819D12',
     icon: PhInstagramLogo
+  },
+  {
+    name: 'Images',
+    link: '/images',
+    color: '#E8710A',
+    icon: PhImages
   },
 ]

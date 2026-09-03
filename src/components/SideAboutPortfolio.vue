@@ -3,9 +3,9 @@ import Logo from '../assets/logo.jpg'
 </script>
 
 <template>
-  <div class="side-profile-container px-5">
+  <div class="side-profile-container">
     <div class="d-flex align-center ga-2">
-      <img :src="Logo" alt="profile" class="avatar">
+      <img :src="Logo" alt="Portfolio logo" class="avatar">
       <div>
         <p class="text-name">About Portfolio</p>
         <p class="text-role">Portfolio of Jiu Axl R. Tabilla</p>
@@ -32,9 +32,10 @@ import Logo from '../assets/logo.jpg'
 
 <style scoped>
 .side-profile-container{
-  border-left: 1px solid #e4e4e4;
+  background-color: var(--grey-50);
+  border-radius: 16px;
   max-width: 600px !important;
-  padding-bottom: 25px;
+  padding: 24px;
 }
 
 .avatar{
@@ -46,11 +47,12 @@ import Logo from '../assets/logo.jpg'
 .text-name{
   font-size: 20px;
   font-weight: 500;
+  color: var(--ink);
 }
 
 
 .desc-container{
-  background-color: #f5f5f5;
+  background-color: var(--surface);
   padding: 10px;
   border-radius: 16px;
 }

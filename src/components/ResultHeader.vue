@@ -19,7 +19,7 @@ const getRandomSeconds = (): string => {
 <style scoped>
 
   p{
-    color: #2D2D2D;
+    color: var(--meta);
     font-size: 14px;
   }
 </style>

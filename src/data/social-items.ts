@@ -3,6 +3,7 @@ import facebook from "../assets/icons/facebook.png";
 import github from "../assets/icons/github.png";
 import linkedin from "../assets/icons/linkedin.png";
 import mail from "../assets/icons/gmail.png";
+import webpage from "../assets/icons/globe.png";
 
 export const socialItems: SearchItem[] = [
   {
@@ -36,5 +37,13 @@ export const socialItems: SearchItem[] = [
     id: 'facebook',
     description: 'Connect with Axl on Facebook',
     icon: facebook
+  },
+  {
+    name: 'Resume',
+    title: 'Resume - Jiu Axl R. Tabilla',
+    link: '/resume.pdf',
+    id: 'resume',
+    description: 'Download my resume as a PDF',
+    icon: webpage
   }
 ]

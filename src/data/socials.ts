@@ -1,5 +1,5 @@
 import {Link} from "../interfaces/link.interface.ts";
-import {PhEnvelope, PhGithubLogo, PhLinkedinLogo} from "@phosphor-icons/vue";
+import {PhEnvelope, PhFilePdf, PhGithubLogo, PhLinkedinLogo} from "@phosphor-icons/vue";
 
 export const socials: Link[] = [
   {
@@ -19,6 +19,12 @@ export const socials: Link[] = [
     link: 'https://github.com/ajaxarrow',
     color: '#010810',
     icon: PhGithubLogo
+  },
+  {
+    name: 'Resume',
+    link: '/resume.pdf',
+    color: '#F9A825',
+    icon: PhFilePdf
   }
 ];
 

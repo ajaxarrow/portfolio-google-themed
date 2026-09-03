@@ -1,21 +1,74 @@
 <script setup lang="ts">
 import Search from "../components/Search.vue";
-import Profile from "../assets/images/profile.jpg";
+import Profile from "../assets/images/closeup.jpg";
 import MenuDialog from "../components/MenuDialog.vue";
 import {useScreenStore} from "../stores/screenSizeStore.ts";
-import {onMounted, ref, watch} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import SearchView from "../views/SearchView.vue";
 import {links} from "../data/links.ts";
 import {useRoute} from "vue-router";
 import {PhMagnifyingGlass} from "@phosphor-icons/vue";
 import Footer from "../components/Footer.vue";
+import SideProfile from "../components/SideProfile.vue";
+import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
+import SideArticleInfo from "../components/SideArticleInfo.vue";
+import {fadeUpStagger} from "../composables/useMotionPresets.ts";
+
+const sideComponents: Record<string, any> = {
+  profile: SideProfile,
+  aboutPortfolio: SideAboutPortfolio,
+  article: SideArticleInfo,
+};
 
 
 const route = useRoute()
 const {isMobile, isSmall} = useScreenStore();
+
+const sideComponent = computed(() => {
+  const side = route.meta.side as string | undefined;
+  return side ? sideComponents[side] : null;
+});
+
+const isFullWidth = computed(() => !!route.meta.fullWidth);
+
+const navContainer = ref<HTMLElement | null>(null);
+const indicatorStyle = ref({ width: '0px', transform: 'translateX(0px)', opacity: 0 });
+
+const updateIndicator = () => {
+  nextTick(() => {
+    const activeEl = navContainer.value?.querySelector<HTMLElement>('.active-link');
+    if (!activeEl || !navContainer.value) {
+      indicatorStyle.value = { ...indicatorStyle.value, opacity: 0 };
+      return;
+    }
+    const containerRect = navContainer.value.getBoundingClientRect();
+    const activeRect = activeEl.getBoundingClientRect();
+    indicatorStyle.value = {
+      width: `${activeRect.width}px`,
+      transform: `translateX(${activeRect.left - containerRect.left}px)`,
+      opacity: 1,
+    };
+  });
+};
+
+watch(() => route.path, updateIndicator);
+onMounted(() => {
+  updateIndicator();
+  window.addEventListener('resize', updateIndicator);
+});
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIndicator);
+});
 const isSmallLayout = ref(false);
 const searchQuery = ref('');
 const linksData = ref([...links]);
+const searchRef = ref();
+
+// Triggered by the app-launcher menu's "Search" item (see MenuDialog.vue). We're
+// already on a page with its own topbar search box, so just focus it directly.
+const handleFocusSearch = () => {
+  nextTick(() => searchRef.value?.focus());
+};
 
 const filterLinks = () => {
   linksData.value = links.filter(link => link.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
@@ -48,6 +101,7 @@ onMounted(() => {
 </script>
 
 <template>
+ <div class="main-layout-root">
   <div v-if="isSmallLayout">
     <SearchView
         @change-layout="isSmallLayout = false"
@@ -97,6 +151,7 @@ onMounted(() => {
         </RouterLink>
         <div class="position-relative w-100" >
           <Search
+              ref="searchRef"
               @click="changeLayout"
               :searchQuery="searchQuery"
               :links="linksData"
@@ -105,7 +160,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="d-flex align-center ga-2">
-        <MenuDialog/>
+        <MenuDialog @focus-search="handleFocusSearch"/>
         <VAvatar
             size="32"
             class="ml-2 cursor-pointer"
@@ -125,9 +180,10 @@ onMounted(() => {
       </div>
     </VRow>
     <div
-        class="ma-0 mx-10 d-flex ga-3"
+        ref="navContainer"
+        class="ma-0 mx-10 d-flex ga-3 nav-links-container"
         :style="{
-          paddingLeft: isMobile || isSmall ? '0px' : '150px',
+          paddingLeft: isMobile || isSmall ? '0px' : 'var(--layout-rail-offset)',
           paddingTop: isMobile || isSmall ? '70px' : '0px',
           overflowX: 'auto',
         }"
@@ -141,40 +197,44 @@ onMounted(() => {
           <component :is="link.icon" /> {{ link.name }}
         </div>
       </RouterLink>
+      <div class="nav-indicator" :style="indicatorStyle"></div>
     </div>
     <VDivider/>
     <div
       class="mx-5 mt-5"
       :style="{
-        paddingLeft: isMobile || isSmall ? '0px' : '150px',
+        paddingLeft: isMobile || isSmall || isFullWidth ? '0px' : 'var(--layout-rail-offset)',
         minHeight: '85vh'
       }"
     >
       <div class="d-flex ga-7">
         <div
             :style="{
-              width: isMobile || isSmall ? '100%' : '800px !important',
+              width: isMobile || isSmall || isFullWidth ? '100%' : 'var(--layout-content-width) !important',
             }">
-          <slot></slot>
+          <RouterView v-slot="{ Component }">
+            <Transition name="results" mode="out-in">
+              <component :is="Component" :key="$route.path" />
+            </Transition>
+          </RouterView>
         </div>
-        <div v-if="!isMobile && !isSmall" class="side-details w-50"
+        <div v-if="!isMobile && !isSmall && !isFullWidth" class="side-details w-50"
         >
-          <slot name="side-details">
-
-          </slot>
+          <component :is="sideComponent" v-if="sideComponent" />
         </div>
       </div>
       <div
+        v-if="!isFullWidth"
         class="mt-5 mb-15"
         :style="{
-          width: isMobile || isSmall ? '100%' : '800px',
+          width: isMobile || isSmall ? '100%' : 'var(--layout-content-width)',
         }"
       >
         <p class="text-suggestion mb-3">People Also Search For</p>
         <VRow class="ma-0 ga-3">
-            <VCol v-for="link in links" class="pa-0" cols="5">
+            <VCol v-for="(link, index) in links" :key="link.name" class="pa-0" cols="5">
               <a class="text-decoration-none text-black" :href="link.link">
-                <div class="suggestion-item">
+                <div class="suggestion-item" v-motion="fadeUpStagger(index)">
                   <div class="suggestion-item-text">
                     {{ link.name }}
                   </div>
@@ -188,16 +248,47 @@ onMounted(() => {
 
   </div>
   <Footer/>
+ </div>
 </template>
 
 <style scoped>
+  .results-enter-active,
+  .results-leave-active {
+    transition: opacity var(--duration-base) var(--ease-out-quart),
+      transform var(--duration-base) var(--ease-out-quart);
+  }
+
+  .results-enter-from,
+  .results-leave-to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .nav-links-container{
+    position: relative;
+  }
+
+  .nav-indicator{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 2px;
+    background-color: var(--googleblue);
+    transition: transform var(--duration-base) var(--ease-out-quart),
+      width var(--duration-base) var(--ease-out-quart),
+      opacity var(--duration-fast) var(--ease-out-quart);
+    pointer-events: none;
+  }
+
   .suggestion-item{
     border-radius: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #f1f3f4;
+    background-color: var(--grey-100);
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
   }
 
   .suggestion-item-text{
@@ -205,7 +296,7 @@ onMounted(() => {
   }
 
   .suggestion-item:hover{
-    background-color: #dbdfe1;
+    background-color: var(--grey-300);
 
     .suggestion-item-text{
       text-decoration: underline;
@@ -228,13 +319,11 @@ onMounted(() => {
     padding-right: 10px !important;
     padding-left: 10px !important;
     padding-bottom: 10px !important;
-    color: #2D2D2D;
+    color: var(--ink);
   }
 
   .active-link{
-
-    border-bottom: 3px solid #4285F4;
-    color: #4285F4;
+    color: var(--googleblue);
     font-weight: 500;
   }
 </style>
