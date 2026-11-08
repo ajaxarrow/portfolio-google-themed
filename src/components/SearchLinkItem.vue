@@ -22,14 +22,20 @@ const articlePath = computed(() => `/article/${prop.searchItem?.id}`);
 const isInternal = computed(() => !isArticle.value && /^\/(?!.*\.pdf$)/.test(prop.searchItem?.link ?? ''));
 const isRouter = computed(() => isArticle.value || isInternal.value);
 const routerTarget = computed(() => isArticle.value ? articlePath.value : prop.searchItem.link);
-const displaySource = computed(() => isRouter.value ? routerTarget.value : truncateString(prop.searchItem?.link));
+const displaySource = computed(() => isRouter.value ? routerTarget.value : breadcrumbUrl(prop.searchItem?.link));
+const opensNewTab = computed(() => !isRouter.value && (prop.searchItem?.link ?? '').startsWith('http'));
 const stackLine = computed(() => [prop.searchItem.role, ...(prop.searchItem.stack ?? [])].filter(Boolean).join(' · '));
 
-function truncateString(str: string): string {
-  if (str.length > 100) {
-    return str.slice(0, 80) + "...";
+// Google-style breadcrumb URL: "figma.com › proto › Sheesh" instead of a 200-character query string.
+function breadcrumbUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.replace(/^www\./, '');
+    const parts = url.pathname.split('/').filter(Boolean).slice(0, 2).map(decodeURIComponent);
+    return [host, ...parts].join(' › ');
+  } catch {
+    return raw;
   }
-  return str;
 }
 </script>
 
@@ -46,9 +52,9 @@ function truncateString(str: string): string {
         <VAvatar size="30" class="icon-container">
           <img :src="prop.searchItem?.icon" style="width: 14px !important;" alt="" role="presentation"/>
         </VAvatar>
-        <div>
+        <div class="source-col">
           <p class="link-title">{{prop.searchItem.name}}</p>
-          <p class="link-source">{{displaySource}}</p>
+          <p class="link-source">{{displaySource}}<span v-if="opensNewTab" class="sr-only"> (opens in a new tab)</span></p>
         </div>
       </div>
       <span class="link-item">
@@ -75,6 +81,10 @@ function truncateString(str: string): string {
   border: 1px solid var(--grey-300);
 }
 
+.source-col{
+  min-width: 0;
+}
+
 .link-title{
   font-size: 14px;
   color: var(--ink);
@@ -83,6 +93,10 @@ function truncateString(str: string): string {
 .link-source{
   font-size: 12px;
   color: var(--meta);
+  max-width: min(100%, 520px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .link-item{
@@ -110,7 +124,7 @@ function truncateString(str: string): string {
 }
 
 .search-item-inner{
-  border-radius: 12px;
+  border-radius: 16px;
   transition: background-color var(--duration-fast) var(--ease-out-quart);
 }
 

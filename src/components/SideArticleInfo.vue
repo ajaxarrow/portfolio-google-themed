@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {useRoute} from "vue-router";
-import Profile from '../assets/images/closeup.jpg'
+import Profile from '../assets/images/closeup.webp'
 import {findEntryById, getCategoryLabel, getEntryCategory} from "../utils/entries.ts";
 import {articles, getReadingTime} from "../data/articles.ts";
 
 const route = useRoute();
 const id = computed(() => route.params.id as string);
 const entry = computed(() => findEntryById(id.value));
+const hasArticle = computed(() => id.value in articles);
 
 const categoryLabel = computed(() => {
   const category = getEntryCategory(id.value);
@@ -25,7 +26,7 @@ const otherArticles = computed(() =>
 </script>
 
 <template>
-  <div v-if="entry" class="side-article-container">
+  <div v-if="entry && hasArticle" class="side-article-container">
     <div class="d-flex align-center ga-2">
       <img :src="Profile" alt="Jiu Axl" class="avatar">
       <div>
@@ -34,7 +35,7 @@ const otherArticles = computed(() =>
       </div>
     </div>
     <p class="bio-text my-4">
-      Writes about frontend development, UI/UX design, and the talks and trainings he's taken part in along the way.
+      Talks and trainings on frontend development, knowledge management and API integration.
     </p>
     <RouterLink to="/about" class="about-link">More about Jiu Axl &rarr;</RouterLink>
 
@@ -96,7 +97,7 @@ const otherArticles = computed(() =>
 }
 
 .text-role{
-  font-size: 13px;
+  font-size: 12px;
   color: var(--meta);
 }
 
@@ -107,7 +108,7 @@ const otherArticles = computed(() =>
 }
 
 .about-link{
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--google-link);
   text-decoration: none;
@@ -119,7 +120,7 @@ const otherArticles = computed(() =>
 
 .section-title{
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--ink);
 }
 
@@ -146,7 +147,7 @@ const otherArticles = computed(() =>
   display: block;
   padding: 10px;
   margin: 0 -10px;
-  border-radius: 12px;
+  border-radius: 16px;
   text-decoration: none;
   transition: background-color var(--duration-fast) var(--ease-out-quart);
 }
@@ -167,7 +168,7 @@ const otherArticles = computed(() =>
 }
 
 .read-next-desc{
-  font-size: 13px;
+  font-size: 12px;
   color: var(--meta);
   line-height: 1.4;
   display: -webkit-box;
