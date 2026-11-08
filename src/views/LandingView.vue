@@ -85,8 +85,8 @@
       </VAvatar>
     </VRow>
     <div class="center">
-      <div class="d-flex flex-column justify-center  ">
-        <p class="text-title text-center mb-3">
+      <div class="hero-col d-flex flex-column justify-center">
+        <p class="text-title text-center mb-6">
           <span v-motion="letterMotion(0)" class="text-googleblue">j</span>
           <span v-motion="letterMotion(1)" class="text-googlered">i</span>
           <span v-motion="letterMotion(2)" class="text-googlegreen">u</span>
@@ -94,10 +94,6 @@
           <span v-motion="letterMotion(4)" class="text-googleblue">x</span>
           <span v-motion="letterMotion(5)" class="text-googlered">l</span>
           <span v-motion="letterMotion(6)" class="text-googleyellow">.</span>
-        </p>
-        <p class="tagline text-center mb-5">
-          Full-stack software engineer. Python, Django, Laravel, Vue.js.<br>
-          Bukidnon, Philippines · open to remote work.
         </p>
         <div class="position-relative mb-15" v-motion="searchMotion()">
           <Search
@@ -108,38 +104,42 @@
             @update:searchQuery="$event => (searchQuery = $event)"
           />
         </div>
-        <div class="cta-row">
-          <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
-          <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
-          <RouterLink class="cta" to="/projects">See projects</RouterLink>
-        </div>
-        <div class="links-container mt-5">
-          <RouterLink
-            v-for="(link, index) in links"
-            :key="link.name"
-            class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black link-item icon-reveal"
-            :class="{ 'icon-reveal--visible': iconsRevealed }"
-            :style="{ transitionDelay: iconRevealDelay(index) }"
-            :to="{path: link.link}">
-            <div class="icon-container">
-              <component :is="link.icon" size="32" :color="link.color" weight="duotone"/>
+        <section class="profile icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(0) }" aria-label="About Jiu Axl">
+          <div class="profile-head">
+            <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="profile-photo" width="64" height="64">
+            <div>
+              <h1 class="profile-role">Full-stack software engineer</h1>
+              <p class="profile-meta">Python · Django · Laravel · Vue.js</p>
             </div>
-            <p class="text-small mt-2">{{link.name}}</p>
+          </div>
+          <p class="profile-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            Open to remote work · Bukidnon, Philippines
+          </p>
+          <div class="cta-row">
+            <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+            <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
+            <a class="cta" href="https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </section>
+        <nav class="chip-row icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(2) }" aria-label="Sections">
+          <RouterLink v-for="link in links" :key="link.name" :to="{path: link.link}" class="chip">
+            <component :is="link.icon" size="18" :color="link.color" weight="duotone"/>
+            {{ link.name }}
           </RouterLink>
-
-        </div>
+        </nav>
+        <p class="try icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(4) }">
+          Try searching
+          <RouterLink v-for="q in ['django', 'figma', 'champion', 'aws']" :key="q" :to="{path: '/all', query: {q}}">{{ q }}</RouterLink>
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-
-
-  .link-item{
-    padding: 15px;
-    border-radius: 10px;
-    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  .hero-col{
+    width: min(584px, calc(100vw - 32px));
   }
 
   .icon-reveal{
@@ -149,29 +149,6 @@
 
   .icon-reveal--visible{
     opacity: 1;
-  }
-
-  .link-item:hover{
-    background-color: var(--grey-300);
-  }
-
-
-  .icon-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    background-color: var(--grey-200);
-    border-radius: 50%;
-  }
-
-  .menu-item-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
   }
 
   .tooltip-container{
@@ -186,35 +163,58 @@
     text-wrap: balance;
   }
 
-  .links-container{
+  .profile{
+    background-color: var(--grey-50);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .profile-head{
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    width: 523px;
+    align-items: center;
+    gap: 16px;
   }
 
-  @media (max-width: 580px) {
-    .links-container{
-      width: 400px;
-    }
+  .profile-photo{
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
+    flex-shrink: 0;
   }
 
-  @media (max-width: 450px) {
-    .links-container{
-      width: 300px;
-    }
+  .profile-role{
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
   }
 
-  .tagline{
+  .profile-meta{
+    font-size: 14px;
     color: var(--meta);
-    font-size: 16px;
-    line-height: 1.5;
-    text-wrap: balance;
+  }
+
+  .profile-status{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .status-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--googlegreen);
+    flex-shrink: 0;
   }
 
   .cta-row{
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     gap: 8px;
   }
@@ -223,10 +223,10 @@
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding: 0 20px;
-    border-radius: 8px;
-    background-color: var(--grey-100);
-    border: 1px solid var(--grey-100);
+    padding: 0 16px;
+    border-radius: 9999px;
+    background-color: var(--surface);
+    border: 1px solid var(--grey-300);
     color: var(--ink);
     font-size: 14px;
     font-weight: 500;
@@ -234,7 +234,7 @@
     transition: background-color var(--duration-fast) var(--ease-out-quart);
   }
 
-  .cta:hover{ background-color: var(--grey-300); }
+  .cta:hover{ background-color: var(--grey-200); }
 
   .cta--primary{
     background-color: var(--google-link);
@@ -243,6 +243,46 @@
   }
 
   .cta--primary:hover{ background-color: #1558b0; }
+
+  .chip-row{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 10px;
+    border-radius: 16px;
+    background-color: var(--grey-100);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .chip:hover{ background-color: var(--grey-300); }
+
+  .try{
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--meta);
+  }
+
+  .try a{
+    margin-left: 12px;
+    color: var(--google-link);
+    text-decoration: none;
+  }
+
+  .try a:hover{ text-decoration: underline; }
 
   .text-base:hover{
     text-decoration: underline !important;
