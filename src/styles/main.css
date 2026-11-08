@@ -1,5 +1,21 @@
 @import url('./variables.css');
 
+@font-face{
+  font-family: 'Satoshi';
+  src: url('/fonts/satoshi-variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face{
+  font-family: 'Literata';
+  src: url('/fonts/literata-variable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 *{
   font-family: 'Satoshi', sans-serif !important;
   scroll-behavior: smooth;

@@ -11,23 +11,26 @@ export const socialItems: SearchItem[] = [
     title: 'LinkedIn Profile - Jiu Axl R. Tabilla',
     link: 'https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/',
     id: 'linkedin',
-    description: 'Connect with me in LinkedIn',
+    description: 'Connect with me on LinkedIn.',
+    tags: ['contact', 'hire', 'message'],
     icon: linkedin
   },
   {
     name: 'GitHub',
-    title: 'Github - AjaxArrow',
+    title: 'GitHub: ajaxarrow',
     link: 'https://github.com/ajaxarrow',
     id: 'github',
-    description: 'View my projects and repositories here',
+    description: 'Code and repositories.',
+    tags: ['code', 'source', 'repos'],
     icon: github
   },
   {
     name: 'Gmail',
     title: 'Email - axldamnaxl@gmail.com',
-    link: 'https://mail.google.com/mail/u/0/?fs=1&to=axldamnaxl@gmail.com&tf=cm',
+    link: 'mailto:axldamnaxl@gmail.com',
     id: 'email',
-    description: 'Send me an email',
+    description: 'Fastest way to reach me.',
+    tags: ['contact', 'hire', 'mail', 'gmail'],
     icon: mail
   },
   {
@@ -40,10 +43,11 @@ export const socialItems: SearchItem[] = [
   },
   {
     name: 'Resume',
-    title: 'Resume - Jiu Axl R. Tabilla',
+    title: 'Résumé: Jiu Axl R. Tabilla (PDF)',
     link: '/resume.pdf',
     id: 'resume',
-    description: 'Download my resume as a PDF',
+    description: 'Two-page PDF: experience, skills, awards.',
+    tags: ['cv', 'resume', 'pdf', 'download', 'hire'],
     icon: webpage
   }
 ]

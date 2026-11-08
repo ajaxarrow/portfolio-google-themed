@@ -63,7 +63,7 @@
   </div>
   <div v-else class="pa-6">
     <VRow align="center" justify="end" class="ma-0">
-      <a v-for="social in socials" target="_blank" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
+      <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
       <MenuDialog @focus-search="handleFocusSearch"/>
@@ -95,6 +95,10 @@
           <span v-motion="letterMotion(5)" class="text-googlered">l</span>
           <span v-motion="letterMotion(6)" class="text-googleyellow">.</span>
         </p>
+        <p class="tagline text-center mb-5">
+          Full-stack software engineer. Python, Django, Laravel, Vue.js.<br>
+          Bukidnon, Philippines · open to remote work.
+        </p>
         <div class="position-relative mb-15" v-motion="searchMotion()">
           <Search
             ref="searchRef"
@@ -103,6 +107,11 @@
             :links="linksData"
             @update:searchQuery="$event => (searchQuery = $event)"
           />
+        </div>
+        <div class="cta-row">
+          <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+          <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
+          <RouterLink class="cta" to="/projects">See projects</RouterLink>
         </div>
         <div class="links-container mt-5">
           <RouterLink
@@ -195,6 +204,45 @@
       width: 300px;
     }
   }
+
+  .tagline{
+    color: var(--meta);
+    font-size: 16px;
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+
+  .cta-row{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cta{
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 8px;
+    background-color: var(--grey-100);
+    border: 1px solid var(--grey-100);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .cta:hover{ background-color: var(--grey-300); }
+
+  .cta--primary{
+    background-color: var(--google-link);
+    border-color: var(--google-link);
+    color: #fff;
+  }
+
+  .cta--primary:hover{ background-color: #1558b0; }
 
   .text-base:hover{
     text-decoration: underline !important;

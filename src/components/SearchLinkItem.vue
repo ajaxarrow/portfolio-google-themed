@@ -18,7 +18,12 @@ const prop = defineProps({
 
 const isArticle = computed(() => isArticleItem(prop.searchItem));
 const articlePath = computed(() => `/article/${prop.searchItem?.id}`);
-const displaySource = computed(() => isArticle.value ? articlePath.value : truncateString(prop.searchItem?.link));
+// Site-relative links (e.g. "/about#education") stay in the SPA; files like /resume.pdf open in a new tab.
+const isInternal = computed(() => !isArticle.value && /^\/(?!.*\.pdf$)/.test(prop.searchItem?.link ?? ''));
+const isRouter = computed(() => isArticle.value || isInternal.value);
+const routerTarget = computed(() => isArticle.value ? articlePath.value : prop.searchItem.link);
+const displaySource = computed(() => isRouter.value ? routerTarget.value : truncateString(prop.searchItem?.link));
+const stackLine = computed(() => [prop.searchItem.role, ...(prop.searchItem.stack ?? [])].filter(Boolean).join(' · '));
 
 function truncateString(str: string): string {
   if (str.length > 100) {
@@ -30,8 +35,8 @@ function truncateString(str: string): string {
 
 <template>
   <component
-      :is="isArticle ? 'RouterLink' : 'a'"
-      v-bind="isArticle ? {to: articlePath} : {href: prop.searchItem?.link, target: '_blank', rel: 'noopener noreferrer'}"
+      :is="isRouter ? 'RouterLink' : 'a'"
+      v-bind="isRouter ? {to: routerTarget} : {href: prop.searchItem?.link, ...(prop.searchItem?.link.startsWith('http') ? {target: '_blank', rel: 'noopener noreferrer'} : {})}"
       class="search-item text-decoration-none text-black"
       :id="prop.searchItem?.id"
       v-motion="fadeUpStagger(prop.index)"
@@ -49,13 +54,16 @@ function truncateString(str: string): string {
       <span class="link-item">
         {{prop.searchItem.title}}
       </span>
-      <div class="d-flex align-center ga-2">
+      <div class="result-body d-flex align-center ga-2">
         <div v-if="prop.searchItem?.image" class="design-image">
-          <SkeletonImage :src="prop.searchItem?.image" :alt="prop.searchItem?.id"/>
+          <SkeletonImage :src="prop.searchItem?.image" :alt="`${prop.searchItem.name} preview`"/>
         </div>
-        <p class="link-description mt-1 pr-2">
-          <span v-if="prop.searchItem.date" class="link-date">{{prop.searchItem.date}} · </span>{{prop.searchItem.description}}
-        </p>
+        <div class="mt-1 pr-2">
+          <p v-if="prop.searchItem.role || prop.searchItem.stack" class="link-role">{{ stackLine }}</p>
+          <p class="link-description">
+            <span v-if="prop.searchItem.date" class="link-date">{{prop.searchItem.date}} · </span>{{prop.searchItem.description}}
+          </p>
+        </div>
       </div>
     </div>
   </component>
@@ -85,6 +93,13 @@ function truncateString(str: string): string {
   color: var(--google-link);
 }
 
+.link-role{
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
 .link-description{
   color: var(--meta);
 }
@@ -108,6 +123,18 @@ function truncateString(str: string): string {
 
   .link-item{
     text-decoration: underline;
+  }
+}
+
+@media (max-width: 600px){
+  .result-body{
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .design-image{
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
   }
 }
 

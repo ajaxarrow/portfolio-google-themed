@@ -12,7 +12,7 @@ import Logo from '../assets/logo.jpg'
       </div>
     </div>
     <div class="desc-container my-5">
-      This portfolio, designed with a Google-inspired theme, was created by Jiu Axl R. Tabilla to highlight his frontend development skills and his ability to adapt existing designs with his unique twist. The portfolio serves to demonstrate his skills, capabilities, and the projects he has contributed to.
+      A portfolio built as a search results page, designed and coded by Jiu Axl R. Tabilla. The search box works: try "django", "figma" or "champion". Every result is real work, and the résumé is one click away.
     </div>
 
 

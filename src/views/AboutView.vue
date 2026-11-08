@@ -5,6 +5,10 @@ import SearchLinkItem from "../components/SearchLinkItem.vue";
 import {aboutQuestions} from "../data/questions.ts";
 import AccordionItem from "../components/AccordionItem.vue";
 import {isVisible} from "../utils/entries.ts";
+import SideProfile from "../components/SideProfile.vue";
+import {useScreenStore} from "../stores/screenSizeStore.ts";
+
+const {isMobile, isSmall} = useScreenStore();
 
 const visibleAbout = about.filter(isVisible)
 const aboutItems = [...visibleAbout]
@@ -14,6 +18,7 @@ const aboutData = [...visibleAbout]
 
 <template>
   <div>
+    <SideProfile v-if="isMobile || isSmall" compact />
     <ResultHeader :results="visibleAbout.length"/>
     <div class="mt-5">
       <SearchLinkItem

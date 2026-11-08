@@ -18,6 +18,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition;
+    if (to.hash) return {el: to.hash, top: 16};
     // Same-path navigations (e.g. the Images lightbox syncing ?item= via router.replace)
     // shouldn't yank scroll position; genuine page changes should land at the top.
     if (to.path === from.path) return false;

@@ -2,37 +2,73 @@
 import Profile from '../assets/images/closeup.jpg'
 import ProfileWide from '../assets/images/profile-wide.jpg'
 
+defineProps<{ compact?: boolean }>();
+
 interface SkillCategory {
   label: string;
   skills: string[];
 }
 
+// Mirrors the "Technical Skills" section of public/resume.pdf, 1:1.
 const skillCategories: SkillCategory[] = [
-  {label: 'Programming Languages', skills: ['JavaScript', 'TypeScript', 'Dart', 'Python', 'PHP']},
-  {label: 'UI/UX Design', skills: ['Figma', 'Design']},
-  {label: 'Databases', skills: ['Firebase', 'Supabase', 'PostgreSQL', 'MySQL', 'SQLite']},
-  {label: 'Frameworks', skills: ['VueJS', 'ReactJS', 'ExpressJS', 'Flutter', 'Laravel']},
-  {label: 'Version Control', skills: ['Git', 'Github']},
+  {label: 'Languages', skills: ['Python', 'JavaScript', 'TypeScript', 'PHP', 'Dart']},
+  {label: 'Backend', skills: ['Django', 'Laravel', 'Express.js', 'REST API Development', 'API Integration']},
+  {label: 'Frontend', skills: ['Vue.js', 'React', 'Next.js', 'HTML', 'CSS']},
+  {label: 'Mobile', skills: ['Flutter']},
+  {label: 'Databases', skills: ['PostgreSQL', 'MySQL', 'SQLite', 'Firebase', 'Supabase', 'SQL']},
+  {label: 'Cloud & DevOps', skills: ['AWS (Lightsail, RDS, IAM)', 'Azure DevOps', 'Git', 'GitHub']},
+  {label: 'Testing & Quality', skills: ['Manual and API/Integration Testing', 'Debugging', 'Issue Triage', 'Code Review']},
+  {label: 'Architecture & Practices', skills: ['Full-Stack Development', 'Backend Architecture', 'Database Design', 'Data Engineering']},
+  {label: 'Additional', skills: ['AI-Assisted Development (Claude, ChatGPT)', 'Figma', 'UI/UX Prototyping']},
 ];
 
 const fields = [
-  {label: 'Address', value: 'Purok-11, Lampanusan, Kalilangan, Bukidnon'},
-  {label: 'Education', value: 'Magna Cum Laude, BS Information Technology Major in Software Development, Central Mindanao University (August 2021 - July 2025)'},
+  {label: 'Role', value: 'Full-Stack Software Engineer'},
+  {label: 'Based in', value: 'Bukidnon, Philippines'},
+  {label: 'Available for', value: 'Remote work, flexible timezone overlap'},
+  {label: 'Education', value: 'Magna Cum Laude, BS Information Technology, Central Mindanao University (2021 - 2025)'},
+];
+
+const highlights = [
+  'Champion, DIGIMC 2025 Reverse Pitching Competition',
+  'Champion, Innova Hackathon 2024',
+  '2nd place, HABI Workshop, 2025 National Innovation Day',
+  'Co-author, CyberSciTech 2025 paper',
+];
+
+const actions = [
+  {label: 'Résumé (PDF)', href: '/resume.pdf', primary: true},
+  {label: 'Email', href: 'mailto:axldamnaxl@gmail.com'},
+  {label: 'LinkedIn', href: 'https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/'},
+  {label: 'GitHub', href: 'https://github.com/ajaxarrow'},
 ];
 </script>
 
 <template>
-  <div class="side-profile-container">
+  <section class="side-profile-container" :class="{ 'side-profile-container--compact': compact }" aria-label="Profile summary">
     <div class="d-flex align-center ga-2">
-      <img :src="Profile" alt="profile" class="avatar">
+      <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="avatar" width="80" height="80">
       <div>
-        <p class="text-name">Jiu Axl R. Tabilla</p>
-        <p class="text-role">UI/UX Designer | Frontend Developer</p>
+        <h2 class="text-name">Jiu Axl R. Tabilla</h2>
+        <p class="text-role">Full-Stack Software Engineer</p>
       </div>
     </div>
-    <img :src="ProfileWide" alt="Jiu Axl Tabilla standing outdoors at night" class="avatar-wide my-4">
+
+    <div class="actions my-4">
+      <a
+        v-for="action in actions"
+        :key="action.label"
+        :href="action.href"
+        :target="action.href.startsWith('mailto:') ? undefined : '_blank'"
+        rel="noopener noreferrer"
+        class="action"
+        :class="{ 'action--primary': action.primary }"
+      >{{ action.label }}</a>
+    </div>
+
+    <img v-if="!compact" :src="ProfileWide" alt="Jiu Axl Tabilla standing outdoors at night" class="avatar-wide mb-4" width="600" height="450">
     <p class="bio-text my-4">
-      A dedicated software developer with extensive experience in full-stack development, specializing in JavaScript, Node.js, React, Vue, and Flutter. Committed to delivering high-quality, scalable applications through meticulous planning, innovative design, and efficient coding practices.
+      Two years shipping production SaaS in Python and Django: compliance automation, AWS Marketplace tooling and two-sided marketplaces for an Ontario-based software company.
     </p>
 
     <VDivider class="my-4"/>
@@ -41,11 +77,17 @@ const fields = [
         <p class="field-label">{{ field.label }}</p>
         <p class="field-value">{{ field.value }}</p>
       </div>
+      <div class="field">
+        <p class="field-label">Highlights</p>
+        <ul class="highlights">
+          <li v-for="item in highlights" :key="item">{{ item }}</li>
+        </ul>
+      </div>
     </div>
 
     <VDivider class="my-4"/>
     <div class="skills-section">
-      <p class="section-title mb-3">Skills</p>
+      <h3 class="section-title mb-3">Skills</h3>
       <div v-for="category in skillCategories" :key="category.label" class="skill-category">
         <p class="field-label">{{ category.label }}</p>
         <div class="chip-row">
@@ -53,7 +95,7 @@ const fields = [
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
@@ -83,6 +125,7 @@ const fields = [
   .text-name{
     font-size: 20px;
     font-weight: 500;
+    line-height: 1.3;
     color: var(--ink);
   }
 
@@ -139,6 +182,53 @@ const fields = [
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+  }
+
+  .actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .action{
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 9999px;
+    border: 1px solid var(--grey-300);
+    background-color: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .action:hover{
+    background-color: var(--grey-200);
+  }
+
+  .action--primary{
+    background-color: var(--google-link);
+    border-color: var(--google-link);
+    color: #fff;
+  }
+
+  .action--primary:hover{
+    background-color: #1558b0;
+  }
+
+  .highlights{
+    margin: 0;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .side-profile-container--compact{
+    margin-bottom: 24px;
   }
 
   .skill-chip{
