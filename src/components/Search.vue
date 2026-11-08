@@ -134,7 +134,7 @@ watch(() => props.searchQuery, (newQuery) => {
   .search-container {
     width: 100%;
     box-sizing: border-box;
-    border-radius: 9999px;
+    border-radius: 24px; /* rounded.lg: stays a soft box when suggestions expand it; a pill radius turns the tall dropdown into an ellipse */
     color: var(--meta);
     border: 1px solid var(--grey-300);
     overflow: hidden;
