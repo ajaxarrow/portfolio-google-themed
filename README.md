@@ -6,7 +6,7 @@ Live: https://ajaxarrow.netlify.app
 
 ## Stack
 
-Vue 3, TypeScript, Vite, Vuetify (auto-imported, tree-shaken), @vueuse/motion, Phosphor icons. Fonts (Satoshi, Literata) are self-hosted. Deployed on Netlify; `public/_redirects` handles SPA deep links.
+Vue 3, TypeScript, Vite, Vuetify (auto-imported, tree-shaken), @vueuse/motion, Phosphor icons. Fonts (Satoshi, Literata) are self-hosted. Deployed on Netlify. `vite-ssg` prerenders every route to static HTML, and unknown paths fall through to the prerendered `404.html` (see `netlify.toml`).
 
 ## Run
 
@@ -25,3 +25,11 @@ npm run preview
 - `public/resume.pdf`: the résumé every "Résumé" link opens. Replace it when the résumé changes, then re-check the data files.
 
 Design intent lives in `PRODUCT.md` and `DESIGN.md`.
+
+## SEO
+
+- `npm run build` runs `vite-ssg`: every route is prerendered to static HTML (crawlers see content without JS).
+- Per-page title, description, canonical, Open Graph and JSON-LD live in `src/seo/useRouteHead.ts`; route copy is in `src/router/index.ts`; name variants and the site URL in `src/seo/site.ts`.
+- `sitemap.xml` and `robots.txt` are generated at build time (`vite.config.ts`).
+- New article pages: add the id to `src/data/articles.ts`; it is picked up automatically.
+- Custom domain: set `VITE_SITE_URL` (e.g. `https://jiuaxltabilla.com`) in Netlify's build env.

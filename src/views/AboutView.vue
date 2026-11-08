@@ -18,6 +18,7 @@ const aboutData = [...visibleAbout]
 
 <template>
   <div>
+    <h1 class="sr-only">Jiu Axl Ramos Tabilla: Full-Stack Software Engineer in Bukidnon, Philippines</h1>
     <SideProfile v-if="isMobile || isSmall" compact />
     <ResultHeader :results="visibleAbout.length"/>
     <div class="mt-5">
@@ -47,6 +48,15 @@ const aboutData = [...visibleAbout]
 </template>
 
 <style scoped>
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .text-suggestion{
   font-weight: 500;
   font-size: 20px;
