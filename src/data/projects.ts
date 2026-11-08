@@ -5,6 +5,7 @@ import virtualclass from "../assets/icons/virtualclass.png"
 import portfolio from "../assets/images/portfolio.png"
 import mk from "../assets/images/mk.png"
 import portfolioIcon from "../assets/logo.jpg"
+import {getGalleryImages} from "./gallery.ts"
 
 export const projects: SearchItem[] = [
   {
@@ -12,7 +13,7 @@ export const projects: SearchItem[] = [
     title: 'LINNKS',
     link: 'https://idmdr.netlify.app/',
     id: 'linnks',
-    description: 'Discover LINNKS: a powerful data mapping and repository platform designed to streamline project management and organize data tagging across multiple locations effortlessly.',
+    description: 'Discover LINNKS: a powerful data mapping and repository platform designed to streamline project management and organize data tagging across multiple locations effortlessly. My role: main frontend developer and API integrator.',
     icon: nomcaarrd,
     image: idmdr
   },
@@ -35,4 +36,14 @@ export const projects: SearchItem[] = [
     icon: portfolioIcon,
     image: portfolio
   },
-]
+  {
+    name: 'SellYoShirt',
+    title: 'SellYoShirt',
+    link: 'https://sellyoshit.netlify.app/',
+    id: 'sellyoshirt',
+    description: 'SellYoShirt is a mobile app for tracking inventory and sales, built for garment resellers who are just starting their own business. My role: sole developer, since it is a personal project.',
+    icon: portfolioIcon,
+    image: getGalleryImages('sellyoshirt')[0],
+    visible: true,
+  },
+];

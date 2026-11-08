@@ -23,7 +23,7 @@ export const about: SearchItem[] = [
   },
   {
     name: 'Experience',
-    date: 'August 2025 - Present',
+    date: 'August 2025 - November 2026',
     title: 'Product Engineer - Buzzerboy Inc',
     link: 'https://www.buzzerboy.com/',
     id: 'buzzerboy-present',
@@ -59,10 +59,11 @@ export const about: SearchItem[] = [
   },
   {
     name: 'Experience',
-    title: 'Frontend Developer',
+    date: 'June 2025 - December 2025',
+    title: 'Affiliate - withKM',
     link: 'https://withkm.com/',
     id: 'frontend-developer',
-    description: "Frontend Developer at withKM, a bukidnon based startup that focuses on creating solutions for clients.",
+    description: "Affiliated with withKM, a Bukidnon-based startup that creates software solutions for clients.",
     icon: webpage,
   },
   {
