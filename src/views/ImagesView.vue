@@ -205,7 +205,7 @@ onMounted(() => {
 .masonry-skeleton{
   width: 100%;
   height: 140px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: linear-gradient(100deg, var(--grey-100) 30%, var(--grey-200) 45%, var(--grey-100) 60%);
   background-size: 300% 100%;
   animation: masonry-shimmer 1.6s ease-in-out infinite;
@@ -227,7 +227,7 @@ onMounted(() => {
   height: 0;
   overflow: hidden;
   display: block;
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid var(--grey-300);
   cursor: pointer;
   opacity: 0;

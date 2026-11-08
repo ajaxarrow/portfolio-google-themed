@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Profile from '../assets/images/closeup.jpg'
-import ProfileWide from '../assets/images/profile-wide.jpg'
+import Profile from '../assets/images/closeup.webp'
+import ProfileWide from '../assets/images/profile-wide.webp'
 
 defineProps<{ compact?: boolean }>();
 
@@ -23,6 +23,7 @@ const skillCategories: SkillCategory[] = [
 ];
 
 const fields = [
+  {label: 'Full name', value: 'Jiu Axl Ramos Tabilla (Axl)'},
   {label: 'Role', value: 'Full-Stack Software Engineer'},
   {label: 'Based in', value: 'Bukidnon, Philippines'},
   {label: 'Available for', value: 'Remote work, flexible timezone overlap'},
@@ -142,7 +143,7 @@ const actions = [
 
   .section-title{
     font-weight: 600;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--ink);
   }
 
@@ -212,11 +213,11 @@ const actions = [
   .action--primary{
     background-color: var(--google-link);
     border-color: var(--google-link);
-    color: #fff;
+    color: var(--surface);
   }
 
   .action--primary:hover{
-    background-color: #1558b0;
+    background-color: var(--link-pressed);
   }
 
   .highlights{
