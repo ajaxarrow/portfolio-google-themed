@@ -87,17 +87,20 @@ const getFirstSegment = (path: string) => {
 
 watch(() => searchQuery.value, filterLinks)
 
-watch(
-    () => route.path,
-    (newPath) => {
-      searchQuery.value = newPath ? getFirstSegment(newPath) : "";
-    }
-);
+// The box shows what a real search page would: the query when there is one
+// (/all?q=aws -> "aws"), otherwise the section name (/projects -> "projects").
+const queryFromRoute = () => {
+  const q = route.query.q;
+  const text = Array.isArray(q) ? q[0] : q;
+  return text?.trim() ? text.trim() : getFirstSegment(route.path);
+};
+
+watch(() => route.fullPath, () => {
+  searchQuery.value = queryFromRoute();
+});
 
 onMounted(() => {
-  if (route.path) {
-    searchQuery.value = getFirstSegment(route.path);
-  }
+  searchQuery.value = queryFromRoute();
 });
 </script>
 
