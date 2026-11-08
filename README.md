@@ -2,7 +2,7 @@
 
 A portfolio built as a search results page: a working search box, result rows for projects, designs and awards, a "People Also Ask" FAQ and a Knowledge Panel with the facts a recruiter needs (role, location, availability, résumé, contact). An original pastiche, not a copy of any real product.
 
-Live: https://ajaxarrow.netlify.app
+Live: https://jiuaxl.netlify.app
 
 ## Stack
 

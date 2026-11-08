@@ -7,7 +7,7 @@ import { join } from 'node:path'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const siteUrl = (env.VITE_SITE_URL || 'https://ajaxarrow.netlify.app').replace(/\/$/, '')
+  const siteUrl = (env.VITE_SITE_URL || 'https://jiuaxl.netlify.app').replace(/\/$/, '')
 
   // Article pages are data-driven (src/data/articles.ts); read their ids so each is prerendered.
   const articleIds = [...readFileSync('src/data/articles.ts', 'utf8').matchAll(/^ {2}"([a-z0-9-]+)": \{/gm)].map((m) => m[1])

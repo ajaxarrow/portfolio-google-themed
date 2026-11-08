@@ -3,7 +3,7 @@
  * (recommended: jiuaxltabilla.com), set VITE_SITE_URL in the Netlify build env
  * and every canonical, og:url, sitemap entry and JSON-LD url follows.
  */
-export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://ajaxarrow.netlify.app').replace(/\/$/, '');
+export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://jiuaxl.netlify.app').replace(/\/$/, '');
 
 export const PERSON = {
   name: 'Jiu Axl R. Tabilla',
