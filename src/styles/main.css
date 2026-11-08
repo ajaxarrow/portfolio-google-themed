@@ -32,6 +32,53 @@
   font-size: 12px;
 }
 
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link{
+  position: absolute;
+  left: 16px;
+  top: -64px;
+  z-index: 3000;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background-color: var(--ink);
+  color: var(--surface);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: top var(--duration-fast) var(--ease-out-quart);
+}
+
+.skip-link:focus{
+  top: 12px;
+}
+
+/* Browser surfaces: selection, caret and scrollbars follow the palette. */
+::selection{
+  background-color: color-mix(in srgb, var(--googleblue) 28%, transparent);
+  color: var(--ink);
+}
+
+input, textarea{
+  caret-color: var(--googleblue);
+}
+
+html{
+  scrollbar-color: var(--grey-400) transparent;
+}
+
+main:focus{
+  outline: none;
+}
+
 :focus-visible{
   outline: 2px solid var(--googleblue);
   outline-offset: 2px;

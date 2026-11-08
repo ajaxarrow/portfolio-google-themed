@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Search from "../components/Search.vue";
-import Profile from "../assets/images/closeup.jpg";
+import Profile from "../assets/images/closeup.webp";
 import MenuDialog from "../components/MenuDialog.vue";
 import {useScreenStore} from "../stores/screenSizeStore.ts";
 import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
@@ -9,6 +9,7 @@ import {links} from "../data/links.ts";
 import {useRoute} from "vue-router";
 import {PhMagnifyingGlass} from "@phosphor-icons/vue";
 import Footer from "../components/Footer.vue";
+import Wordmark from "../components/Wordmark.vue";
 import SideProfile from "../components/SideProfile.vue";
 import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
 import SideArticleInfo from "../components/SideArticleInfo.vue";
@@ -102,6 +103,7 @@ onMounted(() => {
 
 <template>
  <div class="main-layout-root">
+  <a href="#main" class="skip-link">Skip to results</a>
   <div v-if="isSmallLayout">
     <SearchView
         @change-layout="isSmallLayout = false"
@@ -114,13 +116,7 @@ onMounted(() => {
     <div v-if="isMobile || isSmall">
       <VRow class="ma-0 px-6 pt-6" justify="center" >
         <RouterLink class="text-logo text-center mb-3 text-decoration-none" to="/">
-          <span class="text-googleblue">j</span>
-          <span class="text-googlered">i</span>
-          <span class="text-googlegreen">u</span>
-          <span class="text-googleyellow">a</span>
-          <span class="text-googleblue">x</span>
-          <span class="text-googlered">l</span>
-          <span class="text-googleyellow">.</span>
+          <Wordmark/>
         </RouterLink>
       </VRow>
       <div class="position-relative mx-3">
@@ -141,13 +137,7 @@ onMounted(() => {
     >
       <div class="d-flex ga-6" style="width: 800px">
         <RouterLink class="text-logo text-center mb-3 text-decoration-none" to="/">
-          <span class="text-googleblue">j</span>
-          <span class="text-googlered">i</span>
-          <span class="text-googlegreen">u</span>
-          <span class="text-googleyellow">a</span>
-          <span class="text-googleblue">x</span>
-          <span class="text-googlered">l</span>
-          <span class="text-googleyellow">.</span>
+          <Wordmark/>
         </RouterLink>
         <div class="position-relative w-100" >
           <Search
@@ -179,17 +169,17 @@ onMounted(() => {
         </VAvatar>
       </div>
     </VRow>
-    <div
+    <nav
         ref="navContainer"
+        aria-label="Sections"
         class="ma-0 mx-10 d-flex ga-3 nav-links-container"
         :style="{
           paddingLeft: isMobile || isSmall ? '0px' : 'var(--layout-rail-offset)',
           paddingTop: isMobile || isSmall ? '70px' : '0px',
-          overflowX: 'auto',
         }"
     >
       <RouterLink
-        v-for="link in links" :key="link.name" class=" text-decoration-none text-black" :to="link.link">
+        v-for="link in links" :key="link.name" class="nav-link text-decoration-none text-black" :to="link.link">
         <div
             class="align-center cursor-pointer link-item d-flex align-center ga-2"
             :class="{ 'active-link': $route.path === link.link }"
@@ -198,9 +188,11 @@ onMounted(() => {
         </div>
       </RouterLink>
       <div class="nav-indicator" :style="indicatorStyle"></div>
-    </div>
+    </nav>
     <VDivider/>
-    <div
+    <main
+      id="main"
+      tabindex="-1"
       class="mx-5 mt-5"
       :style="{
         paddingLeft: isMobile || isSmall || isFullWidth ? '0px' : 'var(--layout-rail-offset)',
@@ -212,6 +204,7 @@ onMounted(() => {
             :style="{
               width: isMobile || isSmall || isFullWidth ? '100%' : 'var(--layout-content-width) !important',
             }">
+          <h1 v-if="route.meta.h1" class="sr-only">{{ route.meta.h1 }}</h1>
           <RouterView v-slot="{ Component }">
             <Transition name="results" mode="out-in">
               <component :is="Component" :key="$route.path" />
@@ -244,7 +237,7 @@ onMounted(() => {
             </VCol>
         </VRow>
       </div>
-    </div>
+    </main>
 
   </div>
   <Footer/>
@@ -266,6 +259,18 @@ onMounted(() => {
 
   .nav-links-container{
     position: relative;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .nav-links-container::-webkit-scrollbar{
+    display: none;
+  }
+
+  .nav-link{
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .nav-indicator{
@@ -316,6 +321,7 @@ onMounted(() => {
   }
 
   .link-item{
+    min-height: 44px;
     padding-right: 10px !important;
     padding-left: 10px !important;
     padding-bottom: 10px !important;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Profile from '../assets/images/closeup.jpg'
+  import Profile from '../assets/images/closeup.webp'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
@@ -7,11 +7,11 @@
   import SearchView from "./SearchView.vue";
   import {socials} from "../data/socials.ts";
   import MenuDialog from "../components/MenuDialog.vue";
+  import Wordmark from "../components/Wordmark.vue";
   import {fadeUpOnce, isReducedMotion} from "../composables/useMotionPresets.ts";
 
   const searchRef = ref();
 
-  const letterMotion = (index: number) => fadeUpOnce(index * 45, {durationMs: 260, riseYPx: 10});
   const searchMotion = () => fadeUpOnce(350, {durationMs: 300, riseYPx: 12});
 
   // Plain CSS opacity fade (no transform) for the icon grid: it sits directly beneath
@@ -63,7 +63,7 @@
   </div>
   <div v-else class="pa-6">
     <VRow align="center" justify="end" class="ma-0">
-      <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
+      <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="top-link mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
       <MenuDialog @focus-search="handleFocusSearch"/>
@@ -84,16 +84,10 @@
         </VTooltip>
       </VAvatar>
     </VRow>
-    <div class="center">
+    <main class="center" id="main">
       <div class="hero-col d-flex flex-column justify-center">
         <p class="text-title text-center mb-6">
-          <span v-motion="letterMotion(0)" class="text-googleblue">j</span>
-          <span v-motion="letterMotion(1)" class="text-googlered">i</span>
-          <span v-motion="letterMotion(2)" class="text-googlegreen">u</span>
-          <span v-motion="letterMotion(3)" class="text-googleyellow">a</span>
-          <span v-motion="letterMotion(4)" class="text-googleblue">x</span>
-          <span v-motion="letterMotion(5)" class="text-googlered">l</span>
-          <span v-motion="letterMotion(6)" class="text-googleyellow">.</span>
+          <Wordmark reveal/>
         </p>
         <div class="position-relative mb-15" v-motion="searchMotion()">
           <Search
@@ -108,7 +102,7 @@
           <div class="profile-head">
             <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="profile-photo" width="64" height="64">
             <div>
-              <h1 class="profile-role">Full-stack software engineer</h1>
+              <h1 class="profile-role"><span class="profile-name">Jiu Axl Tabilla</span><span class="profile-title">Full-stack software engineer</span></h1>
               <p class="profile-meta">Python · Django · Laravel · Vue.js</p>
             </div>
           </div>
@@ -117,7 +111,7 @@
             Open to remote work · Bukidnon, Philippines
           </p>
           <div class="cta-row">
-            <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)</a>
+            <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
             <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
             <a class="cta" href="https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
@@ -133,7 +127,7 @@
           <RouterLink v-for="q in ['django', 'figma', 'champion', 'aws']" :key="q" :to="{path: '/all', query: {q}}">{{ q }}</RouterLink>
         </p>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -191,6 +185,18 @@
     color: var(--ink);
   }
 
+  .profile-name{
+    display: block;
+    font-weight: 600;
+  }
+
+  .profile-title{
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--meta);
+  }
+
   .profile-meta{
     font-size: 14px;
     color: var(--meta);
@@ -239,10 +245,10 @@
   .cta--primary{
     background-color: var(--google-link);
     border-color: var(--google-link);
-    color: #fff;
+    color: var(--surface);
   }
 
-  .cta--primary:hover{ background-color: #1558b0; }
+  .cta--primary:hover{ background-color: var(--link-pressed); }
 
   .chip-row{
     display: flex;
@@ -283,6 +289,13 @@
   }
 
   .try a:hover{ text-decoration: underline; }
+
+  .top-link{
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 6px;
+  }
 
   .text-base:hover{
     text-decoration: underline !important;
