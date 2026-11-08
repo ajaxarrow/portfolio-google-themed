@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Profile from '../assets/images/closeup.jpg'
+  import Profile from '../assets/images/closeup.webp'
   import Search from "../components/Search.vue";
   import {links} from "../data/links.ts";
   import {useScreenStore} from "../stores/screenSizeStore.ts";
@@ -7,11 +7,11 @@
   import SearchView from "./SearchView.vue";
   import {socials} from "../data/socials.ts";
   import MenuDialog from "../components/MenuDialog.vue";
+  import Wordmark from "../components/Wordmark.vue";
   import {fadeUpOnce, isReducedMotion} from "../composables/useMotionPresets.ts";
 
   const searchRef = ref();
 
-  const letterMotion = (index: number) => fadeUpOnce(index * 45, {durationMs: 260, riseYPx: 10});
   const searchMotion = () => fadeUpOnce(350, {durationMs: 300, riseYPx: 12});
 
   // Plain CSS opacity fade (no transform) for the icon grid: it sits directly beneath
@@ -63,7 +63,7 @@
   </div>
   <div v-else class="pa-6">
     <VRow align="center" justify="end" class="ma-0">
-      <a v-for="social in socials" target="_blank" :href="social.link" class="mx-2 text-decoration-none text-base text-small">
+      <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="top-link mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
       <MenuDialog @focus-search="handleFocusSearch"/>
@@ -84,16 +84,10 @@
         </VTooltip>
       </VAvatar>
     </VRow>
-    <div class="center">
-      <div class="d-flex flex-column justify-center  ">
-        <p class="text-title text-center mb-3">
-          <span v-motion="letterMotion(0)" class="text-googleblue">j</span>
-          <span v-motion="letterMotion(1)" class="text-googlered">i</span>
-          <span v-motion="letterMotion(2)" class="text-googlegreen">u</span>
-          <span v-motion="letterMotion(3)" class="text-googleyellow">a</span>
-          <span v-motion="letterMotion(4)" class="text-googleblue">x</span>
-          <span v-motion="letterMotion(5)" class="text-googlered">l</span>
-          <span v-motion="letterMotion(6)" class="text-googleyellow">.</span>
+    <main class="center" id="main">
+      <div class="hero-col d-flex flex-column justify-center">
+        <p class="text-title text-center mb-6">
+          <Wordmark reveal/>
         </p>
         <div class="position-relative mb-15" v-motion="searchMotion()">
           <Search
@@ -104,33 +98,42 @@
             @update:searchQuery="$event => (searchQuery = $event)"
           />
         </div>
-        <div class="links-container mt-5">
-          <RouterLink
-            v-for="(link, index) in links"
-            :key="link.name"
-            class="d-flex flex-column align-center cursor-pointer text-decoration-none text-black link-item icon-reveal"
-            :class="{ 'icon-reveal--visible': iconsRevealed }"
-            :style="{ transitionDelay: iconRevealDelay(index) }"
-            :to="{path: link.link}">
-            <div class="icon-container">
-              <component :is="link.icon" size="32" :color="link.color" weight="duotone"/>
+        <section class="profile icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(0) }" aria-label="About Jiu Axl">
+          <div class="profile-head">
+            <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="profile-photo" width="64" height="64">
+            <div>
+              <h1 class="profile-role"><span class="profile-name">Jiu Axl Tabilla</span><span class="profile-title">Full-stack software engineer</span></h1>
+              <p class="profile-meta">Python · Django · Laravel · Vue.js</p>
             </div>
-            <p class="text-small mt-2">{{link.name}}</p>
+          </div>
+          <p class="profile-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            Open to remote work · Bukidnon, Philippines
+          </p>
+          <div class="cta-row">
+            <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
+            <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
+            <a class="cta" href="https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          </div>
+        </section>
+        <nav class="chip-row icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(2) }" aria-label="Sections">
+          <RouterLink v-for="link in links" :key="link.name" :to="{path: link.link}" class="chip">
+            <component :is="link.icon" size="18" :color="link.color" weight="duotone"/>
+            {{ link.name }}
           </RouterLink>
-
-        </div>
+        </nav>
+        <p class="try icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(4) }">
+          Try searching
+          <RouterLink v-for="q in ['django', 'figma', 'champion', 'aws']" :key="q" :to="{path: '/all', query: {q}}">{{ q }}</RouterLink>
+        </p>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <style scoped>
-
-
-  .link-item{
-    padding: 15px;
-    border-radius: 10px;
-    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  .hero-col{
+    width: min(584px, calc(100vw - 32px));
   }
 
   .icon-reveal{
@@ -140,29 +143,6 @@
 
   .icon-reveal--visible{
     opacity: 1;
-  }
-
-  .link-item:hover{
-    background-color: var(--grey-300);
-  }
-
-
-  .icon-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    background-color: var(--grey-200);
-    border-radius: 50%;
-  }
-
-  .menu-item-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
   }
 
   .tooltip-container{
@@ -177,23 +157,144 @@
     text-wrap: balance;
   }
 
-  .links-container{
+  .profile{
+    background-color: var(--grey-50);
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 24px;
+  }
+
+  .profile-head{
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .profile-photo{
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .profile-role{
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  .profile-name{
+    display: block;
+    font-weight: 600;
+  }
+
+  .profile-title{
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--meta);
+  }
+
+  .profile-meta{
+    font-size: 14px;
+    color: var(--meta);
+  }
+
+  .profile-status{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .status-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--googlegreen);
+    flex-shrink: 0;
+  }
+
+  .cta-row{
+    display: flex;
     flex-wrap: wrap;
-    width: 523px;
+    gap: 8px;
   }
 
-  @media (max-width: 580px) {
-    .links-container{
-      width: 400px;
-    }
+  .cta{
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 9999px;
+    background-color: var(--surface);
+    border: 1px solid var(--grey-300);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
   }
 
-  @media (max-width: 450px) {
-    .links-container{
-      width: 300px;
-    }
+  .cta:hover{ background-color: var(--grey-200); }
+
+  .cta--primary{
+    background-color: var(--google-link);
+    border-color: var(--google-link);
+    color: var(--surface);
+  }
+
+  .cta--primary:hover{ background-color: var(--link-pressed); }
+
+  .chip-row{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 10px;
+    border-radius: 16px;
+    background-color: var(--grey-100);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .chip:hover{ background-color: var(--grey-300); }
+
+  .try{
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--meta);
+  }
+
+  .try a{
+    margin-left: 12px;
+    color: var(--google-link);
+    text-decoration: none;
+  }
+
+  .try a:hover{ text-decoration: underline; }
+
+  .top-link{
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 6px;
   }
 
   .text-base:hover{

@@ -1,49 +1,61 @@
 import {SearchItem} from "../interfaces/link.interface.ts";
-import nomcaarrd from "../assets/icons/nomcaarrd.png";
-import idmdr from "../assets/images/idmdr.png"
+import nomcaarrd from "../assets/icons/nomcaarrd.webp";
+import idmdr from "../assets/images/idmdr.webp"
 import virtualclass from "../assets/icons/virtualclass.png"
-import portfolio from "../assets/images/portfolio.png"
-import mk from "../assets/images/mk.png"
+import portfolio from "../assets/images/portfolio.webp"
+import mk from "../assets/images/mk.webp"
 import portfolioIcon from "../assets/logo.jpg"
 import {getGalleryImages} from "./gallery.ts"
 
 export const projects: SearchItem[] = [
   {
     name: 'LINNKS',
-    title: 'LINNKS',
+    title: 'LINNKS: data mapping and repository platform',
     link: 'https://idmdr.netlify.app/',
     id: 'linnks',
-    description: 'Discover LINNKS: a powerful data mapping and repository platform designed to streamline project management and organize data tagging across multiple locations effortlessly. My role: main frontend developer and API integrator.',
+    description: 'Maps and organizes project data across locations. It is also my capstone Knowledge Management System, built for NOMCAARRD, defended at Central Mindanao University and later presented to NOMCAARRD affiliates. I designed the UI in Figma, then built it.',
+    role: 'Frontend developer, API integration and UI design',
+    stack: ['Vue.js', 'Figma', 'REST API'],
+    tags: ['frontend', 'capstone', 'nomcaarrd', 'mapping', 'knowledge management', 'ui/ux', 'javascript'],
     icon: nomcaarrd,
-    image: idmdr
+    image: idmdr,
+    featured: true,
   },
   {
     name: 'Virtual Class',
-    title: 'Virtual Class',
+    title: 'Virtual Class: an interactive plant lab',
     link: 'https://mkvirtualclass.com/',
     id: 'virtual-class',
-    description: "Contributed as a backend developer and data engineer, while also assisting in UI/UX design. Virtual Class is an interactive laboratory that complements the 'Vascular Plants in Mt. Pigngalngalan' workbook, offering a digital environment for studying plant taxonomy, morphology, and ecology. ",
+    description: "A virtual lab for plant taxonomy, morphology and ecology, paired with the 'Vascular Plants in Mt. Pigngalngalan' workbook.",
+    role: 'Backend developer and data engineer; contributed to UI/UX',
+    stack: ['Backend development', 'Data engineering', 'SQL'],
+    tags: ['education', 'database', 'sql', 'ui/ux'],
     icon: virtualclass,
     image: mk
   },
-  
-  {
-    name: 'Portfolio',
-    title: 'Google Themed Portfolio',
-    link: 'https://ajaxarrow.netlify.app/',
-    id: 'portfolio',
-    description: 'Explore Jiu Axl Tabilla’s Google-themed portfolio, showcasing his innovative projects, versatile skills, and professional journey in a sleek, modern design.',
-    icon: portfolioIcon,
-    image: portfolio
-  },
   {
     name: 'SellYoShirt',
-    title: 'SellYoShirt',
+    title: 'SellYoShirt: inventory and sales tracker',
     link: 'https://sellyoshit.netlify.app/',
     id: 'sellyoshirt',
-    description: 'SellYoShirt is a mobile app for tracking inventory and sales, built for garment resellers who are just starting their own business. My role: sole developer, since it is a personal project.',
+    description: 'A mobile inventory and sales tracker for new garment resellers. A personal product, built end to end.',
+    role: 'Sole developer',
+    stack: ['Mobile-first web app', 'Netlify'],
+    tags: ['inventory', 'solo', 'product'],
     icon: portfolioIcon,
     image: getGalleryImages('sellyoshirt')[0],
     visible: true,
+  },
+  {
+    name: 'Portfolio',
+    title: 'This site: a Google-style search results page',
+    link: '/',
+    id: 'portfolio',
+    description: 'A portfolio built as a search results page, with a working search box, knowledge panel and People Also Ask. Designed and built by me.',
+    role: 'Designer and developer',
+    stack: ['Vue 3', 'TypeScript', 'Vite', 'Vuetify'],
+    tags: ['frontend', 'ui/ux', 'design', 'netlify', 'javascript'],
+    icon: portfolioIcon,
+    image: portfolio
   },
 ];

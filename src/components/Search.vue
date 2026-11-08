@@ -134,7 +134,7 @@ watch(() => props.searchQuery, (newQuery) => {
   .search-container {
     width: 100%;
     box-sizing: border-box;
-    border-radius: 25px;
+    border-radius: 9999px;
     color: var(--meta);
     border: 1px solid var(--grey-300);
     overflow: hidden;

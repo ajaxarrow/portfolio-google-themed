@@ -61,7 +61,7 @@ const searchResults = computed(() => isSearching.value ? searchEntries(searchQue
           :searchItem="link"
           :index="index"
       />
-      <div class="mb-7">
+      <div v-if="overviewQuestions.length" class="mb-7">
         <p class="text-suggestion mb-3">People Also Ask</p>
         <VDivider class="mb-3 "/>
         <AccordionItem

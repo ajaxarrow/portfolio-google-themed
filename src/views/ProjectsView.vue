@@ -5,7 +5,8 @@ import {projects} from "../data/projects.ts";
 import {buzzerboyProjects} from "../data/buzzerboy-projects.ts";
 import {isVisible} from "../utils/entries.ts";
 
-const allProjects = [...projects, ...buzzerboyProjects].filter(isVisible);
+// Paid, production work leads; personal and academic projects follow.
+const allProjects = [...buzzerboyProjects, ...projects].filter(isVisible);
 </script>
 
 <template>

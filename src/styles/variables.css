@@ -10,6 +10,7 @@
   --googlegreen: #34A853;
   --googleyellow: #FBBC05;
   --google-link: #1A73E8;
+  --link-pressed: #1558b0; /* hover/pressed state of --google-link */
 
   /* Neutral surfaces / borders */
   --surface: #ffffff;

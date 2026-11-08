@@ -92,7 +92,7 @@
   }
   .menu-item:hover{
     background-color: var(--grey-200);
-    border-radius: 10px;
+    border-radius: 8px;
   }
 
   .menu-item{

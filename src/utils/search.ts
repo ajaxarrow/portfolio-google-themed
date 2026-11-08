@@ -30,9 +30,13 @@ export function resolveSearchDestination(query: string): SearchDestination {
 }
 
 export function matchesQuery(item: SearchItem, query: string): boolean {
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) return true;
-  return [item.name, item.title, item.description].some((field) => field?.toLowerCase().includes(normalized));
+  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length === 0) return true;
+  const haystack = [item.name, item.title, item.description, item.role, ...(item.stack ?? []), ...(item.tags ?? [])]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  return terms.every((term) => haystack.includes(term));
 }
 
 export function searchEntries(query: string): SearchItem[] {

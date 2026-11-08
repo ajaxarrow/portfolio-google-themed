@@ -6,14 +6,13 @@ const props = defineProps({
   },
 });
 
-const getRandomSeconds = (): string => {
-  const randomSeconds = Math.random() * (0.90 - 0.01) + 0.01;
-  return randomSeconds.toFixed(2);
-};
+// Stable per result count: the same page always reports the same "time", so the joke
+// doesn't jitter on static data between visits or re-renders.
+const seconds = ((props.results * 37) % 89 + 11) / 100;
 </script>
 
 <template>
-  <p>About {{ props.results }} results ({{ getRandomSeconds() }} seconds)</p>
+  <p>About {{ props.results }} results ({{ seconds.toFixed(2) }} seconds)</p>
 </template>
 
 <style scoped>

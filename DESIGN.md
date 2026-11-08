@@ -8,6 +8,7 @@ colors:
   googlegreen: "#34A853"
   googleyellow: "#FBBC05"
   google-link: "#1A73E8"
+  link-pressed: "#1558B0"
   ink: "#202124"
   meta: "#5F6368"
   grey-50: "#F8F9FA"
@@ -43,6 +44,11 @@ typography:
     fontSize: "12px"
     fontWeight: 500
     lineHeight: 1.25
+  article-reading:
+    fontFamily: "Literata, Georgia, serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.7
   article-display:
     fontFamily: "Literata, Georgia, serif"
     fontSize: "clamp(2rem, 1.6rem + 1.6vw, 2.75rem)"

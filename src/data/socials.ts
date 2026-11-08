@@ -10,7 +10,7 @@ export const socials: Link[] = [
   },
   {
     name: 'Email',
-    link: 'https://mail.google.com/mail/u/0/?fs=1&to=axldamnaxl@gmail.com&tf=cm',
+    link: 'mailto:axldamnaxl@gmail.com',
     color: '#c52626',
     icon: PhEnvelope
   },

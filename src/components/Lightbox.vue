@@ -75,6 +75,7 @@ function handleKeydown(event: KeyboardEvent) {
 // to observe on that first render — without it, the very first open of a
 // session would skip the focus-in entirely.
 watch(() => props.modelValue, (isOpen) => {
+  if (typeof document === 'undefined') return; // SSG: no DOM at build time
   document.body.style.overflow = isOpen ? 'hidden' : '';
   if (isOpen) {
     previouslyFocused = document.activeElement as HTMLElement;
@@ -192,7 +193,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   background-color: var(--grey-50);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
 }
 

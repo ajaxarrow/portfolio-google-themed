@@ -18,6 +18,13 @@ interface SearchItem{
   icon?: string;
   date?: string;
   visible?: boolean;
+  /** One line: what I did on this, e.g. "Lead full-stack Django developer". */
+  role?: string;
+  /** Stack / skills shown under the title and matched by search. */
+  stack?: string[];
+  /** Extra search keywords not shown on screen. */
+  tags?: string[];
+  featured?: boolean;
 }
 
 interface QnAItem{

@@ -2,7 +2,9 @@
 import EasterEggHost from "./components/EasterEggHost.vue";
 import {useEasterEggs, KONAMI_SEQUENCE} from "./composables/useEasterEggs.ts";
 import {useKeySequence} from "./composables/useKeySequence.ts";
+import {useRouteHead} from "./seo/useRouteHead.ts";
 
+useRouteHead();
 const {triggerById} = useEasterEggs();
 useKeySequence(KONAMI_SEQUENCE, () => triggerById('konami-note'));
 </script>

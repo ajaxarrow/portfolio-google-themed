@@ -51,7 +51,7 @@ const toggleAccordion = () => {
 
 .accordion-item:hover{
   background-color: var(--grey-200);
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .flip-enter-active,

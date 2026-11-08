@@ -12,6 +12,7 @@ const route = useRoute();
 const id = computed(() => route.params.id as string);
 const entry = computed(() => findEntryById(id.value));
 const article = computed(() => getArticle(id.value));
+const externalLink = computed(() => /^https?:/.test(entry.value?.link ?? '') ? entry.value?.link : undefined);
 const photos = computed(() => getGalleryImages(id.value));
 const hero = computed(() => photos.value[0]);
 const filmstrip = computed(() => photos.value.slice(1));
@@ -44,11 +45,10 @@ function openLightbox(index: number) {
     </RouterLink>
 
     <header class="article-header" v-motion="headerMotion">
-      <div v-if="categoryLabel" class="kicker">
-        <span class="kicker-dot"></span>{{ categoryLabel }}
-      </div>
       <h1 class="article-title">{{ entry.title }}</h1>
       <div class="article-meta">
+        <span v-if="categoryLabel">{{ categoryLabel }}</span>
+        <span v-if="categoryLabel" class="meta-dot">&middot;</span>
         <span v-if="entry.date">{{ entry.date }}</span>
         <span v-if="entry.date" class="meta-dot">&middot;</span>
         <span>{{ readingTime }} min read</span>
@@ -90,8 +90,13 @@ function openLightbox(index: number) {
     />
   </article>
   <div v-else class="article-not-found">
-    <p class="text-red font-weight-medium mb-2">This article doesn't exist.</p>
-    <p class="mb-3">Try heading back to <RouterLink to="/about">About Me</RouterLink> instead.</p>
+    <h1 class="not-found-title">No write-up for this one</h1>
+    <p v-if="externalLink" class="mb-3">
+      <strong>{{ entry?.title }}</strong> lives on its original post instead.
+      <a :href="externalLink" target="_blank" rel="noopener noreferrer">Open the original post<span class="sr-only"> (opens in a new tab)</span></a>.
+    </p>
+    <p v-else class="mb-3">That article does not exist.</p>
+    <p class="mb-3">Back to <RouterLink to="/about">About Me</RouterLink> or <RouterLink to="/all">everything</RouterLink>.</p>
   </div>
 </template>
 
@@ -124,27 +129,6 @@ function openLightbox(index: number) {
 
 .back-link:hover .back-arrow{
   transform: translateX(-3px);
-}
-
-.kicker{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background-color: var(--grey-100);
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.kicker-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  flex-shrink: 0;
 }
 
 .article-title{
@@ -222,7 +206,7 @@ function openLightbox(index: number) {
 }
 
 .filmstrip-title{
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 14px;
@@ -240,7 +224,7 @@ function openLightbox(index: number) {
   width: auto;
   flex-shrink: 0;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid var(--grey-300);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-out-quart);
@@ -248,6 +232,12 @@ function openLightbox(index: number) {
 
 .filmstrip-photo:hover{
   opacity: 0.85;
+}
+
+.not-found-title{
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
 
 .article-not-found{
