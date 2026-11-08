@@ -21,8 +21,7 @@ export const buzzerboyProjects: SearchItem[] = [
     title: 'StraightLine: from SaaS to AWS Marketplace',
     link: 'https://www.usestraightline.com/welcome/',
     id: 'straightline',
-    // TODO(axl): add one real outcome (users, listings launched) to this description.
-    description: 'Guides SaaS companies through AWS Partner status, Foundational Technical Review (FTR) readiness and AWS Marketplace launch. I owned the Django backend architecture and the workflows behind each step.',
+    description: 'Takes a SaaS company from AWS Partner status through Foundational Technical Review (FTR) readiness to a live AWS Marketplace listing. I owned the Django backend architecture, designed the relational models and REST APIs, and built the workflow behind each step.',
     role: 'Lead full-stack Django developer',
     stack: ['Django', 'REST API', 'AWS'],
     tags: ['python', 'backend', 'saas', 'marketplace', 'ftr', 'architecture'],
@@ -61,7 +60,7 @@ export const buzzerboyProjects: SearchItem[] = [
   {
     name: 'TechRepNetwork',
     title: 'TechRepNetwork: a marketplace for sales reps',
-    link: 'https://techrepnetwork.com/',
+    link: 'https://www.techrepnetwork.com/',
     id: 'techrepnetwork',
     description: 'Connects independent sales reps with high-growth tech companies on commission. I led development of the marketplace architecture, APIs and the business workflows around deals.',
     role: 'Lead full-stack developer',

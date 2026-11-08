@@ -1,11 +1,11 @@
 import { SearchItem } from "../interfaces/link.interface.ts";
 import figma from "../assets/icons/figma.png";
-import sheesh from "../assets/images/sheesh.png";
-import idmdr from "../assets/images/idmdr.png";
-import payroll from "../assets/images/payroll.png";
-import farmaid from "../assets/images/farmaid.png";
-import kahibawhub from "../assets/images/kahibawhub.png";
-import ecotrail from "../assets/images/ecotrail.png";
+import sheesh from "../assets/images/sheesh.webp";
+import idmdr from "../assets/images/idmdr.webp";
+import payroll from "../assets/images/payroll.webp";
+import farmaid from "../assets/images/farmaid.webp";
+import kahibawhub from "../assets/images/kahibawhub.webp";
+import {getGalleryImages} from "./gallery.ts";
 
 export const designs: SearchItem[] = [
   {
@@ -16,7 +16,7 @@ export const designs: SearchItem[] = [
     // TODO(axl): add booking-flow wireframes + before/after iterations for a process case study.
     description: 'Full mobile UI for a shoe cleaning and repair platform, focused on simple booking flows.',
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
+    tags: ['figma','ui/ux','design','prototype','mobile','booking','on-demand service','shoe repair'],
     image: sheesh
   },
   {
@@ -26,7 +26,7 @@ export const designs: SearchItem[] = [
     id: 'linnks-ui',
     description: 'Interface for a data-mapping and repository platform. I then built it as the frontend developer in Vue.js, taking one product from Figma to production.',
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
+    tags: ['figma','ui/ux','design','prototype','web','dashboard','mapping','data repository','vue.js'],
     image: idmdr
   },
   {
@@ -36,7 +36,7 @@ export const designs: SearchItem[] = [
     id: 'payroll-ui',
     description: 'Payroll-management screens built from reusable design-system components, so every layout stays consistent.',
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
+    tags: ['figma','ui/ux','design','prototype','web','design system','components','payroll','admin'],
     image: payroll
   },
   {
@@ -46,8 +46,8 @@ export const designs: SearchItem[] = [
     id: 'eco-trail',
     description: "A travel landing page designed and shipped in two hours as a timed internship challenge, with a light entrance animation that keeps the focus on the destination photography.",
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
-    image: ecotrail
+    tags: ['figma','ui/ux','design','prototype','landing page','travel','timed challenge','animation'],
+    image: getGalleryImages("eco-trail")[0]
   },
   {
     name: 'FarmAid',
@@ -56,7 +56,7 @@ export const designs: SearchItem[] = [
     id: 'farm-aid',
     description: "Mobile app UI that gives farmers access to agricultural resources and experts. The concept won the Innova Hackathon, where I was project manager and UI designer.",
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
+    tags: ['figma','ui/ux','design','prototype','mobile','hackathon','agriculture','project manager','award'],
     image: farmaid
   },
   {
@@ -66,7 +66,7 @@ export const designs: SearchItem[] = [
     id: 'kahibawhub',
     description: "App screens designed in two days by adapting components from earlier projects. The app went on to a CyberSciTech 2025 paper.",
     icon: figma,
-    tags: ['figma', 'ui/ux', 'design', 'prototype', 'mobile'],
+    tags: ['figma','ui/ux','design','prototype','mobile','education','blockchain','research','paper'],
     image: kahibawhub
   },
 ];

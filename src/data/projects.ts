@@ -1,9 +1,9 @@
 import {SearchItem} from "../interfaces/link.interface.ts";
-import nomcaarrd from "../assets/icons/nomcaarrd.png";
-import idmdr from "../assets/images/idmdr.png"
+import nomcaarrd from "../assets/icons/nomcaarrd.webp";
+import idmdr from "../assets/images/idmdr.webp"
 import virtualclass from "../assets/icons/virtualclass.png"
-import portfolio from "../assets/images/portfolio.png"
-import mk from "../assets/images/mk.png"
+import portfolio from "../assets/images/portfolio.webp"
+import mk from "../assets/images/mk.webp"
 import portfolioIcon from "../assets/logo.jpg"
 import {getGalleryImages} from "./gallery.ts"
 
@@ -28,7 +28,7 @@ export const projects: SearchItem[] = [
     id: 'virtual-class',
     description: "A virtual lab for plant taxonomy, morphology and ecology, paired with the 'Vascular Plants in Mt. Pigngalngalan' workbook.",
     role: 'Backend developer and data engineer; contributed to UI/UX',
-    stack: ['Backend', 'Data engineering'],
+    stack: ['Backend development', 'Data engineering', 'SQL'],
     tags: ['education', 'database', 'sql', 'ui/ux'],
     icon: virtualclass,
     image: mk
@@ -40,7 +40,7 @@ export const projects: SearchItem[] = [
     id: 'sellyoshirt',
     description: 'A mobile inventory and sales tracker for new garment resellers. A personal product, built end to end.',
     role: 'Sole developer',
-    stack: ['Mobile'],
+    stack: ['Mobile-first web app', 'Netlify'],
     tags: ['inventory', 'solo', 'product'],
     icon: portfolioIcon,
     image: getGalleryImages('sellyoshirt')[0],
