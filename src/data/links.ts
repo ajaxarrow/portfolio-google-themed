@@ -1,4 +1,4 @@
-import {PhCode, PhFigmaLogo, PhImages, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
+import {PhBriefcase, PhCode, PhFigmaLogo, PhImages, PhEnvelopeSimple, PhInstagramLogo, PhTextIndent, PhUserRectangle} from "@phosphor-icons/vue";
 import {Link} from "../interfaces/link.interface.ts";
 
 
@@ -14,6 +14,12 @@ export const links: Link[] = [
     link: '/about',
     color: '#4D1683',
     icon: PhUserRectangle
+  },
+  {
+    name: 'Case Studies',
+    link: '/case-studies',
+    color: '#1A73E8',
+    icon: PhBriefcase
   },
   {
     name: 'Projects',
@@ -32,6 +38,12 @@ export const links: Link[] = [
     link: '/socials',
     color: '#819D12',
     icon: PhInstagramLogo
+  },
+  {
+    name: 'Contact',
+    link: '/contact',
+    color: '#C5221F',
+    icon: PhEnvelopeSimple
   },
   {
     name: 'Images',

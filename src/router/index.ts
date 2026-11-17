@@ -32,6 +32,12 @@ export const routes: RouteRecordRaw[] = [
           meta: {h1: 'Projects by Jiu Axl Tabilla', title: 'Projects | Jiu Axl Tabilla, Full-Stack Developer Portfolio', description: 'Software projects by Jiu Axl Tabilla: Django and Laravel SaaS platforms, Vue.js web apps, REST APIs, AWS Marketplace tooling and Flutter mobile apps.'}
         },
         {
+          path: 'case-studies',
+          name: 'case-studies',
+          component: () => import("../views/CaseStudiesView.vue"),
+          meta: {fullWidth: true, title: 'Case Studies | Hire Jiu Axl Tabilla, Full-Stack Developer for SaaS', description: 'Case studies from Jiu Axl Tabilla: production SaaS, compliance platforms and two-sided marketplaces. The problem, what was built, the outcome, and how to start a project.'}
+        },
+        {
           path: 'designs',
           name: 'designs',
           component: () => import("../views/DesignsView.vue"),
@@ -41,7 +47,13 @@ export const routes: RouteRecordRaw[] = [
           path: 'socials',
           name: 'socials',
           component: () => import("../views/SocialsView.vue"),
-          meta: {h1: 'Contact Jiu Axl Tabilla', title: 'Contact & Socials | Hire Jiu Axl Tabilla', description: 'Contact Jiu Axl Tabilla for software development jobs, freelance and remote work: email, LinkedIn, GitHub and more.'}
+          meta: {h1: 'Jiu Axl Tabilla on LinkedIn, GitHub and more', title: 'Socials | Jiu Axl Tabilla on LinkedIn and GitHub', description: 'Find Jiu Axl Tabilla on LinkedIn and GitHub, download the résumé, or go to the contact form.'}
+        },
+        {
+          path: 'contact',
+          name: 'contact',
+          component: () => import("../views/ContactView.vue"),
+          meta: {fullWidth: true, title: 'Contact | Start a Project with Jiu Axl Tabilla', description: 'Contact Jiu Axl Tabilla about AI automation, software development and web development projects. Send a message with the contact form or by email.'}
         },
         {
           path: 'images',

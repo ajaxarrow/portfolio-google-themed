@@ -158,7 +158,7 @@ onMounted(() => {
             size="32"
             class="ml-2 cursor-pointer"
         >
-          <VImg :src="Profile"></VImg>
+          <VImg :src="Profile" alt=""></VImg>
           <VTooltip
               activator="parent"
               location="bottom"

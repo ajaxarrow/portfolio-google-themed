@@ -9,6 +9,21 @@
   import MenuDialog from "../components/MenuDialog.vue";
   import Wordmark from "../components/Wordmark.vue";
   import {fadeUpOnce, isReducedMotion} from "../composables/useMotionPresets.ts";
+  import {caseStudies} from "../data/case-studies.ts";
+  import {useEasterEggs} from "../composables/useEasterEggs.ts";
+
+  const {triggerById} = useEasterEggs();
+  // Hints for the hidden search tricks; clicking one fires it, typing it works too.
+  const eggHints = [
+    {id: 'barrel-roll', label: 'do a barrel roll'},
+    {id: 'askew', label: 'askew'},
+    {id: 'coin', label: 'flip a coin'},
+  ];
+
+  // Clients land here first: lead with the work, keep the rest one click away.
+  const topResults = caseStudies.filter((study) => study.featured);
+  const HOME_CHIPS = ['Case Studies', 'Projects', 'About Me', 'Contact'];
+  const homeLinks = links.filter((link) => HOME_CHIPS.includes(link.name));
 
   const searchRef = ref();
 
@@ -62,7 +77,7 @@
     />
   </div>
   <div v-else class="pa-6">
-    <VRow align="center" justify="end" class="ma-0">
+    <VRow align="center" justify="end" class="ma-0 top-bar">
       <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="top-link mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
@@ -71,7 +86,7 @@
           size="32"
           class="ml-2 cursor-pointer"
       >
-        <VImg :src="Profile"></VImg>
+        <VImg :src="Profile" alt=""></VImg>
         <VTooltip
           activator="parent"
           location="bottom"
@@ -102,29 +117,46 @@
           <div class="profile-head">
             <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="profile-photo" width="64" height="64">
             <div>
-              <h1 class="profile-role"><span class="profile-name">Jiu Axl Tabilla</span><span class="profile-title">Full-stack software engineer</span></h1>
-              <p class="profile-meta">Python · Django · Laravel · Vue.js</p>
+              <h1 class="profile-role"><span class="profile-name">Jiu Axl Tabilla</span><span class="profile-title">Software engineer</span></h1>
+              <p class="profile-meta">AI automation · Software development · Web development</p>
             </div>
           </div>
+          <p class="profile-pitch">
+            I build SaaS backends, marketplaces and AI tools for startups and small teams, from the first Figma screen to deployed code.
+          </p>
           <p class="profile-status">
             <span class="status-dot" aria-hidden="true"></span>
-            Open to remote work · Bukidnon, Philippines
+            Open to client projects and remote work · Bukidnon, Philippines
           </p>
           <div class="cta-row">
-            <a class="cta cta--primary" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
-            <a class="cta" href="mailto:axldamnaxl@gmail.com">Email me</a>
-            <a class="cta" href="https://www.linkedin.com/in/jiu-axl-tabilla-9bb659303/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <RouterLink class="cta cta--primary" to="/case-studies">See case studies</RouterLink>
+            <RouterLink class="cta" to="/contact">Contact me</RouterLink>
+            <a class="cta" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </section>
+        <section class="top-results icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(1) }" aria-labelledby="top-results-heading">
+          <h2 id="top-results-heading" class="top-results-heading">Top results</h2>
+          <RouterLink v-for="study in topResults" :key="study.id" :to="{path: '/case-studies', hash: `#${study.id}`}" class="top-result">
+            <span class="top-result-text">
+              <span class="top-result-source">{{ study.name }} · {{ study.client }}</span>
+              <span class="top-result-title">{{ study.title }}</span>
+            </span>
+            <img v-if="study.thumbs[0]" :src="study.thumbs[0]" alt="" class="top-result-thumb img-skeleton" width="112" height="70" loading="lazy" decoding="async">
+          </RouterLink>
+        </section>
         <nav class="chip-row icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(2) }" aria-label="Sections">
-          <RouterLink v-for="link in links" :key="link.name" :to="{path: link.link}" class="chip">
+          <RouterLink v-for="link in homeLinks" :key="link.name" :to="{path: link.link}" class="chip">
             <component :is="link.icon" size="18" :color="link.color" weight="duotone"/>
             {{ link.name }}
           </RouterLink>
         </nav>
         <p class="try icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(4) }">
           Try searching
-          <RouterLink v-for="q in ['django', 'figma', 'champion', 'aws']" :key="q" :to="{path: '/all', query: {q}}">{{ q }}</RouterLink>
+          <RouterLink v-for="q in ['ai', 'django', 'figma', 'aws']" :key="q" :to="{path: '/all', query: {q}}">{{ q }}</RouterLink>
+        </p>
+        <p class="try try-eggs icon-reveal" :class="{ 'icon-reveal--visible': iconsRevealed }" :style="{ transitionDelay: iconRevealDelay(5) }">
+          Or something less useful
+          <button v-for="egg in eggHints" :key="egg.id" type="button" @click="triggerById(egg.id)">{{ egg.label }}</button>
         </p>
       </div>
     </main>
@@ -200,6 +232,76 @@
   .profile-meta{
     font-size: 14px;
     color: var(--meta);
+  }
+
+  .profile-pitch{
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .top-results{
+    margin-top: 28px;
+  }
+
+  .top-results-heading{
+    padding: 0 8px 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--meta);
+  }
+
+  .top-result{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 8px;
+    border-radius: 16px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--ease-out-quart);
+  }
+
+  .top-result:hover{ background-color: var(--grey-100); }
+
+  .top-result-text{
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .top-result-source{
+    font-size: 12px;
+    color: var(--meta);
+  }
+
+  .top-result-title{
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--google-link);
+    text-wrap: balance;
+  }
+
+  .top-result:hover .top-result-title{ text-decoration: underline; }
+
+  .top-result-thumb{
+    flex-shrink: 0;
+    width: 112px;
+    height: 70px;
+    border: 1px solid var(--grey-300);
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  @media (max-width: 480px){
+    /* The same links live in the menu and the profile card; here they only wrap the bar. */
+    .top-bar .top-link{ display: none; }
+    .top-result-thumb{ width: 84px; height: 56px; }
   }
 
   .profile-status{
@@ -289,6 +391,21 @@
   }
 
   .try a:hover{ text-decoration: underline; }
+
+  .try-eggs{ margin-top: 4px; }
+
+  .try button{
+    margin-left: 12px;
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--google-link);
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .try button:hover{ text-decoration: underline; }
 
   .top-link{
     display: inline-flex;
