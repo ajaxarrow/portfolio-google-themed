@@ -13,9 +13,11 @@ import Wordmark from "../components/Wordmark.vue";
 import SideProfile from "../components/SideProfile.vue";
 import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
 import SideArticleInfo from "../components/SideArticleInfo.vue";
+import SideHire from "../components/SideHire.vue";
 import {isReducedMotion} from "../composables/useMotionPresets.ts";
 
 const sideComponents: Record<string, any> = {
+  hire: SideHire,
   profile: SideProfile,
   aboutPortfolio: SideAboutPortfolio,
   article: SideArticleInfo,
@@ -245,9 +247,8 @@ onMounted(() => {
             </Transition>
           </RouterView>
         </div>
-        <div v-if="!isMobile && !isSmall && !isFullWidth" class="side-details w-50"
-        >
-          <component :is="sideComponent" v-if="sideComponent" />
+        <div v-if="!isMobile && !isSmall && !isFullWidth && sideComponent" class="side-details">
+          <component :is="sideComponent" />
         </div>
       </div>
       <div
@@ -330,6 +331,12 @@ onMounted(() => {
     min-width: 44px;
     min-height: 44px;
     border-radius: 50%;
+  }
+
+  .side-details{
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 600px;
   }
 
   .suggestion-grid{

@@ -29,7 +29,7 @@ export const routes: RouteRecordRaw[] = [
           path: 'projects',
           name: 'projects',
           component: () => import("../views/ProjectsView.vue"),
-          meta: {h1: 'Projects by Jiu Axl Tabilla', title: 'Projects | Jiu Axl Tabilla, Full-Stack Developer Portfolio', description: 'Software projects by Jiu Axl Tabilla: Django and Laravel SaaS platforms, Vue.js web apps, REST APIs, AWS Marketplace tooling and Flutter mobile apps.'}
+          meta: {side: 'hire', h1: 'Projects by Jiu Axl Tabilla', title: 'Projects | Jiu Axl Tabilla, Full-Stack Developer Portfolio', description: 'Software projects by Jiu Axl Tabilla: Django and Laravel SaaS platforms, Vue.js web apps, REST APIs, AWS Marketplace tooling and Flutter mobile apps.'}
         },
         {
           path: 'case-studies',
@@ -41,13 +41,13 @@ export const routes: RouteRecordRaw[] = [
           path: 'designs',
           name: 'designs',
           component: () => import("../views/DesignsView.vue"),
-          meta: {h1: 'UI/UX designs by Jiu Axl Tabilla', title: 'UI/UX Designs | Jiu Axl Tabilla', description: 'UI/UX design work by Jiu Axl Tabilla: Figma prototypes and interfaces for web and mobile products.'}
+          meta: {side: 'hire', h1: 'UI/UX designs by Jiu Axl Tabilla', title: 'UI/UX Designs | Jiu Axl Tabilla', description: 'UI/UX design work by Jiu Axl Tabilla: Figma prototypes and interfaces for web and mobile products.'}
         },
         {
           path: 'socials',
           name: 'socials',
           component: () => import("../views/SocialsView.vue"),
-          meta: {h1: 'Jiu Axl Tabilla on LinkedIn, GitHub and more', title: 'Socials | Jiu Axl Tabilla on LinkedIn and GitHub', description: 'Find Jiu Axl Tabilla on LinkedIn and GitHub, download the résumé, or go to the contact form.'}
+          meta: {side: 'hire', h1: 'Jiu Axl Tabilla on LinkedIn, GitHub and more', title: 'Socials | Jiu Axl Tabilla on LinkedIn and GitHub', description: 'Find Jiu Axl Tabilla on LinkedIn and GitHub, download the résumé, or go to the contact form.'}
         },
         {
           path: 'contact',
@@ -71,7 +71,7 @@ export const routes: RouteRecordRaw[] = [
           path: ':pathMatch(.*)*',
           name: 'error404',
           component: () => import("../views/NotFoundView.vue"),
-          meta: {h1: 'Page not found', noindex: true, title: 'Page not found | Jiu Axl Tabilla', description: 'This page does not exist. Head back to the portfolio of Jiu Axl Tabilla, full-stack software engineer.'}
+          meta: {side: 'hire', h1: 'Page not found', noindex: true, title: 'Page not found | Jiu Axl Tabilla', description: 'This page does not exist. Head back to the portfolio of Jiu Axl Tabilla, full-stack software engineer.'}
         },
       ]
     },
