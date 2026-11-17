@@ -3,10 +3,18 @@ const modules = import.meta.glob("../assets/gallery/*/*.{webp,jpg,jpeg,png,svg}"
   import: "default",
 }) as Record<string, string>;
 
+/** 640px WebP twins of every gallery image (see the `?thumb` directive in vite.config.ts), keyed like `modules`. */
+const thumbModules = import.meta.glob("../assets/gallery/*/*.{webp,jpg,jpeg,png}", {
+  eager: true,
+  import: "default",
+  query: "?thumb",
+}) as Record<string, string>;
+
 const LOGO_SUFFIX = "-logo.";
 
 const galleryImages: Record<string, string[]> = {};
 const galleryLogos: Record<string, string> = {};
+const galleryThumbs: Record<string, string[]> = {};
 
 Object.keys(modules)
   .sort()
@@ -22,6 +30,7 @@ Object.keys(modules)
 
     if (!galleryImages[id]) galleryImages[id] = [];
     galleryImages[id].push(modules[path]);
+    (galleryThumbs[id] ??= []).push(thumbModules[path] ?? modules[path]);
   });
 
 export { galleryImages };
@@ -38,4 +47,14 @@ export function getHeroImage(id: string): string | undefined {
 /** The small brand mark for an entry, named `<id>-logo.<ext>` in its gallery folder. Not a photo. */
 export function getLogoImage(id: string): string | undefined {
   return galleryLogos[id];
+}
+
+/** Small (640px) version of an entry's nth photo, for list rows and thumbnail strips. */
+export function getThumbImage(id: string, index = 0): string | undefined {
+  return galleryThumbs[id]?.[index];
+}
+
+/** Small versions of every photo, same order as getGalleryImages. */
+export function getThumbImages(id: string): string[] {
+  return galleryThumbs[id] ?? [];
 }

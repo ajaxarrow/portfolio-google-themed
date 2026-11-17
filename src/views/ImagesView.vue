@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {galleryImages} from "../data/gallery.ts";
+import {galleryImages, getThumbImages} from "../data/gallery.ts";
 import {findEntryById, getCategoryLabel, getEntryCategory, isVisible, EntryCategory} from "../utils/entries.ts";
 import Lightbox from "../components/Lightbox.vue";
 import ResultHeader from "../components/ResultHeader.vue";
@@ -12,6 +12,7 @@ const router = useRouter();
 
 interface GalleryTile {
   src: string;
+  thumb: string;
   id: string;
   index: number;
   item: ReturnType<typeof findEntryById>;
@@ -34,7 +35,8 @@ const allPhotos = computed<GalleryTile[]>(() =>
       const item = findEntryById(id);
       if (!item || !isVisible(item)) return [];
       const category = getEntryCategory(id);
-      return images.map((src, index) => ({src, id, index, item, images, category}));
+      const thumbs = getThumbImages(id);
+      return images.map((src, index) => ({src, thumb: thumbs[index] ?? src, id, index, item, images, category}));
     })
   )
 );
@@ -61,6 +63,19 @@ const loadedSrcs = ref(new Set<string>());
 function markLoaded(src: string) {
   loadedSrcs.value.add(src);
 }
+
+// Images that finished loading before hydration never fire @load; pick them up here.
+const gridRoot = ref<HTMLElement | null>(null);
+function syncLoaded() {
+  gridRoot.value?.querySelectorAll<HTMLImageElement>('.masonry-tile img').forEach((img) => {
+    if (img.complete && img.naturalWidth > 0) markLoaded(img.getAttribute('src') ?? '');
+  });
+}
+onMounted(() => nextTick(syncLoaded));
+watch(activeCategory, () => nextTick(syncLoaded));
+
+// Varied placeholder heights so the grid does not look like identical blocks while loading.
+const skeletonHeight = (i: number) => [150, 210, 180, 240][i % 4] + 'px';
 
 const lightboxOpen = ref(false);
 const activeTile = ref<GalleryTile | null>(null);
@@ -116,23 +131,27 @@ onMounted(() => {
       <p>Try a different category above.</p>
     </div>
 
-    <div v-else class="masonry">
+    <div v-else ref="gridRoot" class="masonry">
       <div v-for="(tile, i) in filteredPhotos" :key="`${tile.id}-${tile.index}`" class="masonry-item" v-motion="fadeUpStagger(i)">
-        <div v-if="!loadedSrcs.has(tile.src)" class="masonry-skeleton"></div>
-        <img
-            :src="tile.src"
+        <div v-if="!loadedSrcs.has(tile.thumb)" class="masonry-skeleton" :style="{height: skeletonHeight(i)}" aria-hidden="true"></div>
+        <button
             class="masonry-tile"
-            :class="{ 'masonry-tile--visible': loadedSrcs.has(tile.src) }"
-            :alt="tile.item?.title ?? ''"
-            role="button"
-            tabindex="0"
-            loading="lazy"
-            decoding="async"
+            :class="{ 'masonry-tile--visible': loadedSrcs.has(tile.thumb) }"
+            :aria-label="`Open ${tile.item?.name ?? 'photo'}, photo ${tile.index + 1} of ${tile.images.length}`"
             @click="openTile(tile, tile.index)"
-            @keydown.enter="openTile(tile, tile.index)"
-            @keydown.space.prevent="openTile(tile, tile.index)"
-            @load="markLoaded(tile.src)"
-        />
+        >
+          <img
+              :src="tile.thumb"
+              :alt="tile.item?.title ?? ''"
+              loading="lazy"
+              decoding="async"
+              @load="markLoaded(tile.thumb)"
+          />
+          <span class="tile-caption">
+            <span class="tile-name">{{ tile.item?.name }}</span>
+            <span v-if="tile.images.length > 1" class="tile-count">{{ tile.index + 1 }}/{{ tile.images.length }}</span>
+          </span>
+        </button>
       </div>
     </div>
 
@@ -140,6 +159,7 @@ onMounted(() => {
         v-if="activeTile"
         v-model="lightboxOpen"
         :images="activeTile.images"
+        :thumbs="getThumbImages(activeTile.id)"
         :start-index="activeTile.index"
         :item="activeTile.item"
         @update:model-value="(value: boolean) => !value && closeLightbox()"
@@ -223,25 +243,87 @@ onMounted(() => {
 }
 
 .masonry-tile{
+  position: relative;
   width: 100%;
   height: 0;
+  padding: 0;
   overflow: hidden;
   display: block;
   border-radius: 16px;
   border: 1px solid var(--grey-300);
-  cursor: pointer;
+  background-color: var(--grey-100);
+  cursor: zoom-in;
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out-quart);
 }
 
+.masonry-tile img{
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .masonry-tile--visible{
   height: auto;
-  overflow: visible;
   opacity: 1;
 }
 
-.masonry-tile--visible:hover{
-  opacity: 0.85;
+.masonry-tile--visible:hover img,
+.masonry-tile--visible:focus-visible img{
+  transform: scale(1.05);
+}
+
+.tile-caption{
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-base) var(--ease-out-quart);
+}
+
+.tile-name,
+.tile-count{
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background-color: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tile-name{
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tile-count{
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.masonry-tile:hover .tile-caption,
+.masonry-tile:focus-visible .tile-caption{
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none){
+  .tile-caption{ display: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .masonry-tile--visible:hover img,
+  .masonry-tile--visible:focus-visible img{ transform: none; }
 }
 
 @media (min-width: 640px){

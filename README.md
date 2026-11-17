@@ -26,6 +26,12 @@ npm run preview
 
 Design intent lives in `PRODUCT.md` and `DESIGN.md`.
 
+## Images
+
+- Drop photos in `src/assets/gallery/<entry-id>/` as WebP, up to ~1600px on the long edge. Logos are named `<id>-logo.webp`.
+- Every gallery image also gets a 640px twin at build time (`?thumb`, via `vite-imagetools` in `vite.config.ts`). Use `getThumbImage(id)` / `getThumbImages(id)` from `src/data/gallery.ts` for list rows and strips, and the full image only for hero and lightbox views.
+- Anything that loads an image shows a shimmering placeholder first: `SkeletonImage.vue` for component-managed images, the `.img-skeleton` class (in `main.css`) for plain `<img>` and containers.
+
 ## SEO
 
 - `npm run build` runs `vite-ssg`: every route is prerendered to static HTML (crawlers see content without JS).

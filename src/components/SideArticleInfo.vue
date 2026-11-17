@@ -31,7 +31,7 @@ const otherArticles = computed(() =>
       <img :src="Profile" alt="Jiu Axl" class="avatar">
       <div>
         <p class="text-name">Jiu Axl R. Tabilla</p>
-        <p class="text-role">UI/UX Designer | Frontend Developer</p>
+        <p class="text-role">Full-Stack Software Engineer</p>
       </div>
     </div>
     <p class="bio-text my-4">

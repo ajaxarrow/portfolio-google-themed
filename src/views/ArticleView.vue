@@ -3,7 +3,7 @@ import {computed, ref} from "vue";
 import {useRoute} from "vue-router";
 import {findEntryById, getCategoryLabel, getEntryCategory} from "../utils/entries.ts";
 import {getArticle, getReadingTime} from "../data/articles.ts";
-import {getGalleryImages} from "../data/gallery.ts";
+import {getGalleryImages, getThumbImages} from "../data/gallery.ts";
 import Lightbox from "../components/Lightbox.vue";
 import {fadeUpOnce, fadeUpStagger} from "../composables/useMotionPresets.ts";
 
@@ -14,6 +14,7 @@ const entry = computed(() => findEntryById(id.value));
 const article = computed(() => getArticle(id.value));
 const externalLink = computed(() => /^https?:/.test(entry.value?.link ?? '') ? entry.value?.link : undefined);
 const photos = computed(() => getGalleryImages(id.value));
+const thumbs = computed(() => getThumbImages(id.value));
 const hero = computed(() => photos.value[0]);
 const filmstrip = computed(() => photos.value.slice(1));
 
@@ -59,7 +60,7 @@ function openLightbox(index: number) {
 
     <div class="accent-rule"></div>
 
-    <img v-if="hero" :src="hero" :alt="entry.title" class="article-hero" @click="openLightbox(0)"/>
+    <img v-if="hero" :src="hero" :alt="entry.title" class="article-hero img-skeleton" fetchpriority="high" decoding="async" @click="openLightbox(0)"/>
 
     <div class="article-body" v-motion="bodyMotion" v-html="article.bodyHtml"></div>
 
@@ -69,8 +70,10 @@ function openLightbox(index: number) {
         <img
             v-for="(src, index) in filmstrip"
             :key="src"
-            :src="src"
-            class="filmstrip-photo"
+            :src="thumbs[index + 1] ?? src"
+            class="filmstrip-photo img-skeleton"
+            loading="lazy"
+            decoding="async"
             :alt="`${entry.title} - photo ${index + 2}`"
             role="button"
             tabindex="0"
@@ -85,6 +88,7 @@ function openLightbox(index: number) {
     <Lightbox
         v-model="lightboxOpen"
         :images="photos"
+        :thumbs="thumbs"
         :start-index="lightboxIndex"
         :item="entry"
     />
@@ -164,6 +168,7 @@ function openLightbox(index: number) {
 
 .article-hero{
   width: 100%;
+  min-height: 220px; /* hold the space while the hero loads */
   max-height: 420px;
   object-fit: cover;
   border-radius: 16px;
@@ -222,6 +227,7 @@ function openLightbox(index: number) {
 .filmstrip-photo{
   height: 140px;
   width: auto;
+  min-width: 200px;
   flex-shrink: 0;
   object-fit: cover;
   border-radius: 8px;
