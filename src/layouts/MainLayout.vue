@@ -13,7 +13,7 @@ import Wordmark from "../components/Wordmark.vue";
 import SideProfile from "../components/SideProfile.vue";
 import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
 import SideArticleInfo from "../components/SideArticleInfo.vue";
-import {fadeUpStagger} from "../composables/useMotionPresets.ts";
+import {fadeUpStagger, isReducedMotion} from "../composables/useMotionPresets.ts";
 
 const sideComponents: Record<string, any> = {
   profile: SideProfile,
@@ -35,30 +35,52 @@ const isFullWidth = computed(() => !!route.meta.fullWidth);
 const navContainer = ref<HTMLElement | null>(null);
 const indicatorStyle = ref({ width: '0px', transform: 'translateX(0px)', opacity: 0 });
 
-const updateIndicator = () => {
+// The tab strip scrolls sideways on narrow screens. Fade whichever edge has more
+// tabs behind it, so it reads as scrollable instead of cut off.
+const navFadeLeft = ref(false);
+const navFadeRight = ref(false);
+const updateNavFades = () => {
+  const nav = navContainer.value;
+  if (!nav) return;
+  navFadeLeft.value = nav.scrollLeft > 4;
+  navFadeRight.value = nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 4;
+};
+
+const updateIndicator = (scrollActive = false) => {
   nextTick(() => {
-    const activeEl = navContainer.value?.querySelector<HTMLElement>('.active-link');
-    if (!activeEl || !navContainer.value) {
+    const nav = navContainer.value;
+    const activeEl = nav?.querySelector<HTMLElement>('.active-link');
+    if (!activeEl || !nav) {
       indicatorStyle.value = { ...indicatorStyle.value, opacity: 0 };
+      updateNavFades();
       return;
     }
-    const containerRect = navContainer.value.getBoundingClientRect();
+    // Bring the current tab into view (e.g. "Contact" on a phone), centered.
+    if (scrollActive && nav.scrollWidth > nav.clientWidth) {
+      const target = activeEl.offsetLeft - (nav.clientWidth - activeEl.offsetWidth) / 2;
+      nav.scrollTo({left: Math.max(0, target), behavior: isReducedMotion() ? 'auto' : 'smooth'});
+    }
+    const containerRect = nav.getBoundingClientRect();
     const activeRect = activeEl.getBoundingClientRect();
+    // The indicator lives inside the scrolling strip, so its x is in content
+    // coordinates: add the current scroll offset back in.
     indicatorStyle.value = {
       width: `${activeRect.width}px`,
-      transform: `translateX(${activeRect.left - containerRect.left}px)`,
+      transform: `translateX(${activeRect.left - containerRect.left + nav.scrollLeft}px)`,
       opacity: 1,
     };
+    updateNavFades();
   });
 };
 
-watch(() => route.path, updateIndicator);
+const onResize = () => updateIndicator();
+watch(() => route.path, () => updateIndicator(true));
 onMounted(() => {
-  updateIndicator();
-  window.addEventListener('resize', updateIndicator);
+  updateIndicator(true);
+  window.addEventListener('resize', onResize);
 });
 onUnmounted(() => {
-  window.removeEventListener('resize', updateIndicator);
+  window.removeEventListener('resize', onResize);
 });
 const isSmallLayout = ref(false);
 const searchQuery = ref('');
@@ -183,6 +205,8 @@ onMounted(() => {
         ref="navContainer"
         aria-label="Sections"
         class="ma-0 mx-10 d-flex ga-3 nav-links-container"
+        :class="{ 'fade-left': navFadeLeft, 'fade-right': navFadeRight }"
+        @scroll.passive="updateNavFades"
         :style="{
           paddingLeft: isMobile || isSmall ? '0px' : 'var(--layout-rail-offset)',
           paddingTop: isMobile || isSmall ? '70px' : '0px',
@@ -276,6 +300,17 @@ onMounted(() => {
 
   .nav-links-container::-webkit-scrollbar{
     display: none;
+  }
+
+  /* Edge fades on the scrolling tab strip (only while there is more to scroll). */
+  .nav-links-container.fade-right{
+    mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+  }
+  .nav-links-container.fade-left{
+    mask-image: linear-gradient(to left, #000 calc(100% - 48px), transparent);
+  }
+  .nav-links-container.fade-left.fade-right{
+    mask-image: linear-gradient(to right, transparent, #000 48px, #000 calc(100% - 48px), transparent);
   }
 
   .mobile-top{
