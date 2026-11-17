@@ -1,11 +1,11 @@
 import {SearchItem} from "../interfaces/link.interface.ts";
 import nomcaarrd from "../assets/icons/nomcaarrd.webp";
-import idmdr from "../assets/images/idmdr.webp"
+import idmdr from "../assets/images/idmdr.webp?thumb"
 import virtualclass from "../assets/icons/virtualclass.png"
-import portfolio from "../assets/images/portfolio.webp"
-import mk from "../assets/images/mk.webp"
+import portfolio from "../assets/images/portfolio.webp?thumb"
+import mk from "../assets/images/mk.webp?thumb"
 import portfolioIcon from "../assets/logo.jpg"
-import {getGalleryImages} from "./gallery.ts"
+import {getLogoImage, getThumbImage} from "./gallery.ts"
 
 export const projects: SearchItem[] = [
   {
@@ -34,6 +34,34 @@ export const projects: SearchItem[] = [
     image: mk
   },
   {
+    name: 'Profit Desk',
+    title: 'Profit Desk: an AI profit dashboard for online stores',
+    link: 'https://profit-desk.netlify.app/',
+    id: 'profit-desk',
+    description: 'Connects a Shopify store, calculates true profit after every cost, and runs a monitor that flags loss-making products and ad campaigns and recommends what to fix. The AI only explains numbers the engine calculated, so it cannot invent figures. A personal product, built end to end.',
+    role: 'Sole developer',
+    stack: ['Next.js', 'TypeScript', 'Django REST', 'Groq', 'Gemini'],
+    tags: ['ai', 'ai automation', 'llm', 'shopify', 'e-commerce', 'dashboard', 'analytics', 'python', 'react', 'tailwind', 'solo', 'product'],
+    icon: getLogoImage('profit-desk'),
+    image: getThumbImage('profit-desk'),
+    visible: true,
+    featured: true,
+  },
+  {
+    name: 'SafeRoute',
+    title: 'SafeRoute: weather-aware truck routing',
+    link: 'https://www.loom.com/share/9fb0d2e11e37433daaa7e9ac41e4be0f',
+    id: 'saferoute',
+    description: 'Compares up to three truck routes, forecasts the weather at the moment the truck reaches each checkpoint, scores the risk by wind, rain, snow and load weight, and recommends a route. A personal product, built end to end.',
+    role: 'Sole developer',
+    stack: ['React', 'TypeScript', 'MapLibre', 'Django REST'],
+    tags: ['routing', 'logistics', 'trucking', 'weather', 'maps', 'python', 'tailwind', 'solo', 'product'],
+    icon: getLogoImage('saferoute'),
+    image: getThumbImage('saferoute'),
+    visible: true,
+    featured: true,
+  },
+  {
     name: 'SellYoShirt',
     title: 'SellYoShirt: inventory and sales tracker',
     link: 'https://sellyoshit.netlify.app/',
@@ -43,7 +71,7 @@ export const projects: SearchItem[] = [
     stack: ['Mobile-first web app', 'Netlify'],
     tags: ['inventory', 'solo', 'product'],
     icon: portfolioIcon,
-    image: getGalleryImages('sellyoshirt')[0],
+    image: getThumbImage('sellyoshirt'),
     visible: true,
   },
   {

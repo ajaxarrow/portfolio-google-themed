@@ -1,11 +1,11 @@
 import { SearchItem } from "../interfaces/link.interface.ts";
 import figma from "../assets/icons/figma.png";
-import sheesh from "../assets/images/sheesh.webp";
-import idmdr from "../assets/images/idmdr.webp";
-import payroll from "../assets/images/payroll.webp";
-import farmaid from "../assets/images/farmaid.webp";
-import kahibawhub from "../assets/images/kahibawhub.webp";
-import {getGalleryImages} from "./gallery.ts";
+import sheesh from "../assets/images/sheesh.webp?thumb";
+import idmdr from "../assets/images/idmdr.webp?thumb";
+import payroll from "../assets/images/payroll.webp?thumb";
+import farmaid from "../assets/images/farmaid.webp?thumb";
+import kahibawhub from "../assets/images/kahibawhub.webp?thumb";
+import {getThumbImage} from "./gallery.ts";
 
 export const designs: SearchItem[] = [
   {
@@ -47,7 +47,7 @@ export const designs: SearchItem[] = [
     description: "A travel landing page designed and shipped in two hours as a timed internship challenge, with a light entrance animation that keeps the focus on the destination photography.",
     icon: figma,
     tags: ['figma','ui/ux','design','prototype','landing page','travel','timed challenge','animation'],
-    image: getGalleryImages("eco-trail")[0]
+    image: getThumbImage("eco-trail")
   },
   {
     name: 'FarmAid',

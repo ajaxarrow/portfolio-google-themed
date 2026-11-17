@@ -3,6 +3,7 @@ import {useRoute} from 'vue-router';
 import {useTheme} from 'vuetify';
 import {useHead} from '@unhead/vue';
 import {findEntryById} from '../utils/entries.ts';
+import {getGalleryImages} from '../data/gallery.ts';
 import {aboutQuestions} from '../data/questions.ts';
 import {
   absoluteUrl, DEFAULT_OG_IMAGE, HOME_DESCRIPTION, HOME_TITLE, PERSON, SITE_URL,
@@ -96,7 +97,8 @@ export function useRouteHead() {
       if (entry) {
         title = `${entry.title} | Jiu Axl Tabilla`;
         description = clip(stripHtml(entry.description));
-        if (entry.image) image = absoluteUrl(entry.image);
+        const hero = getGalleryImages(entry.id)[0] ?? entry.image; // full-size photo for link previews, not the 480px thumb
+        if (hero) image = absoluteUrl(hero);
         ogType = 'article';
       } else {
         return {path, title: 'Page not found | Jiu Axl Tabilla', description, image, ogType, noindex: true};

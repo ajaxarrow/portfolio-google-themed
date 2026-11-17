@@ -1,5 +1,5 @@
 import {SearchItem} from "../interfaces/link.interface.ts";
-import {getGalleryImages, getLogoImage} from "./gallery.ts";
+import {getLogoImage, getThumbImage} from "./gallery.ts";
 
 /**
  * Each gallery/<id>/ folder holds real (landscape) screenshots plus a `<id>-logo.*`
@@ -8,7 +8,7 @@ import {getGalleryImages, getLogoImage} from "./gallery.ts";
  * so it never shows up in the Images tab's photo grid.
  */
 function thumbnail(id: string): string | undefined {
-  return getGalleryImages(id)[0];
+  return getThumbImage(id);
 }
 
 function badge(id: string): string | undefined {

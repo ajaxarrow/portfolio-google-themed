@@ -10,7 +10,8 @@ interface EasterEgg {
   triggers: string[];
   kind: 'transform' | 'toast';
   className?: string;
-  toastMessage: string;
+  /** A string, or a function for answers that change each time (coin, dice). */
+  toastMessage: string | (() => string);
 }
 
 export const KONAMI_SEQUENCE = [
@@ -33,6 +34,37 @@ const EGG_REGISTRY: EasterEgg[] = [
     kind: 'transform',
     className: 'egg-askew',
     toastMessage: "Everything's a little askew.",
+  },
+  {
+    id: 'blink',
+    triggers: ['blink html', 'blink', '<blink>'],
+    kind: 'transform',
+    className: 'egg-blink',
+    toastMessage: 'Links are blinking like it is 1998.',
+  },
+  {
+    id: 'recursion',
+    triggers: ['recursion'],
+    kind: 'toast',
+    toastMessage: 'Did you mean: recursion',
+  },
+  {
+    id: 'answer',
+    triggers: ['the answer to life the universe and everything', 'answer to life', '42'],
+    kind: 'toast',
+    toastMessage: '42',
+  },
+  {
+    id: 'coin',
+    triggers: ['flip a coin', 'coin flip'],
+    kind: 'toast',
+    toastMessage: () => (Math.random() < 0.5 ? 'Heads.' : 'Tails.'),
+  },
+  {
+    id: 'dice',
+    triggers: ['roll a dice', 'roll a die', 'roll dice'],
+    kind: 'toast',
+    toastMessage: () => `You rolled a ${Math.floor(Math.random() * 6) + 1}.`,
   },
   {
     id: 'konami-note',
@@ -66,7 +98,7 @@ const triggerToken = ref(0);
 function fire(egg: EasterEgg) {
   pendingEgg.value = egg;
   triggerToken.value++;
-  toastMessage.value = egg.toastMessage;
+  toastMessage.value = typeof egg.toastMessage === 'function' ? egg.toastMessage() : egg.toastMessage;
   toastVisible.value = true;
 }
 

@@ -4,7 +4,7 @@ import {Link} from "../interfaces/link.interface.ts";
 import {PropType, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {useEasterEggs} from "../composables/useEasterEggs.ts";
-import {resolveSearchDestination} from "../utils/search.ts";
+import {goToSearch} from "../utils/search.ts";
 
 const props = defineProps({
   searchQuery: String,
@@ -17,7 +17,7 @@ const localQuery = ref(props.searchQuery);
 
 const navigateTo = (path: string) => {
   if (tryTrigger(path)) return;
-  router.push(resolveSearchDestination(path))
+  goToSearch(router, path)
 }
 
 const removeLink = (index: number, event: MouseEvent) => {
