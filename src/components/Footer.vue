@@ -6,11 +6,13 @@ import {socials} from "../data/socials.ts";
 <template>
   <div class="footer py-3 px-5">
     <p>Open to remote roles · Bukidnon, Philippines (UTC+8)</p>
-    <div class="d-flex align-center ga-2">
-      <a v-for="(social, index) in socials" :key="social.name" target="_blank" rel="noopener noreferrer" :href="social.link" class="footer-link text-decoration-none">
-        <span class="text-base">{{social.name}}</span><span class="sr-only"> (opens in a new tab)</span> <span v-if="index != socials.length - 1">·</span>
-      </a>
-    </div>
+    <ul class="footer-links">
+      <li v-for="social in socials" :key="social.name">
+        <a target="_blank" rel="noopener noreferrer" :href="social.link" class="footer-link text-decoration-none">
+          <span class="text-base">{{social.name}}</span><span class="sr-only"> (opens in a new tab)</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -26,8 +28,25 @@ import {socials} from "../data/socials.ts";
     gap: 4px 16px;
   }
 
-  .footer > div{
+  .footer-links{
+    display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Separator sits between links, outside the tap target, with even space either side. */
+  .footer-links li + li::before{
+    content: "·";
+    padding: 0 6px;
+    color: var(--meta);
+  }
+
+  .footer-links li{
+    display: flex;
+    align-items: center;
   }
 
   .footer-link{
@@ -35,6 +54,10 @@ import {socials} from "../data/socials.ts";
     align-items: center;
     min-height: 44px;
     padding: 0 4px;
+  }
+
+  .footer-links li:first-child .footer-link{
+    padding-left: 0;
   }
 
   .text-base:hover{
