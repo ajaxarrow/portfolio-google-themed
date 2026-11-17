@@ -2,7 +2,7 @@
 import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {
-  PhArrowUpRight, PhCaretLeft, PhCaretRight, PhCheckCircle, PhEnvelopeSimple, PhSparkle, PhStar,
+  PhArrowUp, PhArrowUpRight, PhCaretLeft, PhCaretRight, PhCheckCircle, PhEnvelopeSimple, PhSparkle, PhStar,
 } from "@phosphor-icons/vue";
 import Lightbox from "../components/Lightbox.vue";
 import Portrait from "../assets/images/profile-wide.webp";
@@ -157,6 +157,112 @@ function startInquiry(subject = '') {
 /* Client work often cannot show source; say so plainly instead of leaving the gap unexplained. */
 const hasCodeLink = (study: CaseStudy) => !!study.extraLinks?.some((l) => /code|source|github/i.test(l.label));
 const jumpTo = (id: string) => goToHash(id, isReducedMotion() ? 'auto' : 'smooth');
+
+/* Table of contents: an "On this page" panel fixed to the right on wide screens
+   (a "snake" of colored segments fills dot to dot as you read), and a sticky chip
+   strip on smaller screens. It appears once the hero has scrolled away and hides
+   again after the contact section. */
+const tocItems = [
+  ...caseStudies.map((study, i) => ({id: study.id, label: study.name, color: accent(i)})),
+  {id: 'availability', label: 'Speed & hours', color: 'var(--grey-400)'},
+  {id: 'services', label: 'What I offer', color: 'var(--grey-400)'},
+  {id: 'contact', label: 'Contact', color: 'var(--grey-400)'},
+];
+const tocGroups = [
+  {label: 'Case studies', items: tocItems.slice(0, caseStudies.length).map((item, i) => ({...item, index: i}))},
+  {label: 'Also on this page', items: tocItems.slice(caseStudies.length).map((item, i) => ({...item, index: caseStudies.length + i}))},
+];
+const tocActive = ref(-1);
+const tocProgress = ref(0); // 0..tocItems.length-1, fractional between items
+const tocVisible = ref(false);
+const tocStrip = ref<HTMLElement | null>(null);
+const tocBody = ref<HTMLElement | null>(null);
+const dotCenters = ref<number[]>([]); // y of each dot's centre inside .toc-body
+let tocFrame = 0;
+
+function measureDots() {
+  const body = tocBody.value;
+  if (!body || !body.offsetParent) { dotCenters.value = []; return; }
+  const top = body.getBoundingClientRect().top;
+  dotCenters.value = [...body.querySelectorAll<HTMLElement>('.toc-dot')]
+    .map((dot) => { const r = dot.getBoundingClientRect(); return r.top - top + r.height / 2; });
+}
+
+// One segment between each pair of neighbouring dots, filled in the colour of the
+// item it leaves from, so the snake picks up each study's accent as it passes.
+const snakeSegments = computed(() => dotCenters.value.slice(0, -1).map((y, i) => ({
+  top: `${y}px`,
+  height: `${dotCenters.value[i + 1] - y}px`,
+  fill: Math.min(1, Math.max(0, tocProgress.value - i)),
+  color: tocItems[i].color,
+})));
+
+const tocCaption = computed(() => {
+  const i = tocActive.value;
+  if (i < 0) return 'Start reading';
+  return i < caseStudies.length ? `Case study ${i + 1} of ${caseStudies.length}` : tocItems[i].label;
+});
+
+function backToTop() {
+  window.scrollTo({top: 0, behavior: isReducedMotion() ? 'auto' : 'smooth'});
+  document.getElementById('main')?.focus({preventScroll: true});
+}
+
+function measureToc() {
+  tocFrame = 0;
+  const line = window.innerHeight * 0.35;
+  const sections = tocItems.map((item) => document.getElementById(item.id));
+  let active = -1;
+  let fraction = 0;
+  sections.forEach((el, i) => {
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.top <= line) {
+      active = i;
+      fraction = Math.min(1, Math.max(0, (line - rect.top) / Math.max(rect.height, 1)));
+    }
+  });
+  const first = sections[0]?.getBoundingClientRect();
+  const last = sections[sections.length - 1]?.getBoundingClientRect();
+  tocVisible.value = !!first && !!last && first.top < window.innerHeight * 0.6 && last.bottom > window.innerHeight * 0.4;
+  tocProgress.value = active < 0 ? 0 : Math.min(tocItems.length - 1, active + (active < tocItems.length - 1 ? fraction : 0));
+  if (active !== tocActive.value) {
+    tocActive.value = active;
+    centerActiveChip();
+  }
+}
+
+function centerActiveChip() {
+  nextTick(() => {
+    const strip = tocStrip.value;
+    const chip = strip?.querySelector<HTMLElement>('.is-active');
+    if (!strip || !chip) return;
+    strip.scrollTo({
+      left: Math.max(0, chip.offsetLeft - (strip.clientWidth - chip.offsetWidth) / 2),
+      behavior: isReducedMotion() ? 'auto' : 'smooth',
+    });
+  });
+}
+
+const onTocScroll = () => { if (!tocFrame) tocFrame = requestAnimationFrame(measureToc); };
+const onTocResize = () => { measureDots(); onTocScroll(); };
+
+onMounted(() => {
+  window.addEventListener('scroll', onTocScroll, {passive: true});
+  window.addEventListener('resize', onTocResize, {passive: true});
+  measureDots();
+  measureToc();
+  // Fonts change label heights slightly; re-measure once they settle.
+  document.fonts?.ready.then(measureDots);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onTocScroll);
+  window.removeEventListener('resize', onTocResize);
+  cancelAnimationFrame(tocFrame);
+});
+
+const stripProgress = computed(() => `${tocActive.value < 0 ? 0 : ((tocProgress.value + 1) / tocItems.length) * 100}%`);
 
 function feelingLucky() {
   const pick = caseStudies[Math.floor(Math.random() * caseStudies.length)];
@@ -338,7 +444,7 @@ function feelingLucky() {
     </article>
 
     <!-- Speed + availability -->
-    <section class="answers" aria-labelledby="answers-heading">
+    <section id="availability" class="answers" aria-labelledby="answers-heading" tabindex="-1">
       <h2 id="answers-heading" class="section-heading" data-reveal>How fast, and when are you reachable?</h2>
       <div class="answers-grid">
         <div class="answer-card" data-reveal>
@@ -446,6 +552,70 @@ function feelingLucky() {
         <ContactForm class="contact-form" :subject="inquirySubject" id-prefix="cs-contact"/>
       </div>
     </section>
+
+    <!-- Table of contents: "On this page" panel, fixed right (wide screens) -->
+    <nav class="toc-panel" :class="{ 'is-visible': tocVisible }" aria-labelledby="toc-heading" :inert="!tocVisible">
+      <div class="toc-head">
+        <p id="toc-heading" class="toc-heading">On this page</p>
+        <p class="toc-caption" aria-live="polite">{{ tocCaption }}</p>
+      </div>
+
+      <div ref="tocBody" class="toc-body">
+        <div class="toc-snake" aria-hidden="true">
+          <span
+              v-for="(segment, i) in snakeSegments"
+              :key="i"
+              class="toc-segment"
+              :style="{ top: segment.top, height: segment.height }"
+          >
+            <span class="toc-segment-fill" :style="{ transform: `scaleY(${segment.fill})`, backgroundColor: segment.color }"></span>
+          </span>
+        </div>
+
+        <template v-for="group in tocGroups" :key="group.label">
+          <p class="toc-group">{{ group.label }}</p>
+          <ol class="toc-list">
+            <li
+                v-for="item in group.items"
+                :key="item.id"
+                class="toc-item"
+                :class="{ 'is-active': item.index === tocActive, 'is-done': item.index < tocActive }"
+                :style="{ '--dot': item.color }"
+            >
+              <a
+                  :href="`#${item.id}`"
+                  :aria-current="item.index === tocActive ? 'location' : undefined"
+                  @click.prevent="jumpTo(item.id)"
+              >
+                <span class="toc-dot" aria-hidden="true"></span>
+                <span class="toc-label">{{ item.label }}</span>
+              </a>
+            </li>
+          </ol>
+        </template>
+      </div>
+
+      <button type="button" class="toc-top" @click="backToTop">
+        <PhArrowUp size="14" aria-hidden="true"/> Back to top
+      </button>
+    </nav>
+
+    <!-- Table of contents: sticky chip strip (smaller screens) -->
+    <nav class="toc-bar" :class="{ 'is-visible': tocVisible }" aria-label="Jump to a case study" :inert="!tocVisible">
+      <ol ref="tocStrip" class="toc-strip">
+        <li v-for="(item, i) in tocItems" :key="item.id">
+          <a
+              :href="`#${item.id}`"
+              class="toc-chip"
+              :class="{ 'is-active': i === tocActive }"
+              :style="{ '--dot': item.color }"
+              :aria-current="i === tocActive ? 'location' : undefined"
+              @click.prevent="jumpTo(item.id)"
+          >{{ item.label }}</a>
+        </li>
+      </ol>
+      <span class="toc-bar-progress" :style="{ width: stripProgress }" aria-hidden="true"></span>
+    </nav>
 
     <Lightbox
         v-if="lightbox"
@@ -1466,6 +1636,278 @@ function feelingLucky() {
 .contact-panel .btn-flat:hover{ border-color: var(--grey-300); }
 
 .contact.is-target .contact-form{ animation: target-mark 2s var(--ease-out-quart); border-radius: 20px; }
+
+/* Table of contents ---------------------------------------------------------- */
+
+/* Wide screens: an "On this page" panel fixed to the right. The page reserves a
+   right-hand column for it (padding on .cs) so it never covers content. */
+@media (min-width: 1280px){
+  .cs{ padding-right: calc(var(--toc-width) + 48px); }
+}
+
+.cs{ --toc-width: 208px; }
+
+.toc-panel{
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  z-index: 5;
+  display: none;
+  width: var(--toc-width);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  padding: 18px 16px 12px;
+  border-radius: 16px;
+  background-color: var(--grey-50);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(12px, -50%);
+  transition: opacity var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-base) var(--ease-out-quart),
+    visibility 0s linear var(--duration-base);
+  scrollbar-width: thin;
+}
+
+.toc-panel.is-visible{
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, -50%);
+  transition-delay: 0s;
+}
+
+@media (min-width: 1280px){
+  .toc-panel{ display: block; }
+}
+
+.toc-head{
+  padding: 0 4px 12px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.toc-heading{
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.toc-caption{
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--meta);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc-body{
+  position: relative;
+  padding-top: 4px;
+}
+
+.toc-group{
+  margin: 12px 0 2px;
+  padding-left: 28px; /* align with item labels, clear of the snake */
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--meta);
+}
+
+/* The snake: grey track segments between dots, each filled in its item's colour. */
+.toc-snake{
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 24px;
+  pointer-events: none;
+}
+
+.toc-segment{
+  position: absolute;
+  left: 11px;
+  width: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: var(--grey-200);
+}
+
+.toc-segment-fill{
+  position: absolute;
+  inset: 0;
+  transform-origin: top;
+  transition: transform 120ms linear;
+}
+
+.toc-list{
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc-item a{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 8px 0 6px;
+  border-radius: 10px;
+  color: var(--meta);
+  font-size: 14px;
+  line-height: 1.25;
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    color var(--duration-fast) var(--ease-out-quart);
+}
+
+.toc-item a:hover{
+  background-color: var(--grey-100);
+  color: var(--ink);
+}
+
+.toc-item a:focus-visible{
+  outline: 2px solid var(--google-link);
+  outline-offset: -2px;
+}
+
+.toc-dot{
+  position: relative; /* above the snake */
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--grey-300);
+  border-radius: 50%;
+  background-color: var(--grey-50);
+  transition: border-color var(--duration-base) var(--ease-out-quart),
+    background-color var(--duration-base) var(--ease-out-quart),
+    box-shadow var(--duration-base) var(--ease-out-quart);
+}
+
+.toc-item.is-done .toc-dot{
+  border-color: var(--dot);
+  background-color: var(--dot);
+}
+
+.toc-item.is-active .toc-dot{
+  border-color: var(--dot);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot) 22%, transparent);
+}
+
+.toc-item.is-active a{
+  background-color: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.toc-label{
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toc-top{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 10px;
+  padding: 0 10px;
+  border-top: 1px solid var(--grey-200);
+  border-radius: 0 0 10px 10px;
+  background: none;
+  color: var(--google-link);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toc-top:hover{ text-decoration: underline; }
+.toc-top:focus-visible{ outline: 2px solid var(--google-link); outline-offset: 2px; }
+
+/* Phones/tablets: a sticky strip of chips at the top, with a progress line. */
+.toc-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  border-bottom: 1px solid var(--grey-200);
+  background-color: var(--surface);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100%);
+  transition: opacity var(--duration-base) var(--ease-out-quart),
+    transform var(--duration-base) var(--ease-out-quart),
+    visibility 0s linear var(--duration-base);
+}
+
+.toc-bar.is-visible{
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+@media (min-width: 1280px){
+  .toc-bar{ display: none; }
+}
+
+.toc-strip{
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 16px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+}
+
+.toc-strip::-webkit-scrollbar{ display: none; }
+
+.toc-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--grey-300);
+  border-radius: 9999px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+}
+
+.toc-chip::before{
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--dot);
+}
+
+.toc-chip.is-active{
+  border-color: var(--ink);
+  background-color: var(--ink);
+  color: var(--surface);
+}
+
+.toc-bar-progress{
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  background-color: var(--googleblue);
+  transition: width 120ms linear;
+}
+
+@media (max-width: 1279px){
+  /* Land below the sticky strip when jumping to a section. */
+  .study, .answers, .services, .contact{ scroll-margin-top: 72px; }
+}
 
 /* Narrow screens */
 @media (max-width: 900px){
