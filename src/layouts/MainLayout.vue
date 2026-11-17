@@ -117,11 +117,19 @@ onMounted(() => {
   </div>
   <div v-else>
     <div v-if="isMobile || isSmall">
-      <VRow class="ma-0 px-6 pt-6" justify="center" >
+      <div class="mobile-top px-6 pt-6">
         <RouterLink class="text-logo text-center mb-3 text-decoration-none" to="/">
           <Wordmark/>
         </RouterLink>
-      </VRow>
+        <div class="mobile-actions">
+          <MenuDialog @focus-search="handleFocusSearch"/>
+          <RouterLink to="/about" class="avatar-link" aria-label="About Jiu Axl Tabilla">
+            <VAvatar size="32">
+              <VImg :src="Profile" alt=""></VImg>
+            </VAvatar>
+          </RouterLink>
+        </div>
+      </div>
       <div class="position-relative mx-3">
         <Search
           @click="changeLayout"
@@ -154,22 +162,21 @@ onMounted(() => {
       </div>
       <div class="d-flex align-center ga-2">
         <MenuDialog @focus-search="handleFocusSearch"/>
-        <VAvatar
-            size="32"
-            class="ml-2 cursor-pointer"
-        >
-          <VImg :src="Profile" alt=""></VImg>
-          <VTooltip
-              activator="parent"
-              location="bottom"
-          >
-            <div class="tooltip-container">
-              <p class="text-small font-weight-medium">Portfolio</p>
-              <p class="text-small text-gs90">Jiu Axl R. Tabilla</p>
-              <p class="text-small text-gs90">axldamnaxl@gmail.com</p>
-            </div>
-          </VTooltip>
-        </VAvatar>
+        <RouterLink to="/about" class="avatar-link ml-2" aria-label="About Jiu Axl Tabilla">
+          <VAvatar size="32">
+            <VImg :src="Profile" alt=""></VImg>
+            <VTooltip
+                activator="parent"
+                location="bottom"
+            >
+              <div class="tooltip-container">
+                <p class="text-small font-weight-medium">Portfolio</p>
+                <p class="text-small text-gs90">Jiu Axl R. Tabilla</p>
+                <p class="text-small text-gs90">axldamnaxl@gmail.com</p>
+              </div>
+            </VTooltip>
+          </VAvatar>
+        </RouterLink>
       </div>
     </VRow>
     <nav
@@ -269,6 +276,29 @@ onMounted(() => {
 
   .nav-links-container::-webkit-scrollbar{
     display: none;
+  }
+
+  .mobile-top{
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-actions{
+    position: absolute;
+    top: 20px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .avatar-link{
+    display: inline-grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
   }
 
   .nav-link{
