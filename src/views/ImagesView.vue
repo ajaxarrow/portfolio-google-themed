@@ -5,7 +5,6 @@ import {galleryImages, getThumbImages} from "../data/gallery.ts";
 import {findEntryById, getCategoryLabel, getEntryCategory, isVisible, EntryCategory} from "../utils/entries.ts";
 import Lightbox from "../components/Lightbox.vue";
 import ResultHeader from "../components/ResultHeader.vue";
-import {fadeUpStagger} from "../composables/useMotionPresets.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -132,7 +131,7 @@ onMounted(() => {
     </div>
 
     <div v-else ref="gridRoot" class="masonry">
-      <div v-for="(tile, i) in filteredPhotos" :key="`${tile.id}-${tile.index}`" class="masonry-item" v-motion="fadeUpStagger(i)">
+      <div v-for="(tile, i) in filteredPhotos" :key="`${tile.id}-${tile.index}`" class="masonry-item" v-reveal="i">
         <div v-if="!loadedSrcs.has(tile.thumb)" class="masonry-skeleton" :style="{height: skeletonHeight(i)}" aria-hidden="true"></div>
         <button
             class="masonry-tile"

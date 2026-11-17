@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {computed, PropType} from "vue";
 import {SearchItem} from "../interfaces/link.interface.ts";
-import {fadeUpStagger} from "../composables/useMotionPresets.ts";
 import {isArticleItem} from "../utils/entries.ts";
 import SkeletonImage from "./SkeletonImage.vue";
 
@@ -45,7 +44,7 @@ function breadcrumbUrl(raw: string): string {
       v-bind="isRouter ? {to: routerTarget} : {href: prop.searchItem?.link, ...(prop.searchItem?.link.startsWith('http') ? {target: '_blank', rel: 'noopener noreferrer'} : {})}"
       class="search-item text-decoration-none text-black"
       :id="prop.searchItem?.id"
-      v-motion="fadeUpStagger(prop.index)"
+      v-reveal="prop.index"
   >
     <div class="pb-6 px-2 search-item-inner">
       <div class="d-flex ga-3 align-center mb-1">

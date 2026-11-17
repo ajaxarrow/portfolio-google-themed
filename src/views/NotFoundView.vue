@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {links} from "../data/links.ts";
-import {fadeUpStagger} from "../composables/useMotionPresets.ts";
 
 const suggestions = [
   "Make sure all words are spelled correctly.",
@@ -17,7 +16,7 @@ const suggestions = [
           v-for="(link, index) in links"
           :key="link.name"
           :to="link.link"
-          v-motion="fadeUpStagger(index)"
+          v-reveal="index"
           class="text-decoration-none font-weight-bold not-found-link">
         <em>{{ link.name }}</em>
       </RouterLink>
@@ -32,7 +31,7 @@ const suggestions = [
     </p>
     <p class="mb-2">Suggestions:</p>
     <ul class="pl-10">
-      <li v-for="(suggestion, index) in suggestions" :key="suggestion" v-motion="fadeUpStagger(index)">{{ suggestion }}</li>
+      <li v-for="(suggestion, index) in suggestions" :key="suggestion" v-reveal="index">{{ suggestion }}</li>
     </ul>
   </div>
 </template>

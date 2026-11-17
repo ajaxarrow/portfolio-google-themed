@@ -4,6 +4,7 @@ import App from './App.vue'
 import vuetify from "./plugins/vuetify.ts";
 import { routes } from './router'
 import { MotionPlugin } from '@vueuse/motion'
+import { vReveal } from './directives/reveal'
 
 // Pre-rendered at build time (vite-ssg): every route ships as real HTML so
 // crawlers and link previews see content without running JavaScript.
@@ -24,5 +25,6 @@ export const createApp = ViteSSG(
   ({ app }) => {
     app.use(vuetify);
     app.use(MotionPlugin);
+    app.directive('reveal', vReveal);
   },
 )

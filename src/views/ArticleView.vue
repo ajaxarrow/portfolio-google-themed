@@ -5,7 +5,7 @@ import {findEntryById, getCategoryLabel, getEntryCategory} from "../utils/entrie
 import {getArticle, getReadingTime} from "../data/articles.ts";
 import {getGalleryImages, getThumbImages} from "../data/gallery.ts";
 import Lightbox from "../components/Lightbox.vue";
-import {fadeUpOnce, fadeUpStagger} from "../composables/useMotionPresets.ts";
+import {fadeUpOnce} from "../composables/useMotionPresets.ts";
 
 const route = useRoute();
 
@@ -77,7 +77,7 @@ function openLightbox(index: number) {
             :alt="`${entry.title} - photo ${index + 2}`"
             role="button"
             tabindex="0"
-            v-motion="fadeUpStagger(index)"
+            v-reveal="index"
             @click="openLightbox(index + 1)"
             @keydown.enter="openLightbox(index + 1)"
             @keydown.space.prevent="openLightbox(index + 1)"
