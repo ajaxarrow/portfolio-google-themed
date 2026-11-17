@@ -69,7 +69,9 @@ const subject = computed(() => {
 <style scoped>
 .contact{
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  max-width: 1240px;
+  /* Keeps the compose card on the same grid as the results pages instead of
+     running to the viewport edge on wide screens. */
+  max-width: 1120px;
   padding-bottom: 72px;
   color: var(--ink);
   font-size: 15px;
@@ -77,7 +79,7 @@ const subject = computed(() => {
 }
 
 @media (min-width: 960px){
-  .contact{ margin-left: var(--layout-rail-offset); }
+  .contact{ margin-left: var(--layout-rail-offset); padding-right: 24px; }
 }
 
 .contact a{
