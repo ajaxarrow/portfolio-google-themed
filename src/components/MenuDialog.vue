@@ -1,12 +1,15 @@
 <script setup lang="ts">
   import {PhDotsNine, PhMagnifyingGlass} from "@phosphor-icons/vue";
   import {ref} from "vue";
+  import {useMediaQuery} from "@vueuse/core";
   import {Link} from "../interfaces/link.interface.ts";
   import {links} from "../data/links.ts";
   import {socials} from "../data/socials.ts";
   import {scaleInStagger} from "../composables/useMotionPresets.ts";
 
   const menuDialog = ref(false);
+  // Hover only where the primary pointer can hover (mouse/trackpad), not on phones.
+  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
 
   const emit = defineEmits(['focus-search']);
 
@@ -32,9 +35,16 @@
 </script>
 
 <template>
+  <!-- Opens on hover for mouse users (with a short close delay so the pointer can
+       travel into the panel); touch screens have no hover, so a tap opens it there. -->
   <VMenu
       v-model="menuDialog"
       :close-on-content-click="false"
+      :open-on-hover="canHover"
+      :open-on-click="!canHover"
+      :open-delay="60"
+      :close-delay="220"
+      location="bottom end"
   >
     <template #activator="{ props }">
       <PhDotsNine
