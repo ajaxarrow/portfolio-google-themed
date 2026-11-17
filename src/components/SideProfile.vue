@@ -2,6 +2,8 @@
 import Profile from '../assets/images/closeup.webp'
 import ProfileWide from '../assets/images/profile-wide.webp'
 
+import {PhCaretDown} from "@phosphor-icons/vue";
+
 defineProps<{ compact?: boolean }>();
 
 interface SkillCategory {
@@ -21,6 +23,8 @@ const skillCategories: SkillCategory[] = [
   {label: 'Architecture & Practices', skills: ['Full-Stack Development', 'Backend Architecture', 'Database Design', 'Data Engineering']},
   {label: 'Additional', skills: ['AI-Assisted Development (Claude, ChatGPT)', 'Figma', 'UI/UX Prototyping']},
 ];
+
+const skillCount = skillCategories.reduce((sum, category) => sum + category.skills.length, 0);
 
 const fields = [
   {label: 'Full name', value: 'Jiu Axl Ramos Tabilla (Axl)'},
@@ -87,7 +91,24 @@ const actions = [
     </div>
 
     <VDivider class="my-4"/>
-    <div class="skills-section">
+    <!-- On phones/tablets the panel sits above the results, so the long skills list
+         folds away behind a toggle; on desktop (side column) it is always open. -->
+    <details v-if="compact" class="skills-section skills-collapsible">
+      <summary class="skills-summary">
+        <span class="section-title">Skills</span>
+        <span class="skills-count">{{ skillCount }} skills · Show all</span>
+        <PhCaretDown size="16" class="skills-caret" aria-hidden="true"/>
+      </summary>
+      <div class="skills-body">
+        <div v-for="category in skillCategories" :key="category.label" class="skill-category">
+          <p class="field-label">{{ category.label }}</p>
+          <div class="chip-row">
+            <span v-for="skill in category.skills" :key="skill" class="skill-chip">{{ skill }}</span>
+          </div>
+        </div>
+      </div>
+    </details>
+    <div v-else class="skills-section">
       <h3 class="section-title mb-3">Skills</h3>
       <div v-for="category in skillCategories" :key="category.label" class="skill-category">
         <p class="field-label">{{ category.label }}</p>
@@ -230,7 +251,36 @@ const actions = [
 
   .side-profile-container--compact{
     margin-bottom: 24px;
+    max-width: none !important; /* fill the column on phones and tablets */
   }
+
+  .skills-summary{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .skills-summary::-webkit-details-marker{ display: none; }
+
+  .skills-count{
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--google-link);
+  }
+
+  .skills-caret{
+    flex-shrink: 0;
+    color: var(--google-link);
+    transition: transform var(--duration-base) var(--ease-out-quart);
+  }
+
+  .skills-collapsible[open] .skills-caret{ transform: rotate(180deg); }
+
+  .skills-body{ padding-top: 12px; }
 
   .skill-chip{
     font-size: 12px;
