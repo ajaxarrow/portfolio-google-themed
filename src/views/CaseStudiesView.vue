@@ -6,6 +6,7 @@ import {
 } from "@phosphor-icons/vue";
 import Lightbox from "../components/Lightbox.vue";
 import Portrait from "../assets/images/profile-wide.webp";
+import PortraitCloseup from "../assets/images/closeup.webp";
 import {
   caseStudies, services, speedFacts, testimonials, trackRecord, type CaseStudy,
 } from "../data/case-studies.ts";
@@ -198,7 +199,11 @@ function feelingLucky() {
 
       <figure class="hero-portrait">
         <div class="portrait-frame">
-          <img :src="Portrait" alt="Jiu Axl Tabilla" width="933" height="1400" fetchpriority="high"/>
+          <picture>
+            <!-- Square close-up for the compact byline on narrow screens. -->
+            <source media="(max-width: 900px)" :srcset="PortraitCloseup"/>
+            <img :src="Portrait" alt="Jiu Axl Tabilla" width="933" height="1400" fetchpriority="high"/>
+          </picture>
         </div>
         <span class="portrait-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <figcaption class="portrait-card">
@@ -657,6 +662,8 @@ function feelingLucky() {
   border-radius: 28px;
   background-color: var(--grey-100);
 }
+
+.portrait-frame picture{ display: contents; }
 
 .portrait-frame img{
   display: block;
@@ -1464,14 +1471,36 @@ function feelingLucky() {
 @media (max-width: 900px){
   .hero{ grid-template-columns: minmax(0, 1fr); }
 
+  /* The portrait becomes a compact byline above the headline, so the headline
+     and pitch land in the first screen instead of a full-height photo. */
   .hero-portrait{
     order: -1;
-    width: min(100%, 248px);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
   }
 
-  .hero{ gap: 32px; }
+  .portrait-frame{
+    flex-shrink: 0;
+    width: 76px;
+    aspect-ratio: 1;
+    border-radius: 20px;
+  }
 
-  .portrait-card{ left: auto; right: -12px; }
+  .portrait-frame img{ object-position: center; }
+
+  .portrait-dots{ display: none; }
+
+  .portrait-card{
+    position: static;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .hero{ gap: 20px; }
 
   .study{
     grid-template-columns: minmax(0, 1fr);
@@ -1491,7 +1520,6 @@ function feelingLucky() {
 }
 
 @media (max-width: 600px){
-  .portrait-card{ right: auto; left: 12px; bottom: 12px; min-width: 0; }
   .answer-card{ padding: 18px; }
   .converter{ grid-template-columns: minmax(0, 1fr); }
   .converter-box{ min-height: 0; padding: 14px 16px; }
