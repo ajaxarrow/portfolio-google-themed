@@ -13,7 +13,7 @@ import Wordmark from "../components/Wordmark.vue";
 import SideProfile from "../components/SideProfile.vue";
 import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
 import SideArticleInfo from "../components/SideArticleInfo.vue";
-import {fadeUpStagger, isReducedMotion} from "../composables/useMotionPresets.ts";
+import {isReducedMotion} from "../composables/useMotionPresets.ts";
 
 const sideComponents: Record<string, any> = {
   profile: SideProfile,
@@ -258,18 +258,14 @@ onMounted(() => {
         }"
       >
         <p class="text-suggestion mb-3">People Also Search For</p>
-        <VRow class="ma-0 ga-3">
-            <VCol v-for="(link, index) in links" :key="link.name" class="pa-0" cols="5">
-              <a class="text-decoration-none text-black" :href="link.link">
-                <div class="suggestion-item" v-motion="fadeUpStagger(index)">
-                  <div class="suggestion-item-text">
-                    {{ link.name }}
-                  </div>
-                  <PhMagnifyingGlass/>
-                </div>
-              </a>
-            </VCol>
-        </VRow>
+        <ul class="suggestion-grid">
+          <li v-for="(link, index) in links" :key="link.name" v-reveal="index">
+            <RouterLink class="suggestion-item text-decoration-none text-black" :to="link.link">
+              <span class="suggestion-item-text">{{ link.name }}</span>
+              <PhMagnifyingGlass aria-hidden="true"/>
+            </RouterLink>
+          </li>
+        </ul>
       </div>
     </main>
 
@@ -336,6 +332,15 @@ onMounted(() => {
     border-radius: 50%;
   }
 
+  .suggestion-grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   .nav-link{
     flex-shrink: 0;
     white-space: nowrap;
@@ -359,7 +364,9 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 14px;
     background-color: var(--grey-100);
     transition: background-color var(--duration-fast) var(--ease-out-quart);
   }
