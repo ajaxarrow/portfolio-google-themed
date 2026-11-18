@@ -23,7 +23,7 @@ export const routes: RouteRecordRaw[] = [
           path: 'all',
           name: 'all',
           component: () => import("../views/AllView.vue"),
-          meta: {h1: 'Everything by Jiu Axl Tabilla', side: 'aboutPortfolio', title: 'Everything by Jiu Axl Tabilla | Projects, Experience, Awards & UI Designs', description: 'Search all of Jiu Axl Tabilla\'s work: production SaaS projects, web and mobile apps, UI/UX designs, hackathon wins, research and talks.'}
+          meta: {h1: 'Everything by Jiu Axl Tabilla', side: 'hire', title: 'Everything by Jiu Axl Tabilla | Projects, Experience, Awards & UI Designs', description: 'Search all of Jiu Axl Tabilla\'s work: production SaaS projects, web and mobile apps, UI/UX designs, hackathon wins, research and talks.'}
         },
         {
           path: 'projects',

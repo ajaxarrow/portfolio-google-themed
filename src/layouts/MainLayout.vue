@@ -11,7 +11,6 @@ import {PhMagnifyingGlass} from "@phosphor-icons/vue";
 import Footer from "../components/Footer.vue";
 import Wordmark from "../components/Wordmark.vue";
 import SideProfile from "../components/SideProfile.vue";
-import SideAboutPortfolio from "../components/SideAboutPortfolio.vue";
 import SideArticleInfo from "../components/SideArticleInfo.vue";
 import SideHire from "../components/SideHire.vue";
 import {isReducedMotion} from "../composables/useMotionPresets.ts";
@@ -19,7 +18,6 @@ import {isReducedMotion} from "../composables/useMotionPresets.ts";
 const sideComponents: Record<string, any> = {
   hire: SideHire,
   profile: SideProfile,
-  aboutPortfolio: SideAboutPortfolio,
   article: SideArticleInfo,
 };
 
@@ -336,7 +334,7 @@ onMounted(() => {
   .side-details{
     flex: 1 1 0;
     min-width: 0;
-    max-width: 600px;
+    max-width: 520px; /* room for the panel to breathe on wide screens, still narrower than the results */
   }
 
   .suggestion-grid{

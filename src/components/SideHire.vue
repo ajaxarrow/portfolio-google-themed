@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import Profile from '../assets/images/closeup.webp'
+import {computed} from "vue";
+import {useRoute} from "vue-router";
+import {PhCaretDown} from "@phosphor-icons/vue";
+import SidePanel from "./SidePanel.vue";
 import {caseStudies} from "../data/case-studies.ts";
 import {projects} from "../data/projects.ts";
 import {buzzerboyProjects} from "../data/buzzerboy-projects.ts";
 import {designs} from "../data/designs.ts";
 import {isVisible} from "../utils/entries.ts";
 
-// A short Knowledge Panel for result pages that have no panel of their own
-// (Projects, Designs, Socials, 404): the facts a recruiter needs, one click away.
+// The Knowledge Panel for result pages without a panel of their own
+// (All, Projects, Designs, Socials, 404): the facts a recruiter needs, one click away.
 const stats = [
   {value: caseStudies.length, label: 'Case studies', to: '/case-studies'},
   {value: [...buzzerboyProjects, ...projects].filter(isVisible).length, label: 'Projects', to: '/projects'},
@@ -15,20 +18,14 @@ const stats = [
 ];
 
 const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
+
+// "All" is the portfolio's front page, so it also says how the site itself was made.
+const route = useRoute();
+const showAboutPortfolio = computed(() => route.name === 'all');
 </script>
 
 <template>
-  <aside class="hire" aria-label="Profile summary">
-    <div class="hire-head">
-      <img :src="Profile" alt="Portrait of Jiu Axl Tabilla" class="hire-avatar" width="64" height="64">
-      <div>
-        <p class="hire-name">Jiu Axl R. Tabilla</p>
-        <p class="hire-role">Full-Stack Software Engineer</p>
-      </div>
-    </div>
-
-    <p class="hire-status"><i aria-hidden="true"></i> Open to client projects and remote work</p>
-
+  <SidePanel class="hire">
     <ul class="hire-stats">
       <li v-for="stat in stats" :key="stat.label">
         <RouterLink :to="stat.to">
@@ -37,13 +34,6 @@ const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
         </RouterLink>
       </li>
     </ul>
-
-    <div class="hire-actions">
-      <RouterLink to="/contact" class="action action--primary">Contact me</RouterLink>
-      <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" class="action">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
-    </div>
-
-    <VDivider class="my-4"/>
 
     <p class="hire-label">Featured case studies</p>
     <ul class="hire-featured">
@@ -57,64 +47,33 @@ const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
         </RouterLink>
       </li>
     </ul>
-  </aside>
+
+    <details v-if="showAboutPortfolio" class="hire-about">
+      <summary>
+        About this portfolio
+        <PhCaretDown size="16" class="hire-about-caret" aria-hidden="true"/>
+      </summary>
+      <p>
+        A portfolio built as a search results page, designed and coded by Jiu Axl R. Tabilla.
+        The search box works: try "django", "figma" or "champion". Every result is real work.
+      </p>
+      <p class="hire-about-meta">Vue.js and TypeScript, built with Vite, designed in Figma, hosted on Netlify.</p>
+    </details>
+  </SidePanel>
 </template>
 
 <style scoped>
 .hire{
   position: sticky;
   top: 24px;
-  padding: 24px;
-  border-radius: 16px;
-  background-color: var(--grey-50);
-  color: var(--ink);
 }
 
-.hire-head{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.hire-avatar{
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  object-fit: cover;
-}
-
-.hire-name{
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.3;
-}
-
-.hire-role{
-  font-size: 14px;
-  color: var(--meta);
-}
-
-.hire-status{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  font-size: 14px;
-}
-
-.hire-status i{
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background-color: var(--googlegreen);
-}
 
 .hire-stats{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin: 16px 0 0;
+  margin: 0 0 20px;
   padding: 0;
   list-style: none;
 }
@@ -123,6 +82,7 @@ const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
   display: flex;
   flex-direction: column;
   padding: 10px 12px;
+  border: 1px solid var(--grey-200);
   border-radius: 12px;
   background-color: var(--surface);
   color: var(--ink);
@@ -142,38 +102,6 @@ const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
   font-size: 12px;
   color: var(--meta);
 }
-
-.hire-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
-.action{
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 16px;
-  border-radius: 9999px;
-  border: 1px solid var(--grey-300);
-  background-color: var(--surface);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background-color var(--duration-fast) var(--ease-out-quart);
-}
-
-.action:hover{ background-color: var(--grey-200); }
-
-.action--primary{
-  border-color: var(--google-link);
-  background-color: var(--google-link);
-  color: var(--surface);
-}
-
-.action--primary:hover{ background-color: var(--link-pressed); }
 
 .hire-label{
   margin-bottom: 8px;
@@ -230,12 +158,35 @@ const featured = caseStudies.filter((study) => study.featured).slice(0, 3);
   color: var(--google-link);
 }
 
-.sr-only{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+
+.hire-about{
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--grey-200);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hire-about summary{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  color: var(--meta);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.hire-about summary::-webkit-details-marker{ display: none; }
+
+.hire-about-caret{ transition: transform var(--duration-base) var(--ease-out-quart); }
+.hire-about[open] .hire-about-caret{ transform: rotate(180deg); }
+
+.hire-about-meta{
+  margin-top: 8px;
+  color: var(--meta);
+  font-size: 13px;
 }
 </style>

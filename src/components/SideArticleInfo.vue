@@ -76,7 +76,6 @@ const otherArticles = computed(() =>
 .side-article-container{
   background-color: var(--grey-50);
   border-radius: 16px;
-  max-width: 600px !important;
   padding: 24px;
   /* Lines the panel up with the article's kicker badge instead of its "Back" link,
      which sits above the kicker with no equivalent on this side. */
