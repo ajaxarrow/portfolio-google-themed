@@ -28,6 +28,17 @@ const seconds = ((caseStudies.length * 37) % 89 + 11) / 100;
 const ACCENTS = ['var(--googleblue)', 'var(--googlered)', 'var(--googleyellow)', 'var(--googlegreen)'];
 const accent = (index: number) => ACCENTS[index % ACCENTS.length];
 
+// What the mock browser bar shows: the site's host, or the product name when the
+// main link is a walkthrough video rather than a site.
+const siteLabel = (study: CaseStudy) => host(study.link).includes('loom.com') ? study.name.toLowerCase() : host(study.link);
+
+// Hero collage: the first screenshot of two featured studies, layered behind the
+// portrait so the first screen shows real work. Only drawn when the column is wide.
+const heroShots = caseStudies
+  .map((study, i) => ({study, color: accent(i)}))
+  .filter(({study}) => study.featured && study.thumbs.length)
+  .slice(0, 2);
+
 /* Screenshot viewer: one active image per case study. */
 const activeImage = ref<Record<string, number>>({});
 const imageIndex = (id: string) => activeImage.value[id] ?? 0;
@@ -303,6 +314,19 @@ function feelingLucky() {
         </div>
       </div>
 
+      <div class="hero-visual">
+        <ul class="hero-shots" aria-label="Featured case studies">
+          <li v-for="(shot, n) in heroShots" :key="shot.study.id" class="hero-shot" :class="`hero-shot--${n + 1}`" :style="{ '--accent': shot.color }">
+            <a :href="`#${shot.study.id}`" @click.prevent="jumpTo(shot.study.id)">
+              <span class="hero-shot-bar" aria-hidden="true">
+                <span class="browser-dots"><i></i><i></i><i></i></span>
+                <span class="hero-shot-url">{{ siteLabel(shot.study) }}</span>
+              </span>
+              <img :src="shot.study.thumbs[0]" :alt="`${shot.study.name} screenshot`" width="640" height="400" loading="eager"/>
+              <span class="hero-shot-label">{{ shot.study.name }}</span>
+            </a>
+          </li>
+        </ul>
       <figure class="hero-portrait">
         <div class="portrait-frame">
           <picture>
@@ -319,6 +343,7 @@ function feelingLucky() {
           <span class="portrait-time">Bukidnon, Philippines<template v-if="studioTime"> · {{ studioTime }}</template></span>
         </figcaption>
       </figure>
+      </div>
     </header>
 
     <!-- Case studies -->
@@ -391,7 +416,7 @@ function feelingLucky() {
           <div class="browser">
             <div class="browser-bar" aria-hidden="true">
               <span class="browser-dots"><i></i><i></i><i></i></span>
-              <span class="browser-url">{{ host(study.link).includes('loom.com') ? study.name.toLowerCase() : host(study.link) }}</span>
+              <span class="browser-url">{{ siteLabel(study) }}</span>
             </div>
             <div
                 class="viewer"
@@ -631,7 +656,9 @@ function feelingLucky() {
 <style scoped>
 .cs{
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  max-width: 1240px;
+  /* Wide enough that on large screens the content reaches the "On this page" panel
+     instead of stopping halfway and leaving an empty band. */
+  max-width: 1720px;
   padding-bottom: 96px;
   color: var(--ink);
   font-size: 15px;
@@ -818,12 +845,101 @@ function feelingLucky() {
   margin-top: 28px;
 }
 
-/* Portrait */
+/* Portrait and work collage */
+.hero-visual{
+  position: relative;
+  container-type: inline-size;
+  isolation: isolate;
+}
+
 .hero-portrait{
   position: relative;
+  z-index: 2;
   justify-self: start;
   width: min(100%, 340px);
   margin: 0;
+}
+
+/* Collage stays hidden until the column has room for it (wide screens). */
+.hero-shots{
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-shot{
+  position: absolute;
+  z-index: 1;
+  width: 56%;
+}
+
+.hero-shot a{
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--grey-300));
+  border-radius: 14px;
+  background-color: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 18px 40px -24px rgb(32 33 36 / 0.35);
+  transition: transform 500ms var(--ease-out-expo);
+}
+
+.hero-shot a:hover{ transform: translateY(-6px); }
+.hero-shot a:focus-visible{ outline: 2px solid var(--google-link); outline-offset: 3px; }
+
+.hero-shot-bar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.hero-shot-url{
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  background-color: var(--grey-100);
+  color: var(--meta);
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hero-shot img{
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top left;
+}
+
+.hero-shot-label{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hero-shot--1{ top: 4%; right: 0; }
+/* The second card covers the first one's lower corner, so its label sits up top. */
+.hero-shot--1 .hero-shot-label{ top: 44px; bottom: auto; }
+.hero-shot--2{ bottom: 2%; right: 9%; }
+.hero-shot--2 a{ box-shadow: 0 24px 48px -24px rgb(32 33 36 / 0.45); }
+
+@container (min-width: 500px){
+  .hero-shots{ display: block; }
+  .hero-portrait{ width: clamp(260px, 48%, 340px); }
 }
 
 .portrait-frame{
@@ -939,6 +1055,8 @@ function feelingLucky() {
   .portrait-frame{ animation: portrait-in 1100ms var(--ease-out-expo) 100ms backwards; }
   .portrait-frame img{ animation: portrait-settle 1500ms var(--ease-out-expo) 100ms backwards; }
   .portrait-card{ animation: rise 800ms var(--ease-out-expo) 700ms backwards; }
+  .hero-shot--1{ animation: rise 900ms var(--ease-out-expo) 350ms backwards; }
+  .hero-shot--2{ animation: rise 900ms var(--ease-out-expo) 500ms backwards; }
   .portrait-dots{ animation: rise 600ms var(--ease-out-expo) 600ms backwards; }
   .portrait-dots i{ animation: dot-pop 500ms var(--ease-out-quart) backwards; }
   .portrait-dots i:nth-child(1){ animation-delay: 850ms; }
@@ -980,7 +1098,7 @@ function feelingLucky() {
   margin-top: 16px;
   padding-bottom: 12px;
   background: linear-gradient(var(--accent), var(--accent)) no-repeat 0 100% / 56px 3px;
-  font-size: clamp(26px, 20px + 1.3vw, 38px);
+  font-size: clamp(26px, 20px + 1.1vw, 34px);
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -1103,7 +1221,9 @@ function feelingLucky() {
 /* Screenshot stage */
 .study-media{
   position: sticky;
-  top: 16px;
+  /* Hold the screenshot near the middle of the screen while the longer text
+     column scrolls past, instead of leaving a gap under it. */
+  top: max(16px, calc(50vh - 240px));
 }
 
 .stage{
@@ -1915,8 +2035,10 @@ function feelingLucky() {
 
   /* The portrait becomes a compact byline above the headline, so the headline
      and pitch land in the first screen instead of a full-height photo. */
+  .hero-visual{ order: -1; }
+  .hero-shots{ display: none; }
+
   .hero-portrait{
-    order: -1;
     display: flex;
     align-items: center;
     gap: 14px;
