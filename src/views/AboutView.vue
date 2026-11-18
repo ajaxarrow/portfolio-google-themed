@@ -23,7 +23,7 @@ const aboutData = [...visibleAbout]
     <ResultHeader :results="visibleAbout.length"/>
     <div class="mt-5">
       <SearchLinkItem
-          v-for="(link, index) in aboutData.splice(0, 2)"
+          v-for="(link, index) in aboutData.slice(0, 2)"
           :key="link.id"
           :searchItem="link"
           :index="index"
@@ -38,7 +38,7 @@ const aboutData = [...visibleAbout]
         />
       </div>
       <SearchLinkItem
-          v-for="(link, index) in aboutItems.splice(2)"
+          v-for="(link, index) in aboutItems.slice(2)"
           :key="link.id"
           :searchItem="link"
           :index="index"
