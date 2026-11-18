@@ -40,6 +40,16 @@ const heroShots = caseStudies
   .slice(0, 2);
 
 /* Screenshot viewer: one active image per case study. */
+// "What I built" reads as the solution by default; the Technical chip swaps in
+// the stack and architecture for engineers.
+type BuiltView = 'solution' | 'technical';
+const BUILT_VIEWS: {id: BuiltView; label: string}[] = [
+  {id: 'solution', label: 'Solution'},
+  {id: 'technical', label: 'Technical'},
+];
+const builtViews = ref<Record<string, BuiltView>>({});
+const builtView = (id: string): BuiltView => builtViews.value[id] ?? 'solution';
+
 const activeImage = ref<Record<string, number>>({});
 const imageIndex = (id: string) => activeImage.value[id] ?? 0;
 
@@ -359,7 +369,7 @@ function feelingLucky() {
     >
       <div class="study-text" data-reveal>
         <div class="study-source">
-          <span class="study-logo"><img v-if="study.logo" :src="study.logo" alt=""/></span>
+          <span class="study-logo"><img v-if="study.logo" :src="study.logo" alt=""/><span v-else class="study-logo-initial" aria-hidden="true">{{ study.name[0] }}</span></span>
           <div>
             <p class="study-name">{{ study.name }}</p>
             <p class="study-client">{{ study.client }}</p>
@@ -377,8 +387,23 @@ function feelingLucky() {
             <dd>{{ study.problem }}</dd>
           </div>
           <div>
-            <dt>What I built</dt>
-            <dd>{{ study.built }}</dd>
+            <dt class="study-built-head">
+              What I built
+              <span class="built-chips" role="group" :aria-label="`${study.name}: how to read what I built`">
+                <button
+                  v-for="view in BUILT_VIEWS"
+                  :key="view.id"
+                  type="button"
+                  class="built-chip"
+                  :aria-pressed="builtView(study.id) === view.id"
+                  :aria-controls="`${study.id}-built`"
+                  @click="builtViews[study.id] = view.id"
+                >{{ view.label }}</button>
+              </span>
+            </dt>
+            <dd :id="`${study.id}-built`" aria-live="polite">
+              {{ builtView(study.id) === 'technical' ? study.technical : study.built }}
+            </dd>
           </div>
           <div class="study-outcome">
             <dt><PhCheckCircle weight="fill" size="16"/> Outcome</dt>
@@ -1089,6 +1114,7 @@ function feelingLucky() {
 
 .study-logo{ width: 40px; height: 40px; }
 .study-logo img{ width: 22px; height: 22px; object-fit: contain; }
+.study-logo-initial{ color: var(--accent); font-size: 17px; font-weight: 700; }
 
 .study-name{ font-size: 15px; font-weight: 600; line-height: 1.3; }
 .study-client{ color: var(--meta); font-size: 13px; line-height: 1.3; }
@@ -1154,6 +1180,37 @@ function feelingLucky() {
 .study-facts dd{
   max-width: 62ch;
   margin-top: 2px;
+}
+
+.study-built-head{ flex-wrap: wrap; justify-content: space-between; }
+
+.built-chips{
+  display: inline-flex;
+  gap: 6px;
+}
+
+.built-chip{
+  min-height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--grey-300);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out-quart),
+    border-color var(--duration-fast) var(--ease-out-quart);
+}
+
+.built-chip:hover{ background-color: var(--grey-100); }
+.built-chip:focus-visible{ outline: 2px solid var(--google-link); outline-offset: 2px; }
+
+.built-chip[aria-pressed="true"]{
+  border-color: transparent;
+  background-color: color-mix(in srgb, var(--google-link) 14%, var(--surface));
+  color: var(--link-pressed);
 }
 
 .study-outcome dt{ color: #188038; }
@@ -1361,16 +1418,17 @@ function feelingLucky() {
   .slide-next-enter-from, .slide-prev-enter-from{ opacity: 0; }
 }
 
+/* One row at any width: thumbs shrink before they wrap. */
 .viewer-thumbs{
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
   padding-inline: 4px;
 }
 
 .viewer-thumb{
-  width: 76px;
+  flex: 0 1 76px;
+  min-width: 40px;
   aspect-ratio: 16 / 10;
   padding: 0;
   overflow: hidden;
