@@ -18,7 +18,16 @@
 
 *{
   font-family: 'Satoshi', sans-serif !important;
+}
+
+/* Page scrolling is eased by Lenis (useSmoothScroll.ts); native smooth scrolling would
+   fight it. Without JS, or with reduced motion, the page scrolls normally. */
+html:not(.lenis){
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html:not(.lenis){ scroll-behavior: auto; }
 }
 
 .center{

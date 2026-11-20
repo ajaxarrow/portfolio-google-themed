@@ -12,6 +12,7 @@ import {
 } from "../data/case-studies.ts";
 import {findEntryById} from "../utils/entries.ts";
 import {isReducedMotion} from "../composables/useMotionPresets.ts";
+import {scrollPageTo} from "../composables/useSmoothScroll.ts";
 import ContactForm from "../components/ContactForm.vue";
 import {CONTACT_EMAIL, mailtoHref} from "../lib/contact.ts";
 
@@ -124,7 +125,7 @@ function goToHash(hash: string, behavior: ScrollBehavior = 'auto') {
   const id = hash.replace(/^#/, '');
   const el = id ? document.getElementById(id) : null;
   if (!el) return;
-  el.scrollIntoView({block: 'start', behavior});
+  scrollPageTo(el, {smooth: behavior === 'smooth'});
   el.focus({preventScroll: true});
   targetId.value = id;
   clearTimeout(targetTimer);
@@ -225,7 +226,7 @@ const tocCaption = computed(() => {
 });
 
 function backToTop() {
-  window.scrollTo({top: 0, behavior: isReducedMotion() ? 'auto' : 'smooth'});
+  scrollPageTo(0, {smooth: !isReducedMotion()});
   document.getElementById('main')?.focus({preventScroll: true});
 }
 
