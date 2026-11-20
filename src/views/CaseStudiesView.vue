@@ -2,7 +2,7 @@
 import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {
-  PhArrowUp, PhArrowUpRight, PhCaretLeft, PhCaretRight, PhCheckCircle, PhEnvelopeSimple, PhSparkle, PhStar,
+  PhArrowUp, PhArrowUpRight, PhCaretLeft, PhCaretRight, PhCheckCircle, PhEnvelopeSimple, PhMagnifyingGlassPlus, PhSparkle, PhStar,
 } from "@phosphor-icons/vue";
 import Lightbox from "../components/Lightbox.vue";
 import Portrait from "../assets/images/profile-wide.webp";
@@ -91,9 +91,6 @@ const allShots = computed(() =>
   caseStudies.flatMap((study) => study.images.map((src, index) => ({study, src, thumb: study.thumbs[index] ?? src, index})))
 );
 
-/* Converter card. */
-const speedId = ref(speedFacts[0].id);
-const speed = computed(() => speedFacts.find((f) => f.id === speedId.value) ?? speedFacts[0]);
 
 /* Time card. Filled in on the client only, so prerendered HTML never shows a stale time. */
 const STUDIO_TZ = 'Asia/Manila';
@@ -101,6 +98,7 @@ const STUDIO_OFFSET_HOURS = 8;
 const studioTime = ref('');
 const studioDay = ref('');
 const offsetLine = ref('');
+const offsetShort = ref('');
 let clock: ReturnType<typeof setInterval> | undefined;
 
 function tick() {
@@ -111,6 +109,7 @@ function tick() {
   const diff = STUDIO_OFFSET_HOURS + now.getTimezoneOffset() / 60;
   const hours = Math.abs(diff);
   const amount = `${Number.isInteger(hours) ? hours : hours.toFixed(1)} ${hours === 1 ? 'hour' : 'hours'}`;
+  offsetShort.value = diff === 0 ? 'Same time zone as you' : `${amount} ${diff > 0 ? 'ahead of' : 'behind'} you`;
   offsetLine.value = diff === 0
     ? `Same time zone as you. It is ${viewerTime} for both of us.`
     : `${amount} ${diff > 0 ? 'ahead of' : 'behind'} you. It is ${viewerTime} where you are.`;
@@ -465,6 +464,7 @@ function feelingLucky() {
                       decoding="async"
                   />
                 </Transition>
+                <span class="viewer-zoom" aria-hidden="true"><PhMagnifyingGlassPlus size="14" weight="bold"/> Click to enlarge</span>
               </button>
               <template v-if="study.images.length > 1">
                 <button class="viewer-nav viewer-nav-prev" :aria-label="`Previous ${study.name} screenshot`" @click="stepImage(study, -1)">
@@ -498,30 +498,21 @@ function feelingLucky() {
     <section id="availability" class="answers" aria-labelledby="answers-heading" tabindex="-1">
       <h2 id="answers-heading" class="section-heading" data-reveal>How fast, and when are you reachable?</h2>
       <div class="answers-grid">
-        <div class="answer-card" data-reveal>
-          <label class="answer-select-label" for="speed-select">Convert time into</label>
-          <select id="speed-select" v-model="speedId" class="answer-select">
-            <option v-for="fact in speedFacts" :key="fact.id" :value="fact.id">{{ fact.label }}</option>
-          </select>
-          <div class="converter" aria-live="polite">
-            <div :key="`${speed.id}-in`" class="converter-box">
-              <span class="converter-amount">{{ speed.amount }}</span>
-              <span class="converter-unit">{{ speed.unit }}</span>
-            </div>
-            <span class="converter-equals" aria-hidden="true">=</span>
-            <div :key="`${speed.id}-out`" class="converter-box converter-box-result">
-              <span class="converter-amount">{{ speed.resultAmount }}</span>
-              <span class="converter-unit">{{ speed.result }}</span>
-            </div>
-          </div>
-          <p class="answer-note">{{ speed.note }}</p>
+        <div v-for="(fact, i) in speedFacts" :key="fact.id" class="answer-card stat-card" data-reveal :style="{ '--i': i }">
+          <p class="answer-select-label">{{ fact.label }}</p>
+          <p class="stat-amount">{{ fact.amount }} <span class="stat-unit">{{ fact.unit }}</span></p>
+          <p class="stat-result">{{ fact.resultAmount }} {{ fact.result }}</p>
+          <p class="answer-note">{{ fact.note }}</p>
         </div>
 
-        <div class="answer-card" data-reveal style="--i: 1">
-          <p class="answer-select-label">Time in Bukidnon, Philippines</p>
-          <p class="clock-time">{{ studioTime || '–:–' }}</p>
-          <p class="clock-day">{{ studioDay || 'Philippine Standard Time' }} (UTC+8)</p>
-          <p class="answer-note">{{ offsetLine || 'Flexible overlap with your working hours.' }}</p>
+        <div class="answer-card stat-card" data-reveal :style="{ '--i': speedFacts.length }">
+          <p class="answer-select-label">Time zone</p>
+          <p class="stat-amount stat-amount--text">{{ offsetShort || 'UTC+8' }}</p>
+          <p class="stat-result">
+            <template v-if="studioTime">{{ studioTime }}, {{ studioDay }} in Bukidnon, Philippines (UTC+8)</template>
+            <template v-else>Bukidnon, Philippines (UTC+8)</template>
+          </p>
+          <p class="answer-note">Flexible overlap with your working hours.</p>
         </div>
       </div>
 
@@ -544,12 +535,12 @@ function feelingLucky() {
       </div>
     </section>
 
-    <!-- Services, as sponsored results -->
+    <!-- Services, styled as search results -->
     <section id="services" class="services" :class="{ 'is-target': targetId === 'services' }" aria-labelledby="services-heading" tabindex="-1">
       <h2 id="services-heading" class="section-heading" data-reveal>What I offer</h2>
       <div class="services-list">
         <div v-for="(service, i) in services" :key="service.id" class="service" data-reveal :style="{ '--i': i }">
-          <p class="service-meta"><strong>Sponsored</strong> · jiuaxl › hire › {{ service.id }}</p>
+          <p class="service-meta">jiuaxl › hire › {{ service.id }}</p>
           <a class="service-title" href="#contact" @click.prevent="startInquiry(service.title)">{{ service.title }}</a>
           <p class="service-description">{{ service.description }}</p>
           <ul class="service-links">
@@ -784,7 +775,7 @@ function feelingLucky() {
   grid-template-columns: minmax(0, var(--layout-content-width)) minmax(260px, 1fr);
   gap: 28px;
   align-items: center;
-  padding: clamp(20px, 3vw, 40px) 0 clamp(40px, 6vw, 80px);
+  padding: clamp(20px, 3vw, 40px) 0 clamp(24px, 4vw, 48px);
 }
 
 .hero-title{
@@ -1098,7 +1089,7 @@ function feelingLucky() {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: clamp(32px, 5vw, 64px);
   align-items: start;
-  padding: clamp(40px, 6vw, 80px) 0;
+  padding: clamp(32px, 4.5vw, 56px) 0;
   border-top: 1px solid var(--grey-200);
   scroll-margin-top: 8px;
 }
@@ -1396,6 +1387,22 @@ function feelingLucky() {
 .viewer-nav:hover{ background-color: var(--grey-100); }
 .viewer .viewer-nav:active{ transform: scale(0.92); }
 
+.viewer-zoom{
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background-color: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
 .viewer-count{
   position: absolute;
   right: 10px;
@@ -1468,7 +1475,7 @@ function feelingLucky() {
 
 .answers-grid{
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-top: 24px;
 }
@@ -1486,55 +1493,6 @@ function feelingLucky() {
   font-weight: 500;
 }
 
-.answer-select{
-  width: 100%;
-  min-height: 44px;
-  margin-top: 8px;
-  padding: 0 40px 0 14px;
-  border: 1px solid var(--grey-300);
-  border-radius: 8px;
-  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 256 256'%3E%3Cpath fill='%235F6368' d='M213.66 101.66l-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E") no-repeat right 14px center;
-  color: var(--ink);
-  font-size: 15px;
-  appearance: none;
-  cursor: pointer;
-}
-
-.answer-select:hover{ border-color: var(--grey-400); }
-
-.converter{
-  display: grid;
-  grid-template-columns: minmax(0, 0.7fr) auto minmax(0, 1.3fr);
-  gap: 12px;
-  align-items: stretch;
-  margin-top: 14px;
-}
-
-.converter-box{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 112px;
-  padding: 12px 16px;
-  border: 1px solid var(--grey-300);
-  border-radius: 8px;
-}
-
-.converter-box-result{
-  border-color: transparent;
-  background-color: var(--grey-100);
-}
-
-@keyframes converter-in{
-  from{ clip-path: inset(0 0 100% 0); transform: translateY(6px); }
-  to{ clip-path: inset(0 0 0 0); transform: translateY(0); }
-}
-
-@media (prefers-reduced-motion: no-preference){
-  .converter-box{ animation: converter-in 420ms var(--ease-out-quart); }
-  .converter-box-result{ animation-delay: 70ms; animation-fill-mode: backwards; }
-}
-
 @media (prefers-reduced-motion: reduce){
   .stage:hover .browser,
   .source-chip:hover,
@@ -1542,42 +1500,44 @@ function feelingLucky() {
   .shot:hover img{ transform: none; }
 }
 
-.converter-amount{
-  font-size: 44px;
+/* Speed facts and time zone: every number visible at once, nothing behind a dropdown. */
+.stat-card{
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-amount{
+  margin-top: 10px;
+  font-size: 40px;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: -0.02em;
 }
 
-.converter-unit{
-  margin-top: 6px;
-  color: var(--meta);
-  font-size: 14px;
-  line-height: 1.35;
+.stat-amount--text{
+  font-size: 26px;
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
-.converter-equals{
-  align-self: center;
-  color: var(--meta);
-  font-size: 28px;
+.stat-unit{
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+.stat-result{
+  margin-top: 8px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .answer-note{
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
   color: var(--meta);
   font-size: 14px;
 }
 
-.clock-time{
-  margin-top: 6px;
-  font-size: clamp(48px, 36px + 3vw, 68px);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.clock-day{ font-size: 15px; }
 
 /* Track record */
 .record{ margin-top: 28px; }
@@ -2144,9 +2104,6 @@ function feelingLucky() {
 
 @media (max-width: 600px){
   .answer-card{ padding: 18px; }
-  .converter{ grid-template-columns: minmax(0, 1fr); }
-  .converter-box{ min-height: 0; padding: 14px 16px; }
-  .converter-equals{ justify-self: center; line-height: 1; }
   .record-row{ grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .shot{ height: 132px; }
 }

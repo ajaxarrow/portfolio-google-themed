@@ -185,7 +185,7 @@ export const caseStudies: CaseStudy[] = [
   }),
 ];
 
-/** Speed facts for the converter card. Each one is already documented on the site. */
+/** Speed facts, shown as stat cards on the case studies page. Each one is already documented on the site. */
 export interface SpeedFact {
   id: string;
   label: string;
@@ -215,15 +215,6 @@ export const speedFacts: SpeedFact[] = [
     result: 'full set of mobile app screens',
     note: 'KahibawHub, built by reusing components from earlier projects. The app went on to a CyberSciTech 2025 paper.',
   },
-  {
-    id: 'promotion',
-    label: 'Promotion',
-    amount: '13',
-    unit: 'months',
-    resultAmount: '1',
-    result: 'promotion, part-time to full-time Product Engineer',
-    note: 'Buzzerboy Inc, July 2024 to August 2025.',
-  },
 ];
 
 export const trackRecord: {label: string; value: string}[] = [
@@ -231,7 +222,6 @@ export const trackRecord: {label: string; value: string}[] = [
   {label: 'Ownership', value: 'Led three production SaaS products and was core developer on two more'},
   {label: 'Promotion', value: 'Promoted from part-time to full-time within 13 months'},
   {label: 'Repeat invitation', value: 'NOMCAARRD asked our team back to present LINNKS to its affiliates'},
-  {label: 'Time zone', value: 'Bukidnon, Philippines (UTC+8), with flexible overlap'},
 ];
 
 /** OPTIONAL: add real quotes here and the Reviews block appears on the page. */
