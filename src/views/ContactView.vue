@@ -163,7 +163,30 @@ const subject = computed(() => {
   .contact-form{ animation: rise 900ms var(--ease-out-expo) 160ms backwards; }
 }
 
-@media (max-width: 900px){
+/* Wherever the results pages show a side panel, use their exact columns (800px
+   results, 28px gap, side panel up to 520px) so switching tabs to Contact does not
+   shift anything. The form never drops below 400px; the intro gives way first. */
+@media (min-width: 960px){
+  .contact{ max-width: none; padding-right: 0; }
+
+  .contact-grid{
+    display: flex;
+    gap: 28px;
+  }
+
+  .contact-intro{
+    flex: 0 1 var(--layout-content-width);
+    min-width: 0;
+  }
+
+  .contact-form{
+    flex: 1 1 0;
+    min-width: 400px;
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 959.98px){
   .contact-grid{ grid-template-columns: minmax(0, 1fr); }
 }
 </style>
