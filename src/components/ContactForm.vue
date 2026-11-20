@@ -253,7 +253,7 @@ function reset() {
 .compose-row input{ min-height: 50px; }
 
 .compose-row input::placeholder,
-.compose-body textarea::placeholder{ color: #80868B; opacity: 1; }
+.compose-body textarea::placeholder{ color: var(--placeholder); opacity: 1; }
 
 .compose-to{
   display: flex;
@@ -301,7 +301,7 @@ function reset() {
   align-items: flex-start;
   gap: 6px;
   padding-bottom: 10px;
-  color: #C5221F;
+  color: var(--error-text);
   font-size: 13px;
   line-height: 1.4;
   animation: error-in 260ms var(--ease-out-expo);
@@ -329,8 +329,8 @@ function reset() {
   margin-top: 16px;
   padding: 12px 14px;
   border-radius: 12px;
-  background-color: #FCE8E6;
-  color: #A50E0E;
+  background-color: var(--error-bg);
+  color: var(--error-strong);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -404,7 +404,7 @@ function reset() {
   font-variant-numeric: tabular-nums;
 }
 
-.compose-count.is-over{ color: #C5221F; }
+.compose-count.is-over{ color: var(--error-text); }
 
 /* Sent */
 .compose-sent{

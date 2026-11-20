@@ -156,3 +156,40 @@ html.egg-blink{
 @media (prefers-reduced-motion: reduce){
   .img-skeleton{ animation: none; }
 }
+
+/* Page canvas follows the theme tokens. */
+html, body{
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+/* Dark theme for Vuetify. Its components carry .v-theme--light and read colors from
+   --v-theme-* (r,g,b triplets); repoint those instead of switching Vuetify's theme,
+   so prerendered markup and the client agree whichever theme the visitor uses. */
+html[data-theme="dark"],
+html[data-theme="dark"] .v-theme--light{
+  --v-theme-background: 32,33,36;
+  --v-theme-on-background: 232,234,237;
+  --v-theme-surface: 48,49,52;
+  --v-theme-on-surface: 232,234,237;
+  --v-theme-surface-bright: 60,64,67;
+  --v-theme-surface-light: 60,64,67;
+  --v-theme-surface-variant: 60,64,67;
+  --v-theme-on-surface-variant: 232,234,237;
+  --v-border-color: 255,255,255;
+  --v-border-opacity: 0.14;
+
+  --v-theme-base: 232,234,237;
+  --v-theme-ink: 232,234,237;
+  --v-theme-meta: 154,160,166;
+  --v-theme-googlelink: 138,180,248;
+  --v-theme-grey-50: 40,41,44;
+  --v-theme-grey-100: 48,49,52;
+  --v-theme-grey-200: 60,64,67;
+  --v-theme-grey-300: 71,74,79;
+  --v-theme-grey-400: 95,99,104;
+}
+
+html[data-theme="dark"] .text-black{
+  color: var(--ink) !important;
+}

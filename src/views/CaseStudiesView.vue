@@ -1214,7 +1214,7 @@ function feelingLucky() {
   color: var(--link-pressed);
 }
 
-.study-outcome dt{ color: #188038; }
+.study-outcome dt{ color: var(--success-strong); }
 .study-outcome dd{ font-weight: 500; }
 
 .study-metrics{
@@ -1783,7 +1783,7 @@ function feelingLucky() {
   max-width: 44ch;
   margin-top: 16px;
   font-size: 17px;
-  color: #3C4043;
+  color: var(--ink-soft);
 }
 
 .contact-email{
@@ -1791,7 +1791,7 @@ function feelingLucky() {
   align-items: flex-start;
   gap: 12px;
   margin: 24px 0 20px;
-  color: #3C4043;
+  color: var(--ink-soft);
   font-size: 14px;
 }
 

@@ -2,6 +2,7 @@
 import Search from "../components/Search.vue";
 import Profile from "../assets/images/closeup.webp";
 import MenuDialog from "../components/MenuDialog.vue";
+import ThemeToggle from "../components/ThemeToggle.vue";
 import {useScreenStore} from "../stores/screenSizeStore.ts";
 import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import SearchView from "../views/SearchView.vue";
@@ -144,6 +145,7 @@ onMounted(() => {
           <Wordmark/>
         </RouterLink>
         <div class="mobile-actions">
+          <ThemeToggle/>
           <MenuDialog @focus-search="handleFocusSearch"/>
           <RouterLink to="/about" class="avatar-link" aria-label="About Jiu Axl Tabilla">
             <VAvatar size="32">
@@ -183,6 +185,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="d-flex align-center ga-2">
+        <ThemeToggle/>
         <MenuDialog @focus-search="handleFocusSearch"/>
         <RouterLink to="/about" class="avatar-link ml-2" aria-label="About Jiu Axl Tabilla">
           <VAvatar size="32">

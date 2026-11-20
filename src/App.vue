@@ -5,12 +5,14 @@ import {useKeySequence} from "./composables/useKeySequence.ts";
 import {useRouteHead} from "./seo/useRouteHead.ts";
 import {onMounted, onUnmounted} from "vue";
 import {initSmoothScroll, destroySmoothScroll} from "./composables/useSmoothScroll.ts";
+import {initTheme} from "./composables/useTheme.ts";
 
 useRouteHead();
 const {triggerById} = useEasterEggs();
 useKeySequence(KONAMI_SEQUENCE, () => triggerById('konami-note'));
 
 onMounted(() => {
+  initTheme();
   initSmoothScroll();
 });
 onUnmounted(destroySmoothScroll);

@@ -7,6 +7,7 @@
   import SearchView from "./SearchView.vue";
   import {socials} from "../data/socials.ts";
   import MenuDialog from "../components/MenuDialog.vue";
+import ThemeToggle from "../components/ThemeToggle.vue";
   import Wordmark from "../components/Wordmark.vue";
   import {fadeUpOnce, isReducedMotion} from "../composables/useMotionPresets.ts";
   import {caseStudies} from "../data/case-studies.ts";
@@ -81,6 +82,7 @@
       <a v-for="social in socials" :key="social.name" :target="social.link.startsWith('mailto:') ? undefined : '_blank'" rel="noopener noreferrer" :href="social.link" class="top-link mx-2 text-decoration-none text-base text-small">
         {{social.name}}
       </a>
+      <ThemeToggle/>
       <MenuDialog @focus-search="handleFocusSearch"/>
       <VAvatar
           size="32"

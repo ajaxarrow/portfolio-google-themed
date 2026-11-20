@@ -172,7 +172,7 @@ const links = [
   padding: 6px 12px;
   border-radius: 9999px;
   background-color: color-mix(in srgb, var(--googlegreen) 12%, var(--surface));
-  color: #137333;
+  color: var(--success-text);
   font-size: 13px;
   font-weight: 500;
 }

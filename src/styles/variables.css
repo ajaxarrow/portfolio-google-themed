@@ -45,3 +45,42 @@
     --duration-egg-spin: 0.01ms;
   }
 }
+/* Status text (light) */
+:root{
+  --success-text: #137333;
+  --success-strong: #188038;
+  --error-text: #C5221F;
+  --error-strong: #A50E0E;
+  --error-bg: #FCE8E6;
+  --ink-soft: #3C4043;
+  --placeholder: #80868B;
+}
+
+/* Dark theme: Google's charcoal dark mode (#202124 page, #303134 raised surfaces),
+   not black. Set on <html data-theme="dark"> by index.html / useTheme.ts. */
+:root[data-theme="dark"]{
+  color-scheme: dark;
+
+  --ink: #E8EAED;
+  --meta: #9AA0A6;
+  --ink-soft: #BDC1C6;
+  --placeholder: #9AA0A6;
+
+  --google-link: #8AB4F8;
+  --link-pressed: #AECBFA;
+
+  --surface: #202124;
+  --grey-50: #28292C;
+  --grey-100: #303134;
+  --grey-200: #3C4043;
+  --grey-300: #474A4F;
+  --grey-400: #5F6368;
+
+  --success-text: #81C995;
+  --success-strong: #81C995;
+  --error-text: #F28B82;
+  --error-strong: #F28B82;
+  --error-bg: rgb(242 139 130 / 0.14);
+
+  --base: #E8EAED;
+}
